@@ -1,0 +1,11 @@
+{
+    "ID": "183",
+    "fullName": "Cheng",
+    "userName": "Cheng1990",
+    "email": "chengsung9@gmail.com",
+    "amount": "100",
+    "sendEmailNotification": false,
+    "bonusType": "deposit",
+    "addReferralCommission": false,
+    "investBonusPlanID": 0
+}

@@ -1,0 +1,11 @@
+{
+    "ID": "55",
+    "fullName": "Zion Friday",
+    "userName": "zionfri",
+    "email": "onumahkalusamuel@gmail.com",
+    "amount": "50",
+    "sendEmailNotification": true,
+    "bonusType": "deposit",
+    "addReferralCommission": true,
+    "investBonusPlanID": "1"
+}

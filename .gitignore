@@ -1,0 +1,13 @@
+.well-known/
+cgi-bin/
+cgi-sys/
+vendor/
+**logs/
+public/*
+!public/.htaccess
+!public/index.php
+!public/uploads/
+public/uploads/*
+!public/uploads/documents/
+tmp/*
+!tmp/index.php
