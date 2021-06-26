@@ -2,31 +2,37 @@
 
 namespace App\Domain\User\Repository;
 
+use App\Base\Domain\Repository;
 use Illuminate\Database\Connection;
 
 /**
  * Repository.
  */
-class UserRepository
+class UserRepository extends Repository
 {
     /**
      * @var PDO The database connection
      */
-    private $connection;
+    protected $connection;
 
-    private $table = 'users';
-    private $referrals_table = 'referrals';
+    protected $table = 'users';
+    protected $referrals_table = 'referrals';
 
-    private $properties = [
+    protected $properties = [
         'ID',
         'fullName',
         'userName',
         'userType',
         'email',
         'password',
-        'bitcoinWalletAddress',
-        'interestWalletBalance',
-        'depositWalletBalance',
+        'btcAddress',
+        'btcBalance',
+        'ethAddress',
+        'ethBalance',
+        'dogeAddress',
+        'dogeBalance',
+        'ltcAddress',
+        'ltcBalance',
         'token',
         'isActive',
         'createdAt',
@@ -42,45 +48,7 @@ class UserRepository
         $this->connection = $connection;
     }
 
-    public function readUser(int $userId = null): array
-    {
-        if ($userId)
-            return (array)
-            $this->connection
-                ->table($this->table)
-                ->select([
-                    'ID',
-                    'fullName',
-                    'userName',
-                    'userType',
-                    'email',
-                    'bitcoinWalletAddress',
-                    'interestWalletBalance',
-                    'depositWalletBalance',
-                    'isActive',
-                    'createdAt',
-                    'updatedAt'
-                ])
-                ->where('userType', 'user')
-                ->find($userId);
-        else
-            return (array)
-            ['users' =>
-            $this->connection
-                ->table($this->table)
-                ->select([
-                    'ID',
-                    'fullName',
-                    'userName'
-                ])
-                ->where('userType', 'user')
-                ->get()];
-    }
 
-    public function findUser(array $params): array
-    {
-        return (array) $this->connection->table($this->table)->where($params)->first();
-    }
     public function usersList(int $offset, int $rowsperpage, string $userName): array
     {
         return ['users' =>
@@ -108,35 +76,6 @@ class UserRepository
             ->where('userName', 'LIKE', "%$userName%")
             ->orderBy('id', 'DESC')
             ->get()];
-    }
-
-    public function insertUser(array $user): int
-    {
-        $row = [];
-        foreach ($user as $key => $value)
-            if (in_array($key, $this->properties))
-                $row[$key] = $value;
-
-        return $this->connection->table($this->table)->insertGetId($row);
-    }
-
-    public function deleteUser(int $userId): bool
-    {
-        return $this->connection->table($this->table)
-            ->where(['ID' => $userId])
-            ->delete();
-    }
-
-    public function updateUser(int $userId, array $data): bool
-    {
-        $row = [];
-        foreach ($data as $key => $value)
-            if (in_array($key, $this->properties) && !in_array($key, ['ID']))
-                $row[$key] = $value;
-
-        return $this->connection->table($this->table)
-            ->where(['ID' => $userId])
-            ->update($row);
     }
 
     public function emailInUse(string $email): bool

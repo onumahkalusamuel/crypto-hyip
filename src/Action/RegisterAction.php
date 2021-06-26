@@ -1,82 +1,157 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action;
 
+use App\Domain\Referrals\Service\Referrals;
 use App\Domain\User\Service\User;
-use App\Helpers\ApiRequest;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 final class RegisterAction
 {
+    private $referrals;
     private $user;
+    private $session;
 
-    public function __construct(User $user)
-    {
+    public function __construct(
+        Referrals $referrals,
+        User $user,
+        Session $session
+    ) {
+        $this->referrals = $referrals;
         $this->user = $user;
+        $this->session = $session;
     }
 
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ): ResponseInterface {
-        // Collect args
-        $data = (array)$request->getParsedBody();
-        $data['userType'] = 'user';
 
-        $user_id = $this->user->createUser($data);
+        // used to track progress
+        $message = false;
 
-        if (!empty($user_id)) {
+        // Collect input from the HTTP request
+        $data = (array) $request->getParsedBody();
 
-            // forward email 
-            $mail = new SendMail();
-            $mail->sendRegistrationEmail($data['email'], $data['fullName'], $data['userName']);
+        $referralUserName = $this->session->get('referralUserName') ?? '';
+        $fullName = trim($data['fullName']);
+        $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
+        $password = trim($data['password']);
 
-            //get user and login
-            $user = $this->user->readUser($user_id);
-
-            // run other processes
-            // check for referral
-            if (!empty($data['referral'])) {
-                $referral = $this->user->findUser(['userName' => $data['referral']]);
-                if (!empty($referral)) {
-                    $refData = [
-                        'referralUserID' => $referral['ID'],
-                        'referralUserName' => $referral['userName'],
-                        'referredUserID' => $user['ID'],
-                        'referredUserName' => $user['userName']
-                    ];
-
-                    $apiRequest = new ApiRequest($request->getHeader('Authorization'));
-
-                    $apiRequest->post('/referrals__', $refData);
-
-                    // send mail to referrer to notify that someone registered under them
-                    $mail->sendDirectReferralSignupEmail(
-                        $referral['email'],
-                        $referral['fullName'],
-                        $user['fullName'],
-                        $user['userName'],
-                        $user['email']
-                    );
-                }
-            }
-
-            // then output
-            $response->getBody()->write(json_encode([
-                "success" => true,
-                "message" => "Registration successful."
-            ]));
-        } else {
-            \http_response_code(400);
-            $response->getBody()->write(json_encode([
-                "success" => false,
-                "message" => "Unable to register account at the moment. Please try again later."
-            ]));
+        if (empty($message) && empty($email)) {
+            $message = "Please enter a valid email.";
         }
 
-        return $response;
+        if (empty($message) && $this->emailInUse($email)) {
+            $message = "Email address already in use";
+        }
+
+        if (empty($message) && (empty($fullName) || strlen($fullName) < 6)) {
+            $message = "A valid name is required";
+        }
+
+        if (empty($message) && empty($password)) {
+            $message = "Password is required.";
+        }
+
+        if (empty($message)) {
+            $userName = $this->generateUserName($fullName);
+            if ($this->userNameInUse($userName)) $message = "Unable to process request. Please contact admin";
+        }
+
+        if (empty($message)) {
+            // Invoke the Domain with inputs and retain the result
+            $userId = $this->user->create(['data' => [
+                'fullName' => $fullName,
+                'email' => $email,
+                'userName' => $userName,
+                'userType' => 'user',
+                'password' => password_hash($password, PASSWORD_BCRYPT)
+            ]]);
+        }
+
+        // responses
+        if (empty($message) && !empty($userId)) {
+
+            // send mail
+            $mail = new SendMail();
+            $mail->sendRegistrationEmail($email, $fullName, $userName);
+
+            if ($userId === 1) {
+                // admin detected
+                $this->user->update(['ID' => $userId, 'data' => ['userType' => 'admin']]);
+            } elseif (!empty($referralUserName)) {
+                $ref = $this->user->find(['params' => [
+                    'userName' => $referralUserName
+                ]]);
+
+                if (!empty($ref->ID)) {
+                    try {
+                        $this->referrals->create(['data' => [
+                            'referralUserID' => $ref->ID,
+                            'referralUserName' => $referralUserName,
+                            'referredUserID' => $userId,
+                            'referredUserName' => $userName
+                        ]]);
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+            // Clear all flash messages
+            $flash = $this->session->getFlashBag();
+            $flash->clear();
+
+            // Get RouteParser from request to generate the urls
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+            $url = $routeParser->urlFor("page", ['page' => "login"]);
+
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'message' => "Account Registered Successful",
+                'redirect' => $url
+            ]));
+
+            // Redirect to protected page
+            return $response;
+        }
+
+        $message = $message ?? 'Unable to process request at the moment. Please try again later';
+
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => $message
+        ]));
+
+        return $response->withStatus(400);
+    }
+
+    public function emailInUse($email): bool
+    {
+        return (bool) $this->user->find(['params' => ['email' => $email]])->ID;
+    }
+
+    public function userNameInUse($userName): bool
+    {
+        return (bool) $this->user->find(['params' => ['userName' => $userName]])->ID;
+    }
+
+    public function generateUserName($fullName): string
+    {
+        $fullName = strtolower($fullName);
+        $fullName = str_replace(" ", "", $fullName);
+        if (strlen($fullName) >= 20) $take = 10;
+        elseif (strlen($fullName) >= 10) $take = 7;
+        else $take = 5;
+
+        $userName = substr($fullName, 0, $take);
+
+        $userName = $userName . rand(13, 9090);
+
+        return $userName;
     }
 }

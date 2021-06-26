@@ -14,7 +14,7 @@
                              <a href="#" class="icon icon-bordered icon-rounded icon-sm pull-left mb-0 mr-10">
                                  <i class="pe-7s-users"></i>
                              </a>
-                             <h4 class="text-gray pt-10 mt-0 mb-30">Reset Password</h4>
+                             <h4 class="text-gray pt-10 mt-0 mb-30">Reset <span class="text-theme-colored2">Password</span></h4>
                          </div>
                          <hr>
                          <div class="row">
@@ -24,7 +24,17 @@
                              </div>
                          </div>
                          <div class="form-group">
-                             <button class="btn btn-dark btn-lg btn-block mt-15" type="submit">Send Reset Link</button>
+                             <button class="btn btn-theme-colored2 btn-dark btn-lg btn-block mt-15" type="submit" data-loading-text="Please wait...">Send Reset Link</button>
+                         </div>
+                         <div class="form-group" style="display: flex;justify-content: space-between;">
+                             <span>
+                                 <a href="<?= $route->urlFor('page', ['page' => 'login']); ?>" class="heading-line-bottom m-0">Log into Account
+                                 </a>
+                             </span>
+                             <span>
+                                 <a href="<?= $route->urlFor('page', ['page' => 'register']); ?>" class="heading-line-bottom m-0">Register New Account
+                                 </a>
+                             </span>
                          </div>
                      </form>
                  </div>
@@ -57,7 +67,5 @@
              }
          });
      </script>
-
-     <?php echo $this->fetch('public/components/section-live-table.php'); ?>
 
  </div>

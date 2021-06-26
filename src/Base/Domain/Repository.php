@@ -27,7 +27,7 @@ class Repository
         'data' => [],
         'filters' => [],
         'params' => [],
-        'order_by' => 'id',
+        'order_by' => 'ID',
         'order' => 'ASC'
     ];
 
@@ -68,7 +68,7 @@ class Repository
     public function readSingle(array $props): object
     {
         [
-            'id' => $id,
+            'ID' => $id,
             'select' => $select
         ] = $props + $this->CHILD_DEFAULTS + self::DEFAULTS;
 
@@ -119,7 +119,20 @@ class Repository
             });
         }
 
-        // where direct
+        // fix for date ranges - from
+        if (!empty($params['where']['from'])) {
+            $__->where('createdAt', '>=', $params['where']['from']);
+        }
+        
+        // fix for date ranges - to
+        if (!empty($params['where']['to'])) {
+            $__->where('createdAt', '<=', $params['where']['to']);
+        }
+        // unset from and to
+        unset($params['where']['from']);
+        unset($params['where']['to']);
+
+        // where direct - the rest
         if (!empty($params['where'])) {
             $__->where($params['where']);
         }
@@ -129,10 +142,10 @@ class Repository
 
         // then continue
         // order
-        // $order_by = $filters['sort_by'] && in_array($filters['sort_by'], $this->properties)
-        //     ? $filters['sort_by']
-        //     : $order_by;
-        // $order = $filters['desc'] ? 'DESC' : $order;
+        $order_by = $filters['sort_by'] && in_array($filters['sort_by'], $this->properties)
+            ? $filters['sort_by']
+            : $order_by;
+        $order = $filters['desc'] ? 'DESC' : $order;
 
         $__->orderBy($order_by, $order);
 
@@ -219,7 +232,11 @@ class Repository
             'select' => $select
         ] = $props + $this->CHILD_DEFAULTS + self::DEFAULTS;
 
-        foreach ($params as $key => $value) if (!in_array($key, $this->properties)) unset($params[$key]);
+        foreach ($params as $key => $value) {
+            if (!in_array($key, $this->properties)) {
+                unset($params[$key]);
+            }
+        }
         $__ = $this->connection->table($this->table);
 
         // select
@@ -271,11 +288,11 @@ class Repository
     public function delete(array $props): bool
     {
         [
-            'id' => $id
+            'ID' => $ID
         ] = $props + $this->CHILD_DEFAULTS + self::DEFAULTS;
 
         $__ = $this->connection->table($this->table)
-            ->where(['id' => $id]);
+            ->where(['ID' => $ID]);
 
         return $__->delete();
     }
@@ -291,24 +308,24 @@ class Repository
 
         [
             'data' => $data,
-            'id' => $id,
+            'ID' => $ID,
             'params' => $params
         ] = $props + $this->CHILD_DEFAULTS + self::DEFAULTS;
 
         // at least one must be provided
-        if (empty($id) && empty($params)) return false;
+        if (empty($ID) && empty($params)) return false;
 
         // prepare the update data
         $row = [];
         foreach ($data as $key => $value)
-            if (in_array($key, $this->properties) && !in_array($key, ['id']))
+            if (in_array($key, $this->properties) && !in_array($key, ['ID']))
                 $row[$key] = $value;
 
         if (empty($row)) return false;
 
         $__ = $this->connection->table($this->table);
         // attach id
-        if (!empty($id)) $__->where(['id' => $id]);
+        if (!empty($ID)) $__->where(['ID' => $ID]);
         // attach other params
         if (!empty($params)) $__->where($params);
 

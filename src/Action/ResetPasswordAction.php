@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Action;
+
+use App\Domain\User\Service\User;
+use App\Helpers\SendMail;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+final class ResetPasswordAction
+{
+    private $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface {
+        // Collect args
+        $data = (array) $request->getParsedBody();
+
+        $message = false;
+        $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
+
+
+        if (empty($message) && empty($email)) {
+            $message = "Please enter a valid email address";
+        }
+
+        if (empty($message)) {
+            $user = $this->user->find(['params' => $data]);
+            if (empty($user->ID)) {
+                $message = "Check your email for password reset link. You will get a message if you have an account with us.";
+            }
+        }
+
+        if (empty($message)) {
+
+            $resetToken = substr(sha1(uniqid()), 7, 15);
+
+            // save to database 
+            $update = $this->user->update(['ID' => $user->ID, 'data' => ['token' => $resetToken]]);
+
+            if (empty($update)) {
+                $message = 'Unable to reset password at the moment. Please contact support.';
+            }
+
+            if (empty($message)) {
+                $mail = new SendMail();
+                $send = $mail->sendPasswordResetEmail($user->email, $user->fullName, $resetToken);
+
+                $response->getBody()->write(json_encode([
+                    'success' => true,
+                    'message' => "Check your email for password reset link. You only get a message if you have an account with us."
+                ]));
+
+                // Redirect to protected page
+                return $response;
+            }
+        }
+
+        $message = $message ?? 'Unable to process request at the moment. Please try again later.';
+
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => $message
+        ]));
+
+        return $response->withStatus(400);
+    }
+}

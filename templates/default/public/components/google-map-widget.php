@@ -5,7 +5,7 @@
         htmlentities(urlencode($siteSettings['contact_address']))
     ); ?>
         <div class="mapouter">
-            <div class="gmap_canvas"><iframe width="100%" height="450" id="gmap_canvas" src="<?=$url;?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" allowfullscreen="1"></iframe><a href="https://soap2day-to.com">soap2day</a><br>
+            <div class="gmap_canvas"><iframe width="100%" height="450" id="gmap_canvas" src="<?=$url;?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" allowfullscreen="1" loading="lazy"></iframe><a href="https://soap2day-to.com">soap2day</a><br>
                 <style>
                     .mapouter {
                         position: relative;

@@ -1,6 +1,6 @@
     <!-- Section: inner-header -->
     <section class="inner-header divider layer-overlay overlay-dark-4" data-bg-img="assets/images/bg/bg1.jpg" style="background-image: url(&quot;assets/images/bg/bg1.jpg&quot;);">
-        <div class="container pt-120 pb-60">
+        <div class="container pt-60 pb-30">
             <!-- Section Content -->
             <div class="section-content">
                 <div class="row">

@@ -3,44 +3,56 @@
 namespace App\Action\User;
 
 use App\Domain\User\Service\User;
-use App\Helpers\ApiRequest;
+use App\Domain\Deposits\Service\Deposits;
+use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Slim\Views\PhpRenderer as View;
 
 final class UserDashboardAction
 {
-    private $user;
+    protected $user;
+    protected $session;
+    protected $deposits;
+    protected $trailLog;
+    protected $view;
 
-    public function __construct(User $user)
-    {
+    public function __construct(
+        Session $session,
+        User $user,
+        Deposits $deposits,
+        TrailLog $trailLog,
+        View $view
+    ) {
         $this->user = $user;
+        $this->session = $session;
+        $this->deposits = $deposits;
+        $this->trailLog = $trailLog;
+        $this->view = $view;
     }
 
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ): ResponseInterface {
-        // Collect args
-        $auth = $request->getAttribute("token")['data'];
-        $apiRequest = new ApiRequest($request->getHeader('Authorization'));
 
+        $ID = $this->session->get('ID');
         // users
-        $user = $this->user->readUser($auth->ID);
+        $user = $this->user->readSingle(['ID'=>$ID]);
 
         // deposits
-        $deposits = $apiRequest->get("deposits/{$auth->ID}")->deposits;
+        $deposits = $this->deposits->readAll(['params' => ['userId' => $ID]]);
         // trx 
-        $trx = $this->processTrx($apiRequest->get("traillog/?userID={$auth->ID}")->traillog);
+        $trailLog = $this->trailLog->readAll([]);
+        $trx = $this->processTrx($trailLog);
 
         // Build the HTTP response
-        unset($user['password']);
+        unset($user->password);
 
-        $user['registrationDate'] = date("d M, Y", strtotime($user['createdAt']));
-        $user['lastLogin'] = date("d M, Y", strtotime($user['createdAt']));
-        $user['accountBalance'] = "";
-        $user['earnedTotal'] = "";
-        $user['pendingWithdrawal'] = "";
+        $user->accountBalance = "";
+        $user->earnedTotal = "";
+        $user->pendingWithdrawal = "";
 
         $return['userInfo'] = $user;
         $return['overview'] = [
@@ -57,9 +69,11 @@ final class UserDashboardAction
                 'body' => $trx['withdrawals']
             ]
         ];
-        $response->getBody()->write(json_encode($return));
 
-        return $response;
+        $data = $return;
+
+        return $this->view->render($response, 'user/dashboard.php', ['data'=>$data]);
+
     }
 
     public function getActiveDeposit(array $deposits): float

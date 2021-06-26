@@ -37,7 +37,7 @@ final class UserAuthMiddleware implements MiddlewareInterface
         // User is not logged in. Redirect to login page.
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        $url = $routeParser->urlFor('login');
+        $url = $routeParser->urlFor('page', ['page'=> 'login']);
 
         $response = new Psr7Response();
 

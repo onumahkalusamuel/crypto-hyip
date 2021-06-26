@@ -31,4 +31,4 @@ $url = sprintf(
 );
 ?>
 
-<iframe src="<?= $url; ?>" scrolling="auto" marginwidth="0" marginheight="0" border="0" style="border:0;margin:0;padding:0;" width="<?=$width;?>" height="<?=$height;?>" frameborder="0"></iframe>
+<iframe src="<?= $url; ?>" scrolling="auto" marginwidth="0" marginheight="0" border="0" style="border:0;margin:0;padding:0;" width="<?=$width;?>" height="<?=$height;?>" frameborder="0" loading="lazy"></iframe>

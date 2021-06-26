@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action\Admin\User;
 
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Referrals\Service\Referrals;

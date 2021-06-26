@@ -1,85 +1,84 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action;
 
 use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Firebase\JWT\JWT;
-use Psr\Container\ContainerInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginAction
 {
 
-    private $user;
-    private $container;
+    protected $user;
+    protected $session;
+    protected $sendMail;
 
-    public function __construct(User $user, ContainerInterface $container)
+    public function __construct(Session $session, User $user, SendMail $sendMail)
     {
         $this->user = $user;
-        $this->container = $container;
+        $this->session = $session;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ): ResponseInterface {
 
-        // Collect data from request
-        $data = $request->getParsedBody();
+        $data = (array)$request->getParsedBody();
+        $email = (string)($data['email'] ?? '');
+        $password = (string)($data['password'] ?? '');
 
-        if (empty($data['userName']) || empty($data['password'])) {
-            \http_response_code(400);
-            return $response;
-        }
+        // variables
+        $loggedIn = false;
+        $userType = '';
+        $message = '';
 
-        $loginUser = $this->user->loginUser($data['userName']);
-        // return $response;
-        if (!empty($loginUser) && $loginUser['isActive']) {
+        // attempt login
+        $loginUser = $this->user->find(['params' => ['email' => $email]]);
 
-            if (password_verify($data['password'], $loginUser['password'])) {
-                // return;
-                // generate token
-                $token = [
-                    "iss" => $_SERVER['HTTP_HOST'],
-                    "aud" => $_SERVER['HTTP_HOST'],
-                    "iat" => time(),
-                    "exp" => time() + 86400,
-                    "data" => [
-                        "ID" => $loginUser['ID'],
-                        "userType" => $loginUser['userType'],
-                        "userName" => $loginUser['userName'],
-                    ]
-                ];
-                $jwt = JWT::encode($token, $this->container->get('settings')['jwt_key']);
-                $response->getBody()->write(json_encode([
-                    "success" => true,
-                    "message" => "Login successful",
-                    "jwt" => $jwt,
-                    "userType" => $loginUser['userType'],
-                ]));
-                // run other processes
-                if ($loginUser['userType'] == "admin") {
-                    $mail = new SendMail();
-                    $mail->sendAdminLoggedIn();
-                }
+        if (password_verify($password, $loginUser->password)) {
+            if ($loginUser->isActive === 0) {
+                $message = "Sorry, it looks like your account is not active. Please chat with support for assistance.";
             } else {
-                \http_response_code(404);
-                $response->getBody()->write(json_encode([
-                    "success" => false,
-                    "message" => "Invalid Username or Password Combination"
-                ]));
+                $loggedIn = true;
             }
-        } else {
-            \http_response_code(404);
-            $response->getBody()->write(json_encode([
-                "success" => false,
-                "message" => "Invalid Username or Password Combination"
-            ]));
         }
 
-        return $response;
+        if (!empty($loginUser)) $userType = $loginUser->userType;
+
+        if ($userType === 'admin') $this->sendMail->sendAdminLoggedIn();
+
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        if ($loggedIn) {
+            // Login successfully
+            // Clears all session data and regenerates session ID
+            $this->session->invalidate();
+            $this->session->start();
+
+            $this->session->set('ID', $loginUser->ID);
+            $this->session->set('userType', $loginUser->userType);
+            $this->session->set('userName', $loginUser->userName);
+            $this->session->set('email', $loginUser->email);
+
+            // Redirect to protected page
+            $url = $routeParser->urlFor("{$userType}-dashboard");
+        } else {
+            $flash->set('error', !empty($message) ? $message : 'Invalid Login Details!');
+
+            // Redirect back to the login page
+            $url = $routeParser->urlFor('page', ['page' => 'login']);
+        }
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

@@ -2,90 +2,85 @@
 
 namespace App\Domain\TrailLog\Repository;
 
-use Illuminate\Database\Connection;
+use App\Base\Domain\Repository;
 
 /**
  * Repository.
  */
-class TrailLogRepository
+class TrailLogRepository extends Repository
 {
     /**
      * @var PDO The database connection
      */
-    private $connection;
-    private $table = 'traillog';
-    private $properties = [
+    protected $connection;
+    protected $table = 'traillog';
+    protected $properties = [
         'ID',
         'userID',
         'userName',
         'logType',
-        'transactionAdminID',
+        'transactionID',
         'transactionDetails',
         'amount',
         'createdAt'
     ];
-    /**
-     * Constructor.
-     *
-     * @param PDO $connection The database connection
-     */
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
 
-    public function read(array $params = null): array
+    protected const DEFAULTS = [
+        'select' => '*',
+        'data' => [],
+        'filters' => [],
+        'params' => [],
+        'order_by' => 'createdAt',
+        'order' => 'DESC'
+    ];
+
+
+    public function readPaging(array $props): array
     {
+        $return = ['data' => [], 'total_rows' => 0];
+
+        [
+            'params' => $params,
+            'filters' => $filters,
+            'order_by' => $order_by,
+            'order' => $order
+        ] = $props + self::DEFAULTS;
+
+        [ 'where' => $where ] = $params;
+
         $__ = $this->connection->table($this->table);
 
-        if (!empty($params['from'])) {
-            $__->where('createdAt', '>=', $params['from']);
+        if (!empty($where['from'])) {
+            $__->where('createdAt', '>=', $where['from']);
         }
 
-        if (!empty($params['to'])) {
-            $__->where('createdAt', '<=', $params['to']);
+        if (!empty($where['to'])) {
+            $__->where('createdAt', '<=', $where['to']);
         }
 
-        if (!empty($params['type']) && $params['type'] != "all") {
-            $__->where(['logType' => $params['type']]);
+        if (!empty($where['logType']) && $where['logType'] !== "all") {
+            $__->where('logType', $where['logType']);
         }
 
-        if (!empty($params['userID'])) {
-            $__->where(['userID' => $params['userID']]);
+        if (!empty($where['userID'])) {
+            $__->where('userID', $where['userID']);
         }
+
+        // get count
+        $return['total_rows'] = $__->get()->count();
 
         // order
-        $__->orderBy('id', 'DESC');
-
+        $__->orderBy($order_by, $order);
 
         // records per page
-        if (!empty($params['rpp'])) {
+        if (!empty($filters['rpp'])) {
             // offset 
-            $__->skip($params['offset']);
-            $__->take($params['rpp']);
+            $__->skip($filters['offset']);
+            $__->take($filters['rpp']);
         }
 
-        return (array) [
-            'traillog' =>
-            $__->get()
-        ];
-    }
+        $return['data'] = $__->get()->all();
 
-    public function create(array $data = null): int
-    {
-        $row = [];
-        foreach ($data as $key => $value)
-            if (in_array($key, $this->properties))
-                $row[$key] = $value;
-
-        return $this->connection->table($this->table)->insertGetId($row);
-    }
-
-
-    public function delete(array $params): bool
-    {
-        return (bool) $this->connection->table($this->table)
-            ->where($params)
-            ->delete();
+        return $return;
     }
 }

@@ -2,29 +2,23 @@
 
 namespace App\Action;
 
-use DOMDocument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\PhpRenderer;
+use App\Helpers\NewsLoader;
+use App\Domain\Plans\Service\Plans;
 
-/** Show login form */
 class PageView
 {
-    /**
-     * View handler
-     *
-     * @var \Slim\Views\PhpRenderer
-     */
     private $view;
+    private $plans;
 
-    /**
-     * Constructor
-     *
-     * @param \Slim\Views\PhpRenderer $view
-     */
-    public function __construct(PhpRenderer $view)
-    {
+    public function __construct(
+        PhpRenderer $view,
+        Plans $plans
+    ) {
         $this->view = $view;
+        $this->plans = $plans;
     }
 
     public function __invoke(
@@ -39,28 +33,16 @@ class PageView
 
         // fetch data
         switch ($page) {
-            case 'home': {
-                $latestNews = simplexml_load_string(file_get_contents('https://cointelegraph.com/rss'));
-                foreach($latestNews->item as $lt) {
-
-                    $dom = new DOMDocument();
-                    $desc = $dom
-                            ->loadHTML("<body>" . $lt->description . "</body>")
-                            ->getElementsByTagName('p')[1];
-                            
-                    $data['latest_news'][] = [
-                        'title' => $lt->title,
-                        'link' => $lt->link,
-                        'image' => $lt->enclosure,
-                        'alt' => 'ctypto news',
-                        'date' => 'date',
-                        'desc' => $desc,
-                        'categories' => $lt->category
-                    ];
+            case 'investment-plans': {
+                    $data['investment_plans'] = $this->plans->readAll(['params' => ['isActive' => 1]]);
+                    break;
                 }
-                break;
-            }
-            
+            case 'latest-news': {
+                    $news = new NewsLoader;
+                    $data['latest_news'] = $news->coinTelegraphNews(20);
+                    break;
+                }
+
             default:
                 # code...
                 break;

@@ -8,23 +8,31 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Slim\Views\PhpRenderer;
+use Laminas\Escaper\Escaper;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 
 final class PhpViewExtensionMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var App
-     */
+
     private $app;
 
-    /**
-     * @var PhpRenderer
-     */
     private $phpRenderer;
 
-    public function __construct(App $app, PhpRenderer $phpRenderer)
-    {
+    private $session;
+
+    private $escaper;
+
+    public function __construct(
+        App $app,
+        PhpRenderer $phpRenderer,
+        Session $session,
+        Escaper $escaper
+    ) {
         $this->phpRenderer = $phpRenderer;
         $this->app = $app;
+        $this->session = $session;
+        $this->escaper = $escaper;
     }
 
     public function process(
@@ -33,17 +41,23 @@ final class PhpViewExtensionMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         $this->phpRenderer->addAttribute(
             'siteSettings',
-            $this->app->getContainer()->get('settings')['display_settings']
+            $this->app->getContainer()->get('settings')['display_settings']()
         );
         $this->phpRenderer->addAttribute('uri', $request->getUri());
         $this->phpRenderer->addAttribute('basePath', $this->app->getBasePath());
         $this->phpRenderer->addAttribute('route', $this->app->getRouteCollector()->getRouteParser());
+        $this->phpRenderer->addAttribute('flashBag', $this->session->getFlashBag());
+        $this->phpRenderer->addAttribute('esc', $this->escaper);
         $this->phpRenderer->addAttribute('getTimeAgo', function ($date) {
             $time_difference = time() - strtotime($date);
 
             if ($time_difference < 1) {
                 return 'less than 1 second ago';
             }
+            if($time_difference > 172800) {
+                return date("d M, Y", strtotime($date));
+            }
+
             $condition = array(
                 12 * 30 * 24 * 60 * 60 =>  'year',
                 30 * 24 * 60 * 60       =>  'month',

@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h2 class="text-uppercasetext-theme-colored mt-0">
-                            About <span class="text-theme-color-2">
+                            About <span class="text-theme-colored2">
                                 <?= $siteSettings['site_name']; ?>
                             </span>
                         </h2>

@@ -4,7 +4,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\App;
-// use Slim\Middleware\ErrorMiddleware;
+use Slim\Middleware\ErrorMiddleware;
 use App\Middleware\PhpViewExtensionMiddleware;
 
 return function (App $app) {
@@ -18,29 +18,28 @@ return function (App $app) {
     $app->add(PhpViewExtensionMiddleware::class);
     $app->add(BasePathMiddleware::class); // <--- here
 
+    // $customErrorHandler = function (
+    //     ServerRequestInterface $request,
+    //     Throwable $exception,
+    //     bool $displayErrorDetails,
+    //     bool $logErrors,
+    //     bool $logErrorDetails,
+    //     ?LoggerInterface $logger = null
+    // ) use ($app) {
 
-    $customErrorHandler = function (
-        ServerRequestInterface $request,
-        Throwable $exception,
-        bool $displayErrorDetails,
-        bool $logErrors,
-        bool $logErrorDetails,
-        ?LoggerInterface $logger = null
-    ) use ($app) {
+    //     $payload = ['success' => false, 'message' => $exception->getMessage()];
 
-        $payload = ['success' => false, 'message' => $exception->getMessage()];
+    //     $response = $app->getResponseFactory()->createResponse();
+    //     $response->getBody()->write(
+    //         json_encode($payload, JSON_UNESCAPED_UNICODE)
+    //     );
 
-        $response = $app->getResponseFactory()->createResponse();
-        $response->getBody()->write(
-            json_encode($payload, JSON_UNESCAPED_UNICODE)
-        );
+    //     \http_response_code($exception->getCode());
+    //     return $response;
+    // };
 
-        \http_response_code($exception->getCode());
-        return $response;
-    };
-
-    // Add Error Middleware
+    // // Add Error Middleware
     $errorMiddleware = $app->addErrorMiddleware(true, true, true);
-    $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
+    // $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 
 };

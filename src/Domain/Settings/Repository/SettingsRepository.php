@@ -2,21 +2,26 @@
 
 namespace App\Domain\Settings\Repository;
 
+use App\Base\Domain\Repository;
 use Illuminate\Database\Connection;
 
 /**
  * Repository.
  */
-class SettingsRepository
+class SettingsRepository extends Repository
 {
     /**
      * @var PDO The database connection
      */
-    private $connection;
-    private $table = 'settings';
-    private $properties = [
+    protected $connection;
+    protected $table = 'settings';
+    protected $properties = [
         'setting',
         'value'
+    ];
+
+    protected $CHILD_DEFAULTS = [
+        'order_by' => 'setting'
     ];
     /**
      * Constructor.
@@ -28,19 +33,10 @@ class SettingsRepository
         $this->connection = $connection;
     }
 
-    public function read(string $setting = null): array
+    public function update(array $props): bool
     {
-        $__ = $this->connection->table($this->table);
+        [ 'setting'=> $setting, 'value' => $value ] = $props;
 
-        if (!empty($setting)) {
-            $__->where(['setting' => $setting]);
-        }
-
-        return (array) ['settings' => $__->get()];
-    }
-
-    public function update(string $setting, string $value = null): bool
-    {
         return $this->connection->table($this->table)
             ->where(['setting' => $setting])
             ->update(['value' => $value]);

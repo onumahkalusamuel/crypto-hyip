@@ -68,7 +68,7 @@ class SendMail
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/><br/>" .
-              "<h2>PASSWORD RESET</h2><br/>" . 
+            "<h2>PASSWORD RESET</h2><br/>" .
             "Hello $name, <br/><br/>
             We received a password reset request from you.<br/> <br/>
         If you are the one, please kindly click on the link below to reset your password.<br/><br/>
@@ -78,7 +78,7 @@ class SendMail
         <h4>https://bexfinance.ltd/reset/{$token}</h4>
         <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time()) ." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a><br>
             </div>
         ";
@@ -105,14 +105,14 @@ class SendMail
         
         <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time()) ." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a><br>
             </div>";
 
         return $this->send($data);
     }
 
-    public function sendWithdrawalRequestEmail($email, $amount, $name, $username)
+    public function sendWithdrawalRequestEmail($email, $cryptoCurrency, $amount, $name, $username)
     {
         $data['email'] = $email;
         $data['name'] = $name;
@@ -124,7 +124,7 @@ class SendMail
             Hello $name,<br/><br/>
             You have requested to withdraw $$amount. Please be patient while it is being processed.<br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>";
 
@@ -144,7 +144,7 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendWithdrawalSentEmail($email, $amount, $name, $username, $account, $batch)
+    public function sendWithdrawalSentEmail($email, $cryptoCurrency, $amount, $name, $username, $account, $batch)
     {
         $data['email'] = $email;
         $data['name'] = $name;
@@ -160,7 +160,7 @@ class SendMail
             Transaction batch: $batch.
             <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>";
 
@@ -194,7 +194,7 @@ class SendMail
             Thank you.
             <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>
 ";
@@ -231,7 +231,7 @@ class SendMail
             Thank you. <br/><br/>
      
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>
             ";
@@ -252,7 +252,7 @@ class SendMail
             You have received a referral commission of \${$amount} from {$ref_username}'s deposit. <br/>
             Thank you. <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>
             ";
@@ -287,7 +287,7 @@ class SendMail
             Thank you. 
             <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             </div>
             ";
@@ -352,7 +352,7 @@ class SendMail
             Thank you.
             <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             <br/>
             </div>";
@@ -401,7 +401,7 @@ class SendMail
             Thank you. <br/><br/>
 
             If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; ".date('Y',time())." BexFinance Support
+            &copy; " . date('Y', time()) . " BexFinance Support
             <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
             <br/>
             </div>
