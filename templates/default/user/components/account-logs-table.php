@@ -24,11 +24,11 @@ $default = ['data' => [], 'total_rows' => 0];
             </div>
             <div class="form-group col-sm-4 col-md-3">
                 <label for="from">From:</label>
-                <input class="form-control" type="date" id="from" name="from" value="<?= $_GET['from'] ?? date("Y-m-d", strtotime("-3 month")); ?>" />
+                <input class="form-control" type="date" id="from" name="from" value="<?= $_GET['from'] ?? ''; ?>" />
             </div>
             <div class="form-group col-sm-4 col-md-3">
                 <label for="to">To:</label>
-                <input class="form-control" type="date" id="to" name="to" value="<?= $_GET['to'] ?? date("Y-m-d", strtotime("+1 day")); ?>" />
+                <input class="form-control" type="date" id="to" name="to" value="<?= $_GET['to'] ?? ''; ?>" />
             </div>
             <div class="form-group col-sm-4 col-md-2">
                 <label for="rpp">Per Page:</label>

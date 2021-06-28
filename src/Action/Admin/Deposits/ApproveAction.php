@@ -1,128 +1,185 @@
 <?php
 
-namespace App\Action\Deposits;
+namespace App\Action\Admin\Deposits;
 
 use App\Domain\Deposits\Service\Deposits;
-use App\Helpers\ApiRequest;
+use App\Domain\User\Service\User;
+use App\Domain\TrailLog\Service\TrailLog;
+use App\Domain\Plans\Service\Plans;
+use App\Domain\Referrals\Service\Referrals;
+use App\Domain\Settings\Service\Settings;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Slim\Routing\RouteContext;
 
 final class ApproveAction
 {
     private $deposits;
+    private $plans;
+    private $user;
+    private $settings;
+    private $referrals;
+    private $trailLog;
+    private $session;
 
-    public function __construct(Deposits $deposits)
-    {
+    public function __construct(
+        Deposits $deposits,
+        Plans $plans,
+        User $user,
+        Settings $settings,
+        Referrals $referrals,
+        TrailLog $trailLog,
+        Session $session
+    ) {
         $this->deposits = $deposits;
+        $this->plans = $plans;
+        $this->user = $user;
+        $this->settings = $settings;
+        $this->referrals = $referrals;
+        $this->trailLog = $trailLog;
+        $this->session = $session;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+        $message = false;
 
-        $data = [
-            "depositStatus" => "approved",
-            "interestPaid" => "0",
-        ];
+        // fettch deposit
+        $dep = $this->deposits->readSingle(['ID' => $args['id']]);
 
-        $auth = $request->getAttribute('token')['data'];
-
-        if ($auth->userType != "admin") {
-            return $response;
+        if (empty($dep->ID)) {
+            $message = "Deposit not found.";
         }
 
-        $apiRequest = new ApiRequest('internalOverride');
+        $plan = $this->plans->readSingle(['ID' => $dep->planID]);
+        if (empty($plan->ID)) {
+            $message = "Corresponding plan not found.";
+        }
 
-        if (!empty($args['id'])) {
+        // check for status
+        if (empty($message) && $dep->depositStatus !== "pending") {
+            $message = "You can only approve a pending deposit";
+        }
 
-            $dep = $this->deposits->readDeposit(['ID' => $args['id']])['deposits'][0];
+        // get user
+        if (empty($message)) {
+            $user = $this->user->readSingle(['ID' => $dep->userID]);
+            if (empty($user->ID)) $message = "User not found";
+        }
 
-            if ($dep->depositStatus != "pending") {
-                return $response;
-            }
+        if (empty($message)) {
+            $this->deposits->beginTransaction();
 
-            if ($this->deposits->updateDeposit($args['id'], $data)) {
-                // get user
-                $user = $apiRequest->get('users/' . $dep->userID);
-
-                // add to deposit wallet balance
-                $apiRequest->put('users/' . $dep->userID, [
-                    'depositWalletBalance' => $user->depositWalletBalance + $dep->amount
+            try {
+                // mark deposit as approved
+                $this->deposits->update([
+                    'ID' => $dep->ID,
+                    'data' => [
+                        'depositStatus' => 'approved',
+                        'depositApprovalDate' => date("Y-m-d H:i:s", time()),
+                        'finalInterestDate' => date(
+                            "Y-m-d H:i:s",
+                            strtotime("+{$plan->duration} {$plan->durationType}s 1 hour")
+                        ),
+                    ]
                 ]);
 
-                // then log it
-                $apiRequest->post('traillog/', [
-                    'userID' => $dep->userID,
-                    'userName' => $dep->userName,
-                    'logType' => 'deposit',
-                    'transactionDetails' => "Deposit for " . $dep->planTitle . " Approved",
-                    'transactionAdminID' => $request->getAttribute('token')['data']->ID,
-                    'amount' => $dep->amount,
+                // add record to traillog
+                $this->trailLog->create([
+                    'data' => [
+                        'userID' => $dep->userID,
+                        'userName' => $dep->userName,
+                        'logType' => 'deposit',
+                        'transactionDetails' => "Deposit for " . $dep->planTitle . " Approved",
+                        'transactionID' => $dep->ID,
+                        'amount' => $dep->amount,
+                    ]
                 ]);
+
 
                 // verify if can pay referral commission
-                $sett = $apiRequest->get('/settings');
 
-                if (!empty($sett->payReferral)) {
+                if (!empty($this->settings->payReferral)) {
                     // check for referral commission
-                    $ref = $apiRequest->get('referrals?referredUserID=' . $dep->userID)->referrals;
+                    $ref = $this->referrals->find([
+                        'params' => [
+                            'referredUserID' => $dep->userID
+                        ]
+                    ]);
 
-                    if (!empty($ref)) {
+                    if (!empty($ref->ID)) {
 
                         //calculate
-                        $referralPercentage = $sett->referralPercentage;
+                        $referralPercentage = $plan->referralPercentage;
 
                         $referralBonus = round($referralPercentage / 100 * $dep->amount, 2);
 
                         // update referral table
-                        $rr = $apiRequest->put('/referrals/' . $ref[0]->ID, [
-                            'referralPaid' => 1,
-                            'referralBonus' => $ref[0]->referralBonus + $referralBonus
+                        $rr = $this->referrals->update([
+                            'ID' => $ref->ID,
+                            'data' => [
+                                'referralPaid' => 1,
+                                'referralBonus' => $ref->referralBonus + $referralBonus
+                            ]
                         ]);
 
                         if ($rr) {
-                            // get user 
-                            $user = $apiRequest->get('/users/' . $ref[0]->referralUserID);
+                            // get the referer
+                            $referer = $this->user->readSingle(['ID' => $ref->referralUserID]);
 
-                            if (!empty($user)) {
+                            if (!empty($referer->ID)) {
                                 $mail = new SendMail();
-                                $m = $mail->sendDirectReferralCommissionEmail(
-                                    $user->email,
-                                    $user->fullName,
+                                $mail->sendDirectReferralCommissionEmail(
+                                    $referer->email,
+                                    $referer->fullName,
                                     $referralBonus,
-                                    $ref[0]->referredUserName,
-                                    $user->userName
+                                    $ref->referredUserName,
+                                    $referer->userName
                                 );
                             }
 
-                            // add to interest wallet balance
-                            $apiRequest->put('/users/' . $user->ID, [
-                                'interestWalletBalance' => $user->interestWalletBalance + $referralBonus,
-                            ]);
-
                             // log
                             $logData = [
-                                'userID' => $user->ID,
-                                'userName' => $user->userName,
+                                'userID' => $referer->ID,
+                                'userName' => $referer->userName,
                                 'logType' => 'referral',
                                 'transactionDetails' => "Received Referral Commission of \${$referralBonus} - {$referralPercentage}%",
-                                'transactionAdminID' => $request->getAttribute('token')['data']->ID,
+                                'transactionID' => $ref->ID,
                                 'amount' => $referralBonus,
                             ];
 
-                            $apiRequest->post('traillog/', $logData);
+                            $this->trailLog->create(['data' => $logData]);
                         }
                     }
                 }
 
-                $response->getBody()->write(json_encode(['message' => 'Deposit approved successfully.']));
-            } else {
-                \http_response_code(404);
+                $this->deposits->commit();
+            } catch (\Exception $e) {
+                $this->deposits->rollback();
+                $message = "Unable to process request at the moment. Please try again later";
+                $user->password = null;
+                \file_put_contents(__DIR__ . '/error-' . $user->ID . $dep->ID . ".json", json_encode([$user, $dep, $e]));
             }
-            return $response;
         }
 
-        \http_response_code(400);
-        return $response;
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-deposits');
+
+
+        if (empty($message)) {
+            $flash->set('success', "Deposit approved successfully");
+        } else {
+            $flash->set('error', $message);
+        }
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

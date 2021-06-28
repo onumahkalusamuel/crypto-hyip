@@ -1,44 +1,90 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action\Admin\User;
 
 use App\Domain\User\Service\User;
-use Psr\Http\Message\ServerRequestInterface;
+use App\Helpers\CryptoHelper;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 final class UpdateAction
 {
     private $user;
+    private $session;
+    private $cryptoHelper;
 
-    public function __construct(User $user)
+    public function __construct(User $user, Session $session, CryptoHelper $cryptoHelper)
     {
         $this->user = $user;
+        $this->session = $session;
+        $this->cryptoHelper = $cryptoHelper;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
-    {
-        $data = (array)$request->getParsedBody();
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
 
-        $auth = $request->getAttribute("token")['data'];
+        $message = false;
+        $ID = $args['id'];
+        $data = (array) $request->getParsedBody();
+        $newData = [];
 
-        //if a user requests update, update his/her profile
-        if ($auth->userType !== "admin") {
-            $args['id'] = $auth->ID;
-            // if its an admin, then its expected to actually carry ID
-        } elseif ($auth->userType == "admin" && empty($args['id'])) {
-            $response->getBody()->write(json_encode(['success' => false, 'message' => 'User to be updated not specified.']));
-            \http_response_code(400);
-            return $response;
+        // validate password if any
+        if(!empty($data['password'])) {
+            $newData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
-        // check for password update
-        if (!empty($data['newPassword'])) $data['password'] = $data['newPassword'];
+        // validate btc address
+        if(!empty($data['btcAddress'])) {
+            $verify = $this->cryptoHelper->validate('btc', $data['btcAddress']);
+            if(empty($verify)) $message = "Invalid Bitcoin Address";
+        }
 
-        // update
-        $this->user->updateUser($args['id'], $data);
+        // validate email
+        if(empty($message) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            if(empty($verify)) $message = "Invalid Email Address";
+        }
 
-        $response->getBody()->write(json_encode(['success' => true, 'message' => 'User updated successfully.']));
+        // continue
+        if(empty($message)) {
+            $newData['fullName'] = $data['fullName'];
+            $newData['userName'] = $data['userName'];
+            $newData['email'] = $data['email'];
+            $newData['btcAddress'] = $data['btcAddress'];
 
-        return $response;
+            if($ID === "new") { 
+                $update = $this->user->create([
+                    'data' => $newData
+                ]);
+                $ID = $update;
+            } else {
+                $update = $this->user->update([
+                    'ID' => $ID,
+                    'data' => $newData
+                ]);
+            }
+
+        }
+
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-view-user', ['id' => $ID]);
+
+        if (empty($message) && !empty($update)) {
+            $flash->set('success', "User info saved successfully.");
+        } else {
+            $flash->set('error', $message);
+        }
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

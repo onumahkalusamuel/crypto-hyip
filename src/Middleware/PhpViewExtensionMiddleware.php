@@ -48,7 +48,10 @@ final class PhpViewExtensionMiddleware implements MiddlewareInterface
         $this->phpRenderer->addAttribute('route', $this->app->getRouteCollector()->getRouteParser());
         $this->phpRenderer->addAttribute('flashBag', $this->session->getFlashBag());
         $this->phpRenderer->addAttribute('esc', $this->escaper);
-        $this->phpRenderer->addAttribute('getTimeAgo', function ($date) {
+        $this->phpRenderer->addAttribute('getTimeAgo', function ($date = null) {
+
+            if(empty($date)) return "";
+
             $time_difference = time() - strtotime($date);
 
             if ($time_difference < 1) {

@@ -4,7 +4,8 @@ namespace App\Action\User;
 
 use App\Domain\User\Service\User;
 use App\Domain\Deposits\Service\Deposits;
-use App\Domain\TrailLog\Service\TrailLog;
+use App\Domain\Withdrawals\Service\Withdrawals;
+use App\Domain\Referrals\Service\Referrals;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -15,20 +16,23 @@ final class UserDashboardAction
     protected $user;
     protected $session;
     protected $deposits;
-    protected $trailLog;
+    protected $withdrawals;
+    protected $referrals;
     protected $view;
 
     public function __construct(
         Session $session,
         User $user,
         Deposits $deposits,
-        TrailLog $trailLog,
+        Withdrawals $withdrawals,
+	Referrals $referrals,
         View $view
     ) {
         $this->user = $user;
         $this->session = $session;
         $this->deposits = $deposits;
-        $this->trailLog = $trailLog;
+        $this->withdrawals = $withdrawals;
+	$this->referrals = $referrals;
         $this->view = $view;
     }
 
@@ -42,60 +46,48 @@ final class UserDashboardAction
         $user = $this->user->readSingle(['ID'=>$ID]);
 
         // deposits
-        $deposits = $this->deposits->readAll(['params' => ['userId' => $ID]]);
-        // trx 
-        $trailLog = $this->trailLog->readAll([]);
-        $trx = $this->processTrx($trailLog);
+       //'where' => ['userID' => $ID]
+
+         // deposits
+        $return['deposits'] = $this->deposits->readAll([
+	    'params' => ['where' => ['userID' => $ID]],
+            'select' => ['cryptoCurrency as currency', 'depositStatus as status'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+            'group_by' => ['currency', 'status']
+        ]);
+
+        // withdrawals
+        $return['withdrawals'] = $this->withdrawals->readAll([
+	    'params' => ['where' => ['userID' => $ID]],
+            'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+            'group_by' => ['currency', 'status']
+        ]);
+
+
+        // referrals
+        $referrals = $this->referrals->readAll([
+	    'params' => ['where' => ['referralUserID' => $ID]],
+            'select' => ['ID'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount']
+        ]);
+
+        $return['referrals'] = [];
+        if (!empty($referrals)) $return['referrals'] = [
+            'total' => $referrals[0]->total,
+            'amount' => $referrals[0]->amount
+        ];
+
 
         // Build the HTTP response
         unset($user->password);
+	unset($user->secretQuestion);
+	unset($user->secretAnswer);
 
-        $user->accountBalance = "";
-        $user->earnedTotal = "";
-        $user->pendingWithdrawal = "";
+        $return['user'] = $user;
 
-        $return['userInfo'] = $user;
-        $return['overview'] = [
-            [
-                'title' => 'Active Deposit',
-                'body' => $this->getActiveDeposit($deposits)
-            ],
-            [
-                'title' => 'Total Deposits',
-                'body' => $trx['deposits']
-            ],
-            [
-                'title' => 'Total Withdrawals',
-                'body' => $trx['withdrawals']
-            ]
-        ];
-
-        $data = $return;
-
-        return $this->view->render($response, 'user/dashboard.php', ['data'=>$data]);
+        return $this->view->render($response, 'user/dashboard.php', ['data'=>$return]);
 
     }
 
-    public function getActiveDeposit(array $deposits): float
-    {
-        $return = 0;
-        if (!empty($deposits)) {
-            foreach ($deposits as $d) {
-                if ($d->isActive && $d->depositStatus == "approved") $return += $d->amount;
-            }
-        }
-        return (float) number_format($return, 2);
-    }
-    public function processTrx(array $trx): array
-    {
-        $return['withdrawals']  = 0;
-        $return['deposits']  = 0;
-
-        foreach ($trx as $t) {
-            if ($t->logType == "withdrawal")  $return['withdrawals'] += $t->amount;
-            if ($t->logType == "deposit")  $return['deposits'] += $t->amount;
-        }
-
-        return $return;
-    }
 }

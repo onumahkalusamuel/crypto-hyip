@@ -79,9 +79,6 @@ $default = ['data' => [], 'total_rows' => 0];
                             </td>
                             <td class="">
                                 <a href="<?= $route->urlFor('user-view-deposit', ['id' => $trans->ID]) ?>" class="btn btn-dark btn-theme-colored btn-sm btn-flat mb-5">VIEW</i></a><br />
-                                <?php if ($trans->depositStatus === "approved") : ?>
-                                    <a href="" class="btn btn-dark btn-theme-colored2 btn-sm btn-flat mb-5" onclick="return releaseDeposit(<?= $esc->escapeJs($trans->ID); ?>)">RELEASE</i></a>
-                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

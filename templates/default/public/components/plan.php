@@ -35,7 +35,3 @@
          </div>
      </div>
  </div>
-
- <?php
-
-    ['Min Deposit: $20','Max Deposit: $999','Profit (%) 15.00%','Min Withdrawal: $23','Investment Method: Bitcoin',"<strong style='color:green'>Instant Withdrawal</strong>","<strong>No withdrawal charges</strong>","<strong style='color:green'>No hidden fees</strong>","<strong>Deposits reflect immediately</strong>","<strong style='color:green'>Principal back on maturity</strong>","<strong>24/7 Customer Support</strong>"];

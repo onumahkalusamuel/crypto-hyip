@@ -1,57 +1,55 @@
 <?php
 
-namespace App\Action\Deposits;
+namespace App\Action\Admin\Deposits;
 
 use App\Domain\Deposits\Service\Deposits;
-use App\Helpers\ApiRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 final class DeleteAction
 {
-    private $deposits;
 
-    public function __construct(Deposits $deposits)
+    private $deposits;
+    private $session;
+
+    public function __construct(Deposits $deposits, Session $session)
     {
         $this->deposits = $deposits;
+        $this->session = $session;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
-    {
-        $auth = $request->getAttribute("token")['data'];
-        $apiRequest = new ApiRequest($request->getHeader('Authorization'));
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
 
-        if (!empty($args['id'])) {
+        $ID = $args['id'];
 
-            $params['ID'] = $args['id'];
+        $deposit = $this->deposits->readSingle(['ID'=>$ID]);
 
-            if ($auth->userType != "admin") {
-
-                $args['user_id'] = $auth->ID;
-            }
-
-            $params['userID'] = $args['user_id'];
-
-            // verify the deposit is deletable
-            $fetch = $apiRequest->get('deposits/' . $params['userID'] . '/' . $params['ID'])->deposits;
-            // $response->getBody()->write((string)json_encode($fetch));
-            // return $response;
-
-            if (
-                !empty($fetch) &&
-                ($fetch[0]->depositStatus == 'pending') &&
-                $this->deposits->deleteDeposit(['ID' => $params['ID']])
-            ) {
-                $response->getBody()->write((string)json_encode(['message' => 'Deposit deleted.']));
-            } else {
-
-                \http_response_code(404);
-            }
-        } else {
-
-            \http_response_code(400);
+        if($deposit->depositStatus === "pending") {
+            $delete = $this->deposits->delete(['ID'=>$ID]);
         }
 
-        return $response;
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-deposits');
+
+
+        if (!empty($delete)) {
+            $flash->set('success', "Deposit deleted successfully");
+        } else {
+            $flash->set('error', "Unable to delete record at the moment. Please try again later.");
+        }
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

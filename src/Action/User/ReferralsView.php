@@ -41,6 +41,7 @@ final class ReferralsView
 
         if (!empty($_GET['query'])) {
             $params['like']['referredUserName'] =  $_GET['query'];
+            $params['like']['referralUserName'] =  $_GET['query'];
         }
 
         // paging

@@ -27,37 +27,47 @@ if (empty($withdrawal->ID)) {
                                     <h3 class=" heading-title heading-line-bottom text-capitalize">Full details</h3>
                                     <table class="table">
                                         <tr>
-                                            <th>Withdrawal Request Date:</th>
-                                            <td><?= $getTimeAgo($withdrawal->createdAt); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Username:</th>
-                                            <td><?= $withdrawal->userName; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Crypto Currency:</th>
                                             <td>
-                                                <?= strtoupper($withdrawal->cryptoCurrency); ?>&nbsp;<br />
+                                                <strong>Withdrawal Request Date:</strong><br/>
+                                                <?= $getTimeAgo($withdrawal->createdAt); ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Username:</strong> <br />
+                                                <?= $withdrawal->userName; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Crypto Currency:</strong><br />
+                                                <?= strtoupper($withdrawal->cryptoCurrency); ?>&nbsp;
                                                 <img src="assets/images/currencies/<?= $withdrawal->cryptoCurrency; ?>.gif" alt="<?= $withdrawal->cryptoCurrency; ?>" />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Withdrawal Address:</th>
-                                            <td><?= $withdrawal->withdrawalAddress; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Amount Requested:</th>
-                                            <td>$<?= number_format($withdrawal->amount, 2); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Deposit Status:</th>
                                             <td>
+                                                <strong>Withdrawal Address:</strong> <br />
+                                                <?= $withdrawal->withdrawalAddress; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Amount Requested:</strong><br />
+                                                $<?= number_format($withdrawal->amount, 2); ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Withdrawal Status:</strong>
                                                 <small class="badge text-uppercase <?= $withdrawal->withdrawalStatus; ?>"><?= $withdrawal->withdrawalStatus; ?></small>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Message from Admin:</th>
-                                            <td><?= $withdrawal->messageFromAdmin; ?></td>
+                                            <td>
+                                                <strong>Message from Admin:</strong>
+                                                <?= $withdrawal->messageFromAdmin; ?>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>

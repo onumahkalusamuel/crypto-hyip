@@ -4,22 +4,52 @@ namespace App\Helpers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Psr\Container\ContainerInterface;
 
 class SendMail
 {
     public $mail;
-    private $supportEmail = "admin@bexfinance.ltd";
-    private $supportName = "BexFinance Support";
+    private $settings;
+    private $siteName;
+    private $siteUrl;
+    private  $contactPhone;
+    private  $contactEmail;
+    private  $contactAddress;
+    private $emailBanner;
 
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
+
+        $this->settings = $container->get('settings');
+        $display = $this->settings['display_settings']();
+        $smtp = $this->settings['smtp'];
+
+        $this->siteName = $display['site_name'];
+        $this->contactPhone = $display['contact_phone'];
+        $this->contactAddress = $display['contact_address'];
+        $this->contactEmail = $display['contact_email'];
+        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+        $this->emailBanner = $this->settings['upload_dir'] . '/email/email-banner.jpg';
+
         $mail = new PHPMailer(true);
 
-        $mail->isMail();
+        if (gethostname() == 'localhost') {
+            $mail->isMail();
+        } else {
+            $mail->isSMTP();
+            $mail->SMTPAuth = true;
+            $mail->Password = $smtp['password'];
+            $mail->Username = $smtp['email'];
+            $mail->Host = gethostname();
+        }
 
-        $mail->setFrom($this->supportEmail, $this->supportName);
-        $mail->addReplyTo($this->supportEmail, $this->supportName);
-        $mail->AddEmbeddedImage(dirname(__FILE__) . '/bexfinance-banner.jpg', 'banner');
+        $mail->setFrom($smtp['email'], $smtp['name']);
+        $mail->addReplyTo($smtp['email'], $this->smtp['name']);
+
+        if (is_file($this->emailBanner)) {
+            $mail->AddEmbeddedImage($this->emailBanner, 'banner');
+        }
+
         // Content
         $mail->isHTML(true);
 
@@ -47,8 +77,8 @@ class SendMail
     public function sendContactMail(array $data)
     {
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->settings['mail']['email'];
+        $data['name'] = $this->settings['mail']['name'];
         $data['subject'] = "Contact Us: " . $data['subject'];
         $data['message'] =
             "<strong>Feedback Form:<br/>" .
@@ -64,7 +94,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Password Reset Email - BexFinance LTD";
+        $data['subject'] = "Password Reset Email - " . $this->siteName;
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/><br/>" .
@@ -72,14 +102,14 @@ class SendMail
             "Hello $name, <br/><br/>
             We received a password reset request from you.<br/> <br/>
         If you are the one, please kindly click on the link below to reset your password.<br/><br/>
-        <strong><a href='https://bexfinance.ltd/reset/{$token}'>RESET PASSWORD NOW</a></strong><br/>
+        <strong><a href='{$this->siteUrl}/reset/{$token}'>RESET PASSWORD NOW</a></strong><br/>
         <br>
         If you are unable to click on the link, please kindly copy the following to your browser.<br/><br/>
-        <h4>https://bexfinance.ltd/reset/{$token}</h4>
+        <h4>{$this->siteUrl}/reset/{$token}</h4>
         <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a><br>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a><br>
             </div>
         ";
 
@@ -90,7 +120,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Registration Info - BexFinance LTD";
+        $data['subject'] = "Registration Info - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/><br/>
@@ -100,13 +130,13 @@ class SendMail
         <strong>Your login information:</strong><br/><br/>
         <strong>Login:</strong> $username <br/>
         <strong>Password:</strong> <em>the password you chose </em><br/><br/>
-        You can login here: <a href='https://bexfinance.ltd/'>BEXFINANCE LTD</a><br/><br/>
+        You can login here: <a href='{$this->siteUrl}/'>{$this->siteName}</a><br/><br/>
         Contact us immediately if you did not authorize this registration.<br/><br/>
         
         <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a><br>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a><br>
             </div>";
 
         return $this->send($data);
@@ -116,16 +146,16 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Withdrawal Request - BexFinance LTD";
+        $data['subject'] = "Withdrawal Request - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/></br>
         <h2>WITHDRAWAL REQUEST</h2><br/>
             Hello $name,<br/><br/>
             You have requested to withdraw $$amount. Please be patient while it is being processed.<br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>";
 
         $this->send($data);
@@ -148,7 +178,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Withdrawal Sent - BexFinance LTD";
+        $data['subject'] = "Withdrawal Sent - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/><br/>
@@ -159,9 +189,9 @@ class SendMail
             Account: $account<br/><br/>
             Transaction batch: $batch.
             <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>";
 
         $this->send($data);
@@ -183,7 +213,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Withdrawal Declined - BexFinance LTD";
+        $data['subject'] = "Withdrawal Declined - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/> <br/><br/>
@@ -193,9 +223,9 @@ class SendMail
             <em> $message</em>.<br/><br/>
             Thank you.
             <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>
 ";
 
@@ -218,21 +248,21 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Direct Referral Signup - BexFinance LTD";
+        $data['subject'] = "Direct Referral Signup - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/>
         <h2>REFERRAL SIGNUP</h2><br/>
             Hello $name,<br/><br/>
-            You have a new direct referral signup on bexfinance.ltd<br />
+            You have a new direct referral signup on {$this->siteName}<br />
             <strong>Username:</strong> $ref_username <br/>
             <strong>Name:</strong> $ref_name <br/>
             <strong>E-mail:</strong> $ref_email<br/><br/>
             Thank you. <br/><br/>
      
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>
             ";
 
@@ -243,7 +273,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Direct Referral Commission - BexFinance LTD";
+        $data['subject'] = "Direct Referral Commission - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/>
@@ -251,9 +281,9 @@ class SendMail
             Hello $name,<br/><br/>
             You have received a referral commission of \${$amount} from {$ref_username}'s deposit. <br/>
             Thank you. <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>
             ";
 
@@ -277,7 +307,7 @@ class SendMail
     {
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Deposit Released - BexFinance LTD";
+        $data['subject'] = "Deposit Released - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/>
@@ -286,9 +316,9 @@ class SendMail
             Your investment deposit of \${$amount} has been released into your available balance. You can now place a withdrawal request on it.<br/>
             Thank you. 
             <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             </div>
             ";
 
@@ -351,9 +381,9 @@ class SendMail
             Congratulations, you just received a bonus <strong>$bonusType</strong> of $$amount.<br/><br/>
             Thank you.
             <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             <br/>
             </div>";
 
@@ -400,9 +430,9 @@ class SendMail
             $reason.<br/><br/>
             Thank you. <br/><br/>
 
-            If you face any challenges, please contact us at <a href='mailto:admin@bexfinance.ltd'>admin@bexfinance.ltd</a><br/><br/>
-            &copy; " . date('Y', time()) . " BexFinance Support
-            <a href='https://bexfinance.ltd'>https://bexfinance.ltd</a>
+            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
+            &copy; " . date('Y', time()) . " {$this->siteName}
+            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
             <br/>
             </div>
             ";
@@ -421,5 +451,16 @@ class SendMail
             $reason";
 
         return $this->send($data);
+    }
+
+    public function sendSettingsChangedMail()
+    {
+    }
+    public function sendAdminPasswordChangeOTP($otp)
+    {
+    }
+
+    public function sendAdminPasswordChangedMail()
+    {
     }
 }

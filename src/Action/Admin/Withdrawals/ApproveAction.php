@@ -1,118 +1,144 @@
 <?php
 
-namespace App\Action\Withdrawals;
+namespace App\Action\Admin\Withdrawals;
 
 use App\Domain\Withdrawals\Service\Withdrawals;
-use App\Helpers\ApiRequest;
+use App\Domain\User\Service\User;
+use App\Domain\TrailLog\Service\TrailLog;
+use App\Domain\Plans\Service\Plans;
+use App\Domain\Referrals\Service\Referrals;
+use App\Domain\Settings\Service\Settings;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Slim\Routing\RouteContext;
 
 final class ApproveAction
 {
     private $withdrawals;
+    private $plans;
+    private $user;
+    private $settings;
+    private $referrals;
+    private $trailLog;
+    private $session;
 
-    public function __construct(Withdrawals $withdrawals)
-    {
+    public function __construct(
+        Withdrawals $withdrawals,
+        Plans $plans,
+        User $user,
+        Settings $settings,
+        Referrals $referrals,
+        TrailLog $trailLog,
+        Session $session
+    ) {
         $this->withdrawals = $withdrawals;
+        $this->plans = $plans;
+        $this->user = $user;
+        $this->settings = $settings;
+        $this->referrals = $referrals;
+        $this->trailLog = $trailLog;
+        $this->session = $session;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        \http_response_code(400);
-        $apiRequest = new ApiRequest('internalOverride');
-        $ID = $args['id'];
-        $withdrawal = $this->withdrawals->read(['ID' => $ID])['withdrawals'][0];
+        $message = false;
 
-        if ($withdrawal->withdrawalStatus != "pending") {
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'message' => 'Withdrawal seems to have been declined or approved previously.'
-            ]));
-            return $response;
+        // fettch withdrawal
+        $withdrawal = $this->withdrawals->readSingle(['ID' => $args['id']]);
+
+        if (empty($withdrawal->ID)) {
+            $message = "Withdrawal not found.";
         }
 
-        // fetch the user
-        $user = $apiRequest->get("users/" . $withdrawal->userID);
-
-        if (empty($user)) {
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'message' => 'User could not be found.'
-            ]));
-            return $response;
+        // check for status
+        if (empty($message) && $withdrawal->withdrawalStatus !== "pending") {
+            $message = "You can only approve a pending withdrawal";
         }
 
-        //check if amount is less than balance
-        if ($user->interestWalletBalance < $withdrawal->amount) {
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'message' => 'Requested amount higher than available interest balance.'
-            ]));
-            return $response;
+        // get user
+        if (empty($message)) {
+            $user = $this->user->readSingle(['ID' => $withdrawal->userID]);
+            if (empty($user->ID)) $message = "User not found";
         }
 
-        // process approval
-        // request for funds transfer by bitcoin api
+        if (empty($message)) {
+            $this->withdrawals->beginTransaction();
 
-        // update withdrawal table
-        $update = $this->withdrawals->update($ID, ['withdrawalStatus' => 'approved']);
+            try {
+                // mark withdrawal as approved
+                $this->withdrawals->update([
+                    'ID' => $withdrawal->ID,
+                    'data' => [
+                        'withdrawalStatus' => 'approved'
+                    ]
+                ]);
 
-        // subtract amount from user interestwallet
-        if (!$update) {
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'message' => 'Unable to approve withdrawal at the moment.'
-            ]));
-            return $response;
+                // remove from user's balance
+                $balance = $withdrawal->cryptoCurrency . "Balance";
+                $this->user->update([
+                    'ID' => $user->ID,
+                    'data' => [
+                        $balance => $user->$balance - $withdrawal->amount
+                    ]
+                ]);
+
+                // add record to traillog
+                $this->trailLog->create([
+                    'data' => [
+                        'userID' => $withdrawal->userID,
+                        'userName' => $withdrawal->userName,
+                        'logType' => 'withdrawal',
+                        'transactionDetails' => "Withdrawal of \${$withdrawal->amount} Approved",
+                        'transactionID' => $withdrawal->ID,
+                        'amount' => $withdrawal->amount,
+                    ]
+                ]);
+
+                $withdrawalAddress = empty(trim($withdrawal->withdrawalAddress))
+                    ? $this->btcAddress()
+                    : $withdrawal->withdrawalAddress;
+
+
+                $mail = new SendMail();
+                $mail->sendWithdrawalSentEmail(
+                    $user->email,
+                    $withdrawal->cryptoCurrency,
+                    $withdrawal->amount,
+                    $user->fullName,
+                    $user->userName,
+                    $withdrawalAddress,
+                    hash('sha256', $withdrawal->ID)
+                );
+
+                $this->withdrawals->commit();
+            } catch (\Exception $e) {
+                $this->withdrawals->rollback();
+                $message = "Unable to process request at the moment. Please try again later";
+                $user->password = null;
+                \file_put_contents(__DIR__ . '/error-' . $user->ID . $withdrawal->ID . ".json", json_encode([$user, $withdrawal, $e]));
+            }
         }
 
-        // update user table
-        $updateUser = $apiRequest->put("users/" . $withdrawal->userID, [
-            'interestWalletBalance' => $user->interestWalletBalance - $withdrawal->amount
-        ]);
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
 
-        if ($updateUser->success == false) {
-            // revert withdrawal 
-            $update = $this->withdrawals->update($ID, ['withdrawalStatus' => 'pending']);
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'message' => 'Unable to approve withdrawal at the moment. Please try again later'
-            ]));
-            return $response;
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-withdrawals');
+
+
+        if (empty($message)) {
+            $flash->set('success', "Withdrawal approved successfully");
+        } else {
+            $flash->set('error', $message);
         }
 
-        $btcAddress = empty(trim($withdrawal->bitcoinWalletAddress))
-            ? $this->btcAddress()
-            : $withdrawal->bitcoinWalletAddress;
-
-        // send mail
-        $mail = new SendMail();
-        $mail->sendWithdrawalSentEmail(
-            $user->email,
-            $withdrawal->amount,
-            $user->fullName,
-            $user->userName,
-            $btcAddress,
-            hash('sha256', $withdrawal->ID)
-        );
-
-        // send to transaction log
-        $logData = [
-            'userID' => $user->ID,
-            'userName' => $user->userName,
-            'logType' => 'withdrawal',
-            'transactionDetails' => "Withdrawal of \${$withdrawal->amount} Approved",
-            'transactionAdminID' => $request->getAttribute('token')['data']->ID,
-            'amount' => $withdrawal->amount,
-        ];
-
-        $apiRequest->post('traillog/', $logData);
-
-        \http_response_code(200);
-        $response->getBody()->write(json_encode(['message' => 'Withdrawal approved successfully.']));
-
-        return $response;
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 
     private function btcAddress(): string

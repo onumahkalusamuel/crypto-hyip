@@ -16,10 +16,10 @@
 
     <!-- Favicon and Touch Icons -->
     <link href="assets/images/favicon.png" rel="shortcut icon" type="image/png">
-    <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon">
-    <link href="assets/images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
-    <link href="assets/images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
-    <link href="assets/images/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon-iphone-60x60.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/images/apple-touch-icon-ipad-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/images/apple-touch-icon-iphone-retina-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/images/apple-touch-icon-ipad-retina-152x152.png">
 
     <!-- Stylesheet -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -38,7 +38,7 @@
     <!-- CSS | Responsive media queries -->
     <link href="assets/css/responsive.css" rel="stylesheet" type="text/css">
     <!-- CSS | Style css. This is the file where you can place your own custom css code. Just uncomment it and use it. -->
-    <!-- <link href="assets/css/style.css" rel="stylesheet" type="text/css"> -->
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css">
 
     <!-- Revolution Slider 5.x CSS settings -->
     <link href="assets/js/revolution-slider/css/settings.css" rel="stylesheet" type="text/css" />

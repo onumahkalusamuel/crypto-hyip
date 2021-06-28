@@ -5,6 +5,7 @@ namespace App\Action;
 use App\Domain\Referrals\Service\Referrals;
 use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
+use App\Helpers\CryptoHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
@@ -15,15 +16,21 @@ final class RegisterAction
     private $referrals;
     private $user;
     private $session;
+    private $mail;
+    private $cryptoHelper;
 
     public function __construct(
         Referrals $referrals,
         User $user,
-        Session $session
+        Session $session,
+        SendMail $sendMail,
+	CryptoHelper $cryptoHelper
     ) {
         $this->referrals = $referrals;
         $this->user = $user;
         $this->session = $session;
+        $this->mail = $sendMail;
+	$this->cryptoHelper = $cryptoHelper;
     }
 
     public function __invoke(
@@ -41,6 +48,10 @@ final class RegisterAction
         $fullName = trim($data['fullName']);
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $password = trim($data['password']);
+        $userName = trim($data['userName']);
+        $btcAddress = trim($data['btcAddress']);
+        $secretQuestion = trim($data['secretQuestion']);
+        $secretAnswer = trim($data['secretAnswer']);
 
         if (empty($message) && empty($email)) {
             $message = "Please enter a valid email.";
@@ -58,10 +69,15 @@ final class RegisterAction
             $message = "Password is required.";
         }
 
-        if (empty($message)) {
+        if (empty($message) && empty($userName)) {
             $userName = $this->generateUserName($fullName);
-            if ($this->userNameInUse($userName)) $message = "Unable to process request. Please contact admin";
+            if ($this->userNameInUse($userName)) $message = "Username is already in use. Try another one.";
         }
+
+	// validate btc address
+	if(empty($message) && !$this->cryptoHelper->validate('btc', $btcAddress)) {
+	    $message = "Please enter a valid bitcoin address";
+	}
 
         if (empty($message)) {
             // Invoke the Domain with inputs and retain the result
@@ -70,7 +86,10 @@ final class RegisterAction
                 'email' => $email,
                 'userName' => $userName,
                 'userType' => 'user',
-                'password' => password_hash($password, PASSWORD_BCRYPT)
+                'password' => password_hash($password, PASSWORD_BCRYPT),
+		'btcAddress' => $btcAddress,
+		'secretQuestion' => $secretQuestion,
+		'secretAnswer' => $secretAnswer
             ]]);
         }
 
@@ -78,8 +97,7 @@ final class RegisterAction
         if (empty($message) && !empty($userId)) {
 
             // send mail
-            $mail = new SendMail();
-            $mail->sendRegistrationEmail($email, $fullName, $userName);
+            $this->mail->sendRegistrationEmail($email, $fullName, $userName);
 
             if ($userId === 1) {
                 // admin detected
@@ -112,7 +130,7 @@ final class RegisterAction
 
             $response->getBody()->write(json_encode([
                 'success' => true,
-                'message' => "Account Registered Successful",
+                'message' => "Account Registered Successfully",
                 'redirect' => $url
             ]));
 

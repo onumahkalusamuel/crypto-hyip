@@ -29,9 +29,9 @@ $myhost = gethostname();
 
 // database connection
 if ($myhost !== 'localhost') {
-    $database = '';
-    $username = '';
-    $password = 'iLoveAfrica@1';
+    $database = 'onumahka_bitrite';
+    $username = 'onumahka_bitrite';
+    $password = 'rQ;{YnJ~EP;f';
 } else {
     $database = 'btc';
     $username = 'root';
@@ -62,10 +62,11 @@ $settings['db'] = [
 ];
 
 // email settings
-$settings['mail'] = [
-    'email' => 'admin@site',
+$settings['smtp'] = [
+    'email' => 'admin@gmail.com',
     'password' => 'l',
-    'name' => 'Admin'
+    'name' => 'Admin',
+    'host' => gethostname()
 ];
 
 // Session

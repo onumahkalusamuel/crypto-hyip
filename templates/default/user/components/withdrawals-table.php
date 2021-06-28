@@ -33,19 +33,6 @@ $default = ['data' => [], 'total_rows' => 0];
                 </div>
             </form>
         </div>
-        <style>
-            .pending {
-                background-color: #ffc107;
-            }
-
-            .approved {
-                background-color: #28a745;
-            }
-
-            .declined {
-                background-color: #007bff;
-            }
-        </style>
         <div class="table-responsive border-theme-colored">
             <table class="table table-striped table-hover">
                 <tr>
@@ -70,7 +57,7 @@ $default = ['data' => [], 'total_rows' => 0];
                             <td class="">
                                 <a href="<?= $route->urlFor('user-view-withdrawal', ['id' => $trans->ID]) ?>" class="btn btn-dark btn-theme-colored btn-sm btn-flat mb-5">VIEW</i></a><br />
                                 <?php if ($trans->withdrawalStatus === "pending") : ?>
-                                    <a href="" class="btn btn-dark btn-theme-colored2 btn-sm btn-flat mb-5" onclick="return cancelWithdrawal(<?= $esc->escapeJs($trans->ID); ?>)">CANCEL</i></a>
+                                    <a href="<?=$route->urlFor('user-delete-withdrawal', ['id'=> $trans->ID]);?>" class="btn btn-dark btn-theme-colored2 btn-sm btn-flat mb-5" onclick="return confirmAction('Are you sure you want to cancel this withdrawal request?')">CANCEL</i></a>
                                 <?php endif; ?>
                             </td>
                         </tr>

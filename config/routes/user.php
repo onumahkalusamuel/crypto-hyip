@@ -26,6 +26,7 @@ return function (App $app) {
         // withdrawals
         $group->get('withdrawals[/]', \App\Action\User\WithdrawalsView::class)->setName('user-withdrawals');
         $group->get('withdrawals/{id}[/]', \App\Action\User\SingleWithdrawalView::class)->setName('user-view-withdrawal');
+        $group->get('withdrawals/{id}/delete[/]', \App\Action\User\WithdrawalDeleteAction::class)->setName('user-delete-withdrawal');
 
         // referrals
         $group->get('referrals[/]', \App\Action\User\ReferralsView::class)->setName('user-referrals');

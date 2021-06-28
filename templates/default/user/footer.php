@@ -97,6 +97,7 @@
 <script src="assets/js/chart.js"></script>
 <!-- JS | Custom script for all pages -->
 <script src="assets/js/custom.js"></script>
+<script src="assets/js/script.js"></script>
 
 <!-- SLIDER REVOLUTION 5.0 EXTENSIONS  
       (Load Extensions only on Local File Systems ! 

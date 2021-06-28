@@ -3,183 +3,109 @@
 namespace App\Action\Admin;
 
 use App\Domain\User\Service\User;
-use App\Helpers\ApiRequest;
+use App\Domain\Plans\Service\Plans;
+use App\Domain\Deposits\Service\Deposits;
+use App\Domain\Withdrawals\Service\Withdrawals;
+use App\Domain\Referrals\Service\Referrals;
+use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\PhpRenderer as View;
 
 final class DashboardAction
 {
 
     private $plans;
-    private $users;
+    private $user;
     private $deposits;
+    private $referrals;
     private $withdrawals;
-    private $trx;
+    private $trailLog;
+    protected $view;
 
-    public function __construct(User $user)
-    {
+    public function __construct(
+        User $user,
+        Plans $plans,
+        Deposits $deposits,
+        Referrals $referrals,
+        Withdrawals $withdrawals,
+        TrailLog $trailLog,
+        View $view
+    ) {
         $this->user = $user;
+        $this->plans = $plans;
+        $this->deposits = $deposits;
+        $this->referrals = $referrals;
+        $this->withdrawals = $withdrawals;
+        $this->trailLog = $trailLog;
+        $this->view = $view;
     }
 
     public function __invoke(
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-        // Collect args
-        $auth = $request->getAttribute("token")['data'];
-        $apiRequest = new ApiRequest($request->getHeader('Authorization'));
 
-        if ($auth->userType != "admin") {
-            \http_response_code(403);
-            return $response;
-        }
         // users
-        $this->processUsers($apiRequest->get("users/")->users);
+        $users = $this->user->readAll([
+            'params' => ['userType' => 'user'],
+            'select' => ['isActive'],
+            'select_raw' => ['COUNT(*) as total'],
+            'group_by' => 'isActive'
+        ]);
+
+        $return['users']['total'] = 0;
+        $return['users']['active'] = 0;
+        foreach ($users as $user) {
+            if (!empty($user->isActive)) {
+                $return['users']['active'] = $user->total;
+            }
+            $return['users']['total'] += $user->total;
+        }
+
         // deposits
-        $this->processDeposits($apiRequest->get("deposits/")->deposits);
+        $return['deposits'] = $this->deposits->readAll([
+            'select' => ['cryptoCurrency as currency', 'depositStatus as status'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+            'group_by' => ['currency', 'status']
+        ]);
+
         // withdrawals 
-        $this->processWithdrawals($apiRequest->get("withdrawals/")->withdrawals);
+        $return['withdrawals'] = $this->withdrawals->readAll([
+            'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+            'group_by' => ['currency', 'status']
+        ]);
+
         // plans 
-        $this->processPlans($apiRequest->get("plans/")->plans);
+        $return['plans'] = $this->plans->readAll([
+            'select' => ['durationType as type'],
+            'select_raw' => ['COUNT(*) as total'],
+            'group_by' => 'type'
+        ]);
+
+
         // referrals 
-        $this->processReferrals($apiRequest->get("referrals/")->referrals);
-        // transactions
-        $this->processTransactions($apiRequest->get("traillog/")->traillog);
+        $referrals = $this->referrals->readAll([
+            'select' => ['ID'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount']
+        ]);
 
-        $return['overview'] = [
-            [
-                'title' => 'Total Users',
-                'body' => $this->users['totalCount'],
-                'type' => 'count'
-            ],
-            [
-                'title' => 'Active Users',
-                'body' => $this->users['activeCount'],
-                'type' => 'count'
-            ],
-            [
-                'title' => 'Investment Plans',
-                'body' => $this->plans['totalCount'],
-                'type' => 'count'
-            ],
-            [
-                'title' => 'Withdrawal Requests',
-                'body' => $this->withdrawals['pendingAmount'],
-                'type' => 'currency'
-            ],
-            [
-                'title' => 'Withdrawals Paid Out',
-                'body' => $this->trx['totalWithdrawal'],
-                'type' => 'currency'
-            ],
-            [
-                'title' => 'Total Earnings',
-                'body' => $this->trx['totalEarning'],
-                'type' => 'currency'
-            ],
-            [
-                'title' => 'Active Deposits',
-                'body' => $this->deposits['activeAmount'],
-                'type' => 'currency'
-            ],
-            [
-                'title' => 'Pending Deposits',
-                'body' => $this->deposits['pendingAmount'],
-                'type' => 'currency'
-            ],
-            [
-                'title' => 'Total Deposits Amount',
-                'body' => $this->trx['totalDeposit'],
-                'type' => 'currency'
+        $return['referrals'] = [];
+        if (!empty($referrals)) $return['referrals'] = [
+            'total' => $referrals[0]->total,
+            'amount' => $referrals[0]->amount,
 
-            ],
-            [
-                'title' => 'Total Referrals',
-                'body' => $this->referrals['totalCount'],
-                'type' => 'count'
-            ],
-            [
-                'title' => 'Total Referral Commissions',
-                'body' => $this->trx['referralCommissions'],
-                'type' => 'currency'
-            ],
         ];
 
-        $response->getBody()->write(json_encode($return));
+        // transactions
+        $return['transactions'] = $this->trailLog->readAll([
+            'select' => ['logType as type', 'cryptoCurrency as currency'],
+            'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+            'group_by' => ['type', 'currency']
+        ]);
 
-        return $response;
-    }
+        return $this->view->render($response, 'admin/dashboard.php', ['data' => $return]);
 
-    public function processUsers(array $users): void
-    {
-        $this->users['totalCount'] = 0;
-        $this->users['activeCount'] = 0;
-        if (!empty($users)) {
-            foreach ($users as $u) {
-                $this->users['totalCount']++;
-                if ($u->isActive) $this->users['activeCount']++;
-            }
-        }
-    }
-
-    public function processDeposits(array $deposits): void
-    {
-        $this->deposits['pendingAmount'] = 0;
-        $this->deposits['activeAmount'] = 0;
-        if (!empty($deposits)) {
-            foreach ($deposits as $d) {
-                // active
-                if ($d->depositStatus == "approved" && empty($d->interestPaid)) {
-                    $this->deposits['activeAmount'] += $d->amount;
-                }
-                // pending
-                if ($d->depositStatus == "pending") {
-                    $this->deposits['pendingAmount'] += $d->amount;
-                }
-            }
-        }
-    }
-
-    public function processWithdrawals(array $withdrawals): void
-    {
-        $this->withdrawals['pendingAmount'] = 0;
-
-        foreach ($withdrawals as $w) {
-            if ($w->withdrawalStatus == "pending") {
-                $this->withdrawals['pendingAmount'] += $w->amount;
-            }
-        }
-    }
-
-    public function processPlans(array $plans): void
-    {
-        $this->plans['totalCount'] = count($plans);
-    }
-
-    public function processReferrals(array $referrals): void
-    {
-        $this->referrals['totalAmount'] = 0;
-        $this->referrals['totalCount'] = 0;
-        foreach ($referrals as $r) {
-            $this->referrals['totalCount']++;
-            $this->referrals['totalAmount'] += $r->amount;
-        }
-    }
-
-    public function processTransactions(array $trx): void
-    {
-        $this->trx['totalDeposit'] = 0;
-        $this->trx['totalEarning'] = 0;
-        $this->trx['totalWithdrawal'] = 0;
-        $this->trx['referralCommissions'] = 0;
-
-        if (!empty($trx)) {
-            foreach ($trx as $t) {
-                if ($t->logType == "deposit") $this->trx['totalDeposit'] += $t->amount;
-                if ($t->logType == "earning") $this->trx['totalEarning'] += $t->amount;
-                if ($t->logType == "withdrawal") $this->trx['totalWithdrawal'] += $t->amount;
-                if ($t->logType == "referral") $this->trx['referralCommissions'] += $t->amount;
-            }
-        }
     }
 }

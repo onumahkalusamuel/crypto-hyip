@@ -44,7 +44,7 @@ $default = ['data' => [], 'total_rows' => 0];
                                     <?= $trans->referredUserName; ?>
                                 </strong><br />
                                 <small>
-                                    <strong>by:</strong>
+                                    <strong>Referred by:</strong>
                                     <?= $trans->referralUserName; ?><br />
                                     <strong>Date:</strong>
                                     <?= $getTimeAgo($trans->createdAt); ?><br />

@@ -20,34 +20,46 @@
                          <hr>
                          <div class="row">
                              <div class="form-group col-md-12">
-                                 <label>Your Name</label>
+                                 <label>Full Name</label>
                                  <input name="fullName" class="form-control" type="text" required />
                              </div>
-                         </div>
-                         <div class="row">
+                             <div class="form-group col-md-12">
+                                 <label>Username</label>
+                                 <input name="userName" class="form-control" type="text" placeholder="(optional)" />
+                             </div>
                              <div class="form-group col-md-12">
                                  <label>Email Address</label>
                                  <input name="email" class="form-control" type="email" required />
                              </div>
-                         </div>
-                         <div class="row">
                              <div class="form-group col-md-12">
                                  <label for="form_choose_password">Password</label>
                                  <input id="form_choose_password" name="password" type="text" class="form-control" required />
                              </div>
-                         </div>
-                         <div class="form-group">
-                             <button class="btn btn-theme-colored2 btn-lg btn-block mt-15" type="submit" data-loading-text="Please wait...">Register Now</button>
-                         </div>
-                         <div class="form-group" style="display: flex;justify-content: space-between;">
-                             <span>
-                                 <a href="<?= $route->urlFor('page', ['page' => 'login']); ?>" class="heading-line-bottom m-0">Log into Account
-                                 </a>
-                             </span>
-                             <span>
-                                 <a href="<?= $route->urlFor('page', ['page' => 'reset-password']); ?>" class="heading-line-bottom m-0">Reset Password
-                                 </a>
-                             </span>
+                             <div class="form-group col-md-12">
+                                 <label for="btcAddress">Bitcoin Deposit Address</label>
+                                 <input id="btcAddress" name="btcAddress" type="text" class="form-control" />
+                             </div>
+                             <div class="form-group col-md-12">
+                                 <label for="secretQuestion">Account Secret Question</label>
+                                 <input id="secretQuestion" name="secretQuestion" type="text" class="form-control" required />
+                             </div>
+                             <div class="form-group col-md-12">
+                                 <label for="secretAnswer">Account Scret Answer</label>
+                                 <input id="secretAnswer" name="secretAnswer" type="text" class="form-control" required />
+                             </div>
+                             <div class="form-group col-md-12">
+                                 <button class="btn btn-theme-colored2 btn-lg btn-block mt-15" type="submit" data-loading-text="Please wait...">Register Now</button>
+                             </div>
+                             <div class="form-group col-md-12" style="display: flex;justify-content: space-between;">
+                                 <span>
+                                     <a href="<?= $route->urlFor('page', ['page' => 'login']); ?>" class="heading-line-bottom m-0">Log into Account
+                                     </a>
+                                 </span>
+                                 <span>
+                                     <a href="<?= $route->urlFor('page', ['page' => 'reset-password']); ?>" class="heading-line-bottom m-0">Reset Password
+                                     </a>
+                                 </span>
+                             </div>
                          </div>
                      </form>
                  </div>
@@ -72,7 +84,9 @@
                              $(form).find('.form-control').val('');
                              $(form_result_div).removeClass("alert-danger");
                              $(form_result_div).addClass("alert-success");
-                             setTimeout(function(){window.location.assign(data.redirect)}, 4000)
+                             setTimeout(function() {
+                                 window.location.assign(data.redirect)
+                             }, 4000)
                          } else {
                              $(form_result_div).removeClass("alert-success");
                              $(form_result_div).addClass("alert-danger");

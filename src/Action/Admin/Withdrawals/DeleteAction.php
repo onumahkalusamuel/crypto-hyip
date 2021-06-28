@@ -1,58 +1,55 @@
 <?php
 
-namespace App\Action\Withdrawals;
+namespace App\Action\Admin\Withdrawals;
 
 use App\Domain\Withdrawals\Service\Withdrawals;
-use App\Helpers\ApiRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 final class DeleteAction
 {
-    private $withdrawals;
 
-    public function __construct(Withdrawals $withdrawals)
+    private $withdrawals;
+    private $session;
+
+    public function __construct(Withdrawals $withdrawals, Session $session)
     {
         $this->withdrawals = $withdrawals;
+        $this->session = $session;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
-    {
-        $auth = $request->getAttribute("token")['data'];
-        $apiRequest = new ApiRequest($request->getHeader('Authorization'));
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
 
-        if (!empty($args['id'])) {
+        $ID = $args['id'];
 
-            $params['ID'] = $args['id'];
+        $withdrawal = $this->withdrawals->readSingle(['ID'=>$ID]);
 
-            if ($auth->userType != "admin") {
-
-                $args['user_id'] = $auth->ID;
-            }
-
-            $params['userID'] = $args['user_id'];
-
-            // verify the withdrawal is deletable
-            $fetch = $apiRequest->get('withdrawals/' . $params['userID'] . '/' . $params['ID'])->withdrawals;
-            // $response->getBody()->write((string)json_encode($fetch));
-            // return $response;
-
-            if (
-                !empty($fetch) &&
-                ($fetch[0]->withdrawalStatus == 'pending') &&
-                $this->withdrawals->delete(['ID' => $params['ID']])
-            ) {
-
-                $response->getBody()->write((string)json_encode(['message' => 'Withdrawal request deleted.']));
-            } else {
-                \http_response_code(400);
-                $response->getBody()->write((string)json_encode(['' => '', 'message' => 'Withdrawal request already approved or not found.']));
-            }
-        } else {
-
-            \http_response_code(400);
+        if($withdrawal->withdrawalStatus === "pending") {
+            $delete = $this->withdrawals->delete(['ID'=>$ID]);
         }
 
-        return $response;
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-withdrawals');
+
+
+        if (!empty($delete)) {
+            $flash->set('success', "Withdrawal deleted successfully");
+        } else {
+            $flash->set('error', "Unable to delete record at the moment. Please try again later.");
+        }
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

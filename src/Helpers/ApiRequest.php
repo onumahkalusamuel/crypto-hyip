@@ -11,37 +11,9 @@ class ApiRequest
 
     public $client;
 
-    public function __construct($token = null)
+    public function __construct()
     {
-        $config = [];
-
-        if (!empty($token)) {
-
-            $config['base_uri'] = $_SERVER["REQUEST_SCHEME"] . '://api.bexfinance.ltd/';
-
-            if ($token == "internalOverride") {
-
-                $t = [
-                    // "iss" => $_SERVER['HTTP_HOST'],
-                    // "aud" => $_SERVER['HTTP_HOST'],
-                    "iat" => time(),
-                    "exp" => time() + 600,
-                    "data" => [
-                        "ID" => 1,
-                        "userType" => "admin",
-                        "userName" => "admin",
-                    ]
-                ];
-
-                $token = "Bearer " .  JWT::encode($t, JWT::$key);
-            }
-
-            $config['headers'] = [
-                'Authorization' => $token
-            ];
-        }
-
-        $this->client = new Client($config);
+        $this->client = new Client();
     }
 
     public function get(string $url)

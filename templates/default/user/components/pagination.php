@@ -6,9 +6,8 @@ $get = $_GET;
 
 if (empty($total_rows) || empty($total_retrieved)) return;
 
-$records_per_page = (int)($get['rpp'] ?? $total_retrieved);
+$records_per_page = !empty($get['rpp']) ? $get['rpp'] : 20;
 
-if ($records_per_page == 0) return;
 $first_page = 1;
 $current_page = $get['page'] ?? $first_page;
 
@@ -50,9 +49,9 @@ $last_page_link = $uri->getPath() . "?" . http_build_query($get);
 
 ?>
 <div class="text-center">
-    Total Records: <?=$total_rows;?>; Records Retrieved: <?=$total_retrieved;?>;
+    Total Records: <?= $total_rows; ?>; Records Retrieved: <?= $total_retrieved; ?>;
     <nav class="" aria-label="...">
-        <ul class="pagination">
+        <ul class="pagination" style="overflow-x:scroll;display:flex;scrollbar-width: none; justify-content: center;">
             <li class="page-item <?= ($first_page_link === $current_page_link) ? 'disabled' : '' ?>">
                 <a class="page-link" href="<?= $first_page_link; ?>">
                     first

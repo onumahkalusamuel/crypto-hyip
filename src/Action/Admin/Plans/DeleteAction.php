@@ -1,32 +1,51 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action\Admin\Plans;
 
-use App\Domain\User\Service\User;
+use App\Domain\Plans\Service\Plans;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 final class DeleteAction
 {
-    private $user;
-    public function __construct(User $user)
+
+    private $plans;
+    private $session;
+
+    public function __construct(Plans $plans, Session $session)
     {
-        $this->user = $user;
+        $this->plans = $plans;
+        $this->session = $session;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
-    {
-        if (!empty($args['id'])) {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
 
-            if ($this->user->deleteUser($args['id'])) {
-                $response->getBody()->write((string)json_encode(['message' => 'User deleted.']));
-            } else {
-                \http_response_code(404);
-            }
+        $ID = $args['id'];
+
+        $delete = $this->plans->delete(['ID'=>$ID]);
+
+        // Clear all flash messages
+        $flash = $this->session->getFlashBag();
+        $flash->clear();
+
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-plans');
+
+
+        if (!empty($delete)) {
+            $flash->set('success', "Plan deleted successfully");
         } else {
-            \http_response_code(400);
+            $flash->set('error', "Unable to delete plan at the moment. Please try again later.");
         }
 
-        return $response;
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }
