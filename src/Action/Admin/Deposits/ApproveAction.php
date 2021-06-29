@@ -23,6 +23,7 @@ final class ApproveAction
     private $referrals;
     private $trailLog;
     private $session;
+    private $mail;
 
     public function __construct(
         Deposits $deposits,
@@ -31,7 +32,8 @@ final class ApproveAction
         Settings $settings,
         Referrals $referrals,
         TrailLog $trailLog,
-        Session $session
+        Session $session,
+        SendMail $sendMail
     ) {
         $this->deposits = $deposits;
         $this->plans = $plans;
@@ -40,6 +42,7 @@ final class ApproveAction
         $this->referrals = $referrals;
         $this->trailLog = $trailLog;
         $this->session = $session;
+        $this->mail = $sendMail;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
@@ -130,8 +133,7 @@ final class ApproveAction
                             $referer = $this->user->readSingle(['ID' => $ref->referralUserID]);
 
                             if (!empty($referer->ID)) {
-                                $mail = new SendMail();
-                                $mail->sendDirectReferralCommissionEmail(
+                                $this->mail->sendDirectReferralCommissionEmail(
                                     $referer->email,
                                     $referer->fullName,
                                     $referralBonus,

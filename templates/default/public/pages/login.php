@@ -20,8 +20,8 @@
                          <hr>
                          <div class="row">
                              <div class="form-group col-md-12">
-                                 <label>Email Address</label>
-                                 <input name="email" class="form-control" type="email" required />
+                                 <label>Username or Email Address</label>
+                                 <input name="email" class="form-control" type="text" required />
                              </div>
                          </div>
                          <div class="row">

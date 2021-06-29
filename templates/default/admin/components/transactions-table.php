@@ -24,7 +24,8 @@ $default = ['data' => [], 'total_rows' => 0];
                     <option <?= ($_GET['logType'] == '' ? 'selected' : null); ?> value="">Show All Logs</option>
                     <option <?= ($_GET['logType'] == 'deposit' ? 'selected' : null); ?> value="deposit">Deposits</option>
                     <option <?= ($_GET['logType'] == 'withdrawal' ? 'selected' : null); ?> value="withdrawal">Withdrawals</option>
-                    <option <?= ($_GET['logType'] == 'earning' ? 'selected' : null); ?> value="earning">Earnings</option>
+                    <option <?= ($_GET['logType'] == 'deposit-earning' ? 'selected' : null); ?> value="deposit-earning">Deposit Earnings</option>
+                    <option <?= ($_GET['logType'] == 'deposit-release' ? 'selected' : null); ?> value="deposit-release">Deposit Releases</option>
                     <option <?= ($_GET['logType'] == 'bonus' ? 'selected' : null); ?> value="bonus">Bonus</option>
                     <option <?= ($_GET['logType'] == 'penalty' ? 'selected' : null); ?> value="penalty">Penalty</option>
                     <option <?= ($_GET['logType'] == 'referral' ? 'selected' : null); ?> value="referral">Referral Commission</option>

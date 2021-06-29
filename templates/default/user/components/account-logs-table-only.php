@@ -46,8 +46,8 @@ $transactions = $transactions ?? [];
                                     <small><?= $trans->transactionDetails; ?></small>
                                 </td>
                                 <td>
-                                    <?= $trans->amount; ?><br />
-                                    <img src="assets/images/bitcoin.gif" alt="bitcoin" />
+                                    <?= number_format($trans->amount, 2); ?><br />
+                                    <img src="assets/images/currencies/<?=$trans->cryptoCurrency;?>.gif" alt="<?=$trans->cryptoCurrency;?>" />
                                 </td>
                                 <td class="">
                                     <small><?= $getTimeAgo($trans->createdAt); ?></small>

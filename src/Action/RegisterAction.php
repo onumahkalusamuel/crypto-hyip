@@ -24,13 +24,13 @@ final class RegisterAction
         User $user,
         Session $session,
         SendMail $sendMail,
-	CryptoHelper $cryptoHelper
+        CryptoHelper $cryptoHelper
     ) {
         $this->referrals = $referrals;
         $this->user = $user;
         $this->session = $session;
         $this->mail = $sendMail;
-	$this->cryptoHelper = $cryptoHelper;
+        $this->cryptoHelper = $cryptoHelper;
     }
 
     public function __invoke(
@@ -74,10 +74,14 @@ final class RegisterAction
             if ($this->userNameInUse($userName)) $message = "Username is already in use. Try another one.";
         }
 
-	// validate btc address
-	if(empty($message) && !$this->cryptoHelper->validate('btc', $btcAddress)) {
-	    $message = "Please enter a valid bitcoin address";
-	}
+        // validate btc address
+        if (empty($message) && !$this->cryptoHelper->validate('btc', $btcAddress)) {
+            $message = "Please enter a valid bitcoin address";
+        }
+
+        if (empty($message) && (empty($secretQuestion) || empty($secretAnswer))) {
+            $message = "Secret Question and Answer must be provided.";
+        }
 
         if (empty($message)) {
             // Invoke the Domain with inputs and retain the result
@@ -87,9 +91,9 @@ final class RegisterAction
                 'userName' => $userName,
                 'userType' => 'user',
                 'password' => password_hash($password, PASSWORD_BCRYPT),
-		'btcAddress' => $btcAddress,
-		'secretQuestion' => $secretQuestion,
-		'secretAnswer' => $secretAnswer
+                'btcAddress' => $btcAddress,
+                'secretQuestion' => $secretQuestion,
+                'secretAnswer' => $secretAnswer
             ]]);
         }
 

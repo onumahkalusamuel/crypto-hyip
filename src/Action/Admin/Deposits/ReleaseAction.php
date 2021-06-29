@@ -17,17 +17,20 @@ final class ReleaseAction
     private $user;
     private $trailLog;
     private $session;
+    private $mail;
 
     public function __construct(
         Deposits $deposits,
         User $user,
         TrailLog $trailLog,
-        Session $session
+        Session $session,
+        SendMail $sendMail
     ) {
         $this->deposits = $deposits;
         $this->user = $user;
         $this->trailLog = $trailLog;
         $this->session = $session;
+        $this->mail = $sendMail;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
@@ -75,15 +78,15 @@ final class ReleaseAction
                     'data' => [
                         'userID' => $dep->userID,
                         'userName' => $dep->userName,
-                        'logType' => 'deposit',
+                        'logType' => 'deposit-release',
                         'transactionDetails' => "Deposit amount \${$dep->amount} released",
                         'transactionID' => $dep->ID,
                         'amount' => "-" . $dep->amount,
                     ]
                 ]);
                 // send mail
-                $mail = new SendMail();
-                $mail->sendDepositReleaseEmail(
+                
+                $this->mail->sendDepositReleaseEmail(
                     $user->email,
                     $user->fullName,
                     $user->userName,

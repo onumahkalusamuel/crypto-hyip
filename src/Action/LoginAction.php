@@ -28,17 +28,23 @@ class LoginAction
         ResponseInterface $response
     ): ResponseInterface {
 
-        $data = (array)$request->getParsedBody();
-        $email = (string)($data['email'] ?? '');
-        $password = (string)($data['password'] ?? '');
+        $data = (array) $request->getParsedBody();
+
+        $email = trim($data['email']);
+        $password = $data['password'];
 
         // variables
         $loggedIn = false;
         $userType = '';
         $message = '';
 
-        // attempt login
-        $loginUser = $this->user->find(['params' => ['email' => $email]]);
+        // attempt login by email
+        $loginUser = $this->user->find(['params' => ['userName' => $email]]);
+
+        // then by email
+        if(empty($loginUser->ID)) {
+            $loginUser = $this->user->find(['params' => ['email' => $email]]);
+        }
 
         if (password_verify($password, $loginUser->password)) {
             if ($loginUser->isActive === 0) {
@@ -48,7 +54,7 @@ class LoginAction
             }
         }
 
-        if (!empty($loginUser)) $userType = $loginUser->userType;
+        if (!empty($loginUser->userType)) $userType = $loginUser->userType;
 
         if ($userType === 'admin') $this->sendMail->sendAdminLoggedIn();
 

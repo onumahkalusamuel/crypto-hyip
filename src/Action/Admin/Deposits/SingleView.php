@@ -38,10 +38,8 @@ final class SingleView
         // trailLog of Deposit
         $trailLog = $this->trailLog->readAll([
             'params' => [
-                'where' => [
-                    'transactionID' => $ID,
-                    'logType' => 'deposit'
-                ]
+                'where' => ['transactionID' => $ID],
+                'like' => ['logType' => 'deposit'],
             ]
         ]);
 

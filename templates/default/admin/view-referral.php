@@ -58,7 +58,7 @@ if(empty($referral->ID)) {
                     <div class="panel-body">
                         <h5>All earnings and transactions for this referral will be listed here.</h5>
                         <?php echo $this->fetch(
-                            'user/components/account-logs-table-only.php',
+                            'admin/components/transactions-table-only.php',
                             ['transactions' => $transactions ?? []]
                         ); ?>
                     </div>

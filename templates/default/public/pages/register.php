@@ -44,7 +44,7 @@
                                  <input id="secretQuestion" name="secretQuestion" type="text" class="form-control" required />
                              </div>
                              <div class="form-group col-md-12">
-                                 <label for="secretAnswer">Account Scret Answer</label>
+                                 <label for="secretAnswer">Account Secret Answer</label>
                                  <input id="secretAnswer" name="secretAnswer" type="text" class="form-control" required />
                              </div>
                              <div class="form-group col-md-12">

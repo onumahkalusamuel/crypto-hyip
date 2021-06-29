@@ -14,13 +14,13 @@ $settings['site_name'] = 'BitriveTrading Inc';
 $settings['contact_email'] = 'admin@bitrivetrading.com';
 
 // contact phone number. to be shown whereever contact is needed
-$settings['contact_phone'] = '+1 (412) 343 566 90';
+$settings['contact_phone'] = '+1 (213) 433‑5023';
 
 // whatsapp number of site
-$settings['whatsapp_number'] = '+1 (412) 343 566 90';
+$settings['whatsapp_number'] = '+1 (213) 433‑5023';
 
 // the address of company
-$settings['contact_address'] = '203, Behind Alis Street, MB, Australia.';
+$settings['contact_address'] = '24, Jurong Hill, Singapore.';
 
 // short description of site. Will show at the footer area
 $settings['site_description'] = $settings['site_name'] . ' stands firmly in support of financial freedom and the liberty that Bitcoin provides globally for anyone to voluntarily participate in a permissionless and decentralized network.';
@@ -42,7 +42,7 @@ $settings['company_vision'] = $settings['site_name'] . ' is committed to give an
 // Check the instructions on how to create a page
 // By default, the items in this array are picked, exploded, and capitalized
 // all of them also appear as [root]/page/[page-title] e.g. [root]/page/about-us
-$settings['primary_menu'] = ['about-us', 'investment-plans', 'faqs', 'contact-us', 'login'];
+$settings['primary_menu'] = ['about-us', 'investment-plans', 'faqs', 'contact-us', 'latest-news', 'login'];
 
 // set the items and order for secondary menu. These will be used at the useful links section
 $settings['secondary_menu'] = ['login', 'register', 'about-us', 'terms', 'latest-news', 'contact-us', 'faqs'];
@@ -129,6 +129,5 @@ $faqs = [
 ];
 
 $settings['faqs'] = $faqs;
-
 
 return $settings;

@@ -108,7 +108,7 @@
                 <div class="header-nav-wrapper">
                     <div class="container">
                         <nav id="menuzord-right" class="menuzord default pl-lg-15 pr-lg-15 pt-sm-5 pb-sm-5">
-                            <a class="menuzord-brand pull-left flip mt-lg-20 mb-lg-15" href="<?= $route->urlFor('home'); ?>">
+                            <a class="menuzord-brand pull-left flip mt-lg-20 mb-lg-15" href="<?= $route->urlFor('user-dashboard'); ?>">
                                 <img src="assets/images/logo-wide.png" alt="">
                             </a>
                             <ul class="menuzord-menu">
