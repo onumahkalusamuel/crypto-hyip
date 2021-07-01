@@ -13,6 +13,7 @@ class SendMail
     private $siteName;
     private $siteUrl;
     private  $contactPhone;
+    private  $contactName;
     private  $contactEmail;
     private  $contactAddress;
     private $emailBanner;
@@ -24,6 +25,7 @@ class SendMail
         $display = $this->settings['display_settings']();
         $smtp = $this->settings['smtp'];
 
+        $this->contactName = $smtp['name'];
         $this->siteName = $display['site_name'];
         $this->contactPhone = $display['contact_phone'];
         $this->contactAddress = $display['contact_address'];
@@ -77,8 +79,8 @@ class SendMail
     public function sendContactMail(array $data)
     {
 
-        $data['email'] = $this->settings['mail']['email'];
-        $data['name'] = $this->settings['mail']['name'];
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Contact Us: " . $data['subject'];
         $data['message'] =
             "<strong>Feedback Form:<br/>" .
@@ -102,10 +104,10 @@ class SendMail
             "Hello $name, <br/><br/>
             We received a password reset request from you.<br/> <br/>
         If you are the one, please kindly click on the link below to reset your password.<br/><br/>
-        <strong><a href='{$this->siteUrl}/reset/{$token}'>RESET PASSWORD NOW</a></strong><br/>
+        <strong><a href='{$this->siteUrl}/reset/{$token}/{$email}'>RESET PASSWORD NOW</a></strong><br/>
         <br>
         If you are unable to click on the link, please kindly copy the following to your browser.<br/><br/>
-        <h4>{$this->siteUrl}/reset/{$token}</h4>
+        <h4>{$this->siteUrl}/reset/{$token}/{$email}</h4>
         <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
             &copy; " . date('Y', time()) . " {$this->siteName}
@@ -139,6 +141,21 @@ class SendMail
             <a href='{$this->siteUrl}'>{$this->siteUrl}</a><br>
             </div>";
 
+        $this->send($data);
+
+        return $this->sendRegistrationEmailToAdmin($name, $username);
+    }
+
+    public function sendRegistrationEmailToAdmin($name, $username)
+    {
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
+        $data['subject'] = "New User Registration - {$this->siteName}";
+        $data['message'] = "
+        A new user just registered on your website. <br/>
+        Name: $name<br/>
+        Username: $username <br/>";
+
         return $this->send($data);
     }
 
@@ -152,7 +169,7 @@ class SendMail
         <img src='cid:banner'/><br/></br>
         <h2>WITHDRAWAL REQUEST</h2><br/>
             Hello $name,<br/><br/>
-            You have requested to withdraw $$amount. Please be patient while it is being processed.<br/><br/>
+            You have requested to withdraw $$amount worth of " . strtoupper($cryptoCurrency) . ". Please be patient while it is being processed.<br/><br/>
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
             &copy; " . date('Y', time()) . " {$this->siteName}
             <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
@@ -160,16 +177,16 @@ class SendMail
 
         $this->send($data);
 
-        return $this->sendWithdrawalRequestEmailToAdmin($amount, $username);
+        return $this->sendWithdrawalRequestEmailToAdmin($cryptoCurrency, $amount, $username);
     }
 
-    private function sendWithdrawalRequestEmailToAdmin($amount, $username)
+    private function sendWithdrawalRequestEmailToAdmin($cryptoCurency, $amount, $username)
     {
         $IP = $_SERVER['REMOTE_ADDR'];
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal Request has been sent";
-        $data['message'] = "User $username requested to withdraw $$amount from IP $IP.";
+        $data['message'] = "User $username requested to withdraw $$amount worth of " . strtoupper($cryptoCurency) . " from IP $IP.";
 
         return $this->send($data);
     }
@@ -186,6 +203,7 @@ class SendMail
             Hello $name,<br/><br/>
             Your withdrawal has been sent to your account successfully.<br/><br/>
             Amount: $$amount<br/><br/>
+            Currency Type: " . strtoupper($cryptoCurrency) . "<br/><br/>
             Account: $account<br/><br/>
             Transaction batch: $batch.
             <br/><br/>
@@ -201,8 +219,8 @@ class SendMail
 
     private function sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch)
     {
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal has been sent";
         $data['message'] = "User $username received $$amount to Bitcoin account $account. Batch is $batch.";
 
@@ -236,8 +254,8 @@ class SendMail
 
     private function sendWithdrawalDeclinedEmailToAdmin($username, $message)
     {
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal Declined for user";
         $data['message'] = "Withdrawal declined for $username.<br><em>$message</em>.";
 
@@ -294,8 +312,8 @@ class SendMail
 
     private function sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username)
     {
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Direct Referral Commission sent to user";
         $data['message'] =
             "$username received a referral commission of \${$amount} from {$ref_username}'s deposit.";
@@ -329,8 +347,8 @@ class SendMail
 
     private function sendDepositReleaseEmailToAdmin($amount, $username)
     {
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Deposit Released to user";
         $data['message'] = "Investment deposit of \${$amount} has been released to {$username} and is now available for withdrawal.";
 
@@ -343,8 +361,8 @@ class SendMail
         $IP = $_SERVER['REMOTE_ADDR'];
         $time = date("Y-M-d, H i s", time());
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Admin Logged In";
         $data['message'] =
             "Admin entered admin area. <br/>
@@ -357,8 +375,8 @@ class SendMail
     public function sendBonusConfirmToken($token, $fullName, $userName, $amount)
     {
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Bonus confirm token";
         $data['message'] =
             "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
@@ -393,8 +411,8 @@ class SendMail
     public function sendBonusAddedMailToAdmin($userName, $name, $amount, $bonusType)
     {
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Bonus added to user";
         $data['message'] =
             "A bonus <strong>$bonusType.</strong> of $$amount has been added successfully to $name ($userName).";
@@ -405,8 +423,8 @@ class SendMail
     public function sendPenaltyConfirmToken($token, $fullName, $userName, $amount)
     {
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Penalty confirm token";
         $data['message'] =
             "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
@@ -443,8 +461,8 @@ class SendMail
     public function sendPenaltySubtractedMailToAdmin($userName, $name, $amount, $reason)
     {
 
-        $data['email'] = $this->supportEmail;
-        $data['name'] = $this->supportName;
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
         $data['subject'] = "Penalty subtracted from user";
         $data['message'] =
             "A penalty of $$amount has been subtracted successfully from $name ($userName).<br/>
@@ -455,12 +473,46 @@ class SendMail
 
     public function sendSettingsChangedMail()
     {
+        $IP = $_SERVER['REMOTE_ADDR'];
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
+        $data['subject'] = "Site Settings Changed";
+        $data['message'] = "Some settings have been modified in the admin section from IP: $IP.";
+
+        return $this->send($data);
     }
     public function sendAdminPasswordChangeOTP($otp)
     {
+        $IP = $_SERVER['REMOTE_ADDR'];
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
+        $data['subject'] = "Admin Password Change OTP";
+        $data['message'] = "You requested to change the admin password from IP: $IP. Enter the following OTP where required. <br/><br/>
+        <h1>$otp</h1><br/>
+        <strong>Note:</strong> OTP expires in about 5 minutes.";
+
+        return $this->send($data);
     }
 
     public function sendAdminPasswordChangedMail()
     {
+        $IP = $_SERVER['REMOTE_ADDR'];
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
+        $data['subject'] = "Admin Password Changed successfully";
+        $data['message'] = "Admin password has been changed from IP: $IP.";
+
+        return $this->send($data);
+    }
+
+    public function sendPendingDepositMailToAdmin($username, $amount)
+    {
+        $IP = $_SERVER['REMOTE_ADDR'];
+        $data['email'] = $this->contactEmail;
+        $data['name'] = $this->contactName;
+        $data['subject'] = "New Pending Deposit";
+        $data['message'] = "You have a pending deposit amount of $$amount from {$username}.";
+
+        return $this->send($data);
     }
 }

@@ -5,7 +5,7 @@ error_reporting(0);
 ini_set('display_errors', '0');
 
 // Timezone
-date_default_timezone_set('Europe/Berlin');
+date_default_timezone_set('Africa/Lagos');
 
 // Settings
 $settings = [];
@@ -29,9 +29,9 @@ $myhost = gethostname();
 
 // database connection
 if ($myhost !== 'localhost') {
-    $database = 'onumahka_bitrite';
-    $username = 'onumahka_bitrite';
-    $password = 'rQ;{YnJ~EP;f';
+    $database = 'bitrziax_btc';
+    $username = 'bitrziax_btc';
+    $password = '8p[PlwbX0~7}';
 } else {
     $database = 'btc';
     $username = 'root';
@@ -63,9 +63,9 @@ $settings['db'] = [
 
 // email settings
 $settings['smtp'] = [
-    'email' => 'admin@gmail.com',
-    'password' => 'l',
-    'name' => 'Admin',
+    'email' => 'admin@bitrivetrading.com',
+    'password' => '5(;-0EYEu6aL',
+    'name' => 'Bitrive Admin',
     'host' => gethostname()
 ];
 

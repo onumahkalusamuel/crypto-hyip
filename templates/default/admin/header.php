@@ -65,31 +65,6 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-    <style>
-        .pulse {
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            font-family: sans-serif;
-            font-weight: 700;
-            font-size: 34px;
-            text-align: center;
-            animation: da-pulse 1.5s ease-in-out 0s infinite;
-        }
-
-        @keyframes da-pulse {
-
-            0%,
-            100% {
-                transform: scale(1.15);
-            }
-
-            48%,
-            52% {
-                transform: scale(1);
-            }
-        }
-    </style>
 </head>
 
 <body class="">

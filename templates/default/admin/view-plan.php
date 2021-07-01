@@ -38,7 +38,7 @@
                                              <td>
                                                  <strong>Is Plan Featured?</strong><br />
                                                  <select name="hasBadge" class="form-control">
-                                                     <option <?= $plan->hasBadge == '0' ? 'selected' : ''; ?> value="1">No</option>
+                                                     <option <?= $plan->hasBadge == '0' ? 'selected' : ''; ?> value="0">No</option>
                                                      <option <?= $plan->hasBadge == '1' ? 'selected' : ''; ?> value="1">Yes</option>
                                                  </select>
                                                  <div class="help">If set to YES, the plan will receive a <strong>FEATURED</strong> badge on the listing pages</div>

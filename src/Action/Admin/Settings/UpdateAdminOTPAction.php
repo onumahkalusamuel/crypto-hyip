@@ -17,13 +17,20 @@ final class UpdateAdminOTPAction
     private $user;
     private $session;
     private $container;
+    private $sendMail;
 
-    public function __construct(Settings $settings, User $user, Session $session, ContainerInterface $container)
-    {
+    public function __construct(
+        Settings $settings,
+        User $user,
+        Session $session,
+        ContainerInterface $container,
+        SendMail $sendMail
+    ) {
         $this->settings = $settings;
         $this->user = $user;
         $this->session = $session;
-	$this->container = $container;
+        $this->container = $container;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -46,8 +53,7 @@ final class UpdateAdminOTPAction
         //  save otp
         $file = $this->container->get('settings')['temp'] . '/.admin-otp';
         if (file_put_contents($file, $token)) {
-            $mail = new SendMail();
-            $mail->sendAdminPasswordChangeOTP($token);
+            $this->sendMail->sendAdminPasswordChangeOTP($token);
 
             $flash->set('success', "OTP sent to admin email. It will expire in 5 minutes.");
         } else {

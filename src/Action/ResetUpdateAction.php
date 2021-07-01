@@ -1,43 +1,81 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action;
 
 use App\Domain\User\Service\User;
-use Psr\Http\Message\ServerRequestInterface;
+use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\PhpRenderer;
+use Symfony\Component\HttpFoundation\Session\Session;
 
-final class ResetUpdateAction
+class ResetUpdateAction
 {
-    private $user;
 
-    public function __construct(User $user)
-    {
+    private $view;
+    private $user;
+    private $session;
+
+    public function __construct(
+        User $user,
+        PhpRenderer $view,
+        Session $session
+    ) {
+
         $this->user = $user;
+        $this->view = $view;
+        $this->session = $session;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
-    {
-        $data = (array)$request->getParsedBody();
-        if (
-            empty($data['ID']) ||
-            empty($data['email']) ||
-            empty($data['token']) ||
-            empty($data['newPassword']) ||
-            empty($data['newPasswordAgain']) ||
-            ($data['newPassword'] !==
-                $data['newPasswordAgain']) ||
-            empty($this->user->findUser(['ID' => $data['ID']]))
-        ) {
-            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Something went wrong, Please contact support.']));
-            \http_response_code(400);
-            return $response;
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
+
+        $return['success'] = false;
+        $return['message'] = "An error occured";
+
+        $data = (array) $request->getParsedBody();
+
+        $newPassword = $data['newPassword'];
+        $token = $args['token'];
+        $email = $args['email'];
+        $csrf = $this->session->get('csrf');
+        $tokenConfirm = $this->session->get('token');
+        $emailConfirm = $this->session->get('email');
+        $ID = $this->session->get('ID');
+
+        if ($email !== $emailConfirm || empty($newPassword)) {
+            $message = "An error occured. Please try again later.";
         }
 
-        // update
-        $this->user->updateUser($data['ID'], ['password' => $data['newPassword'], "token" => ""]);
+        if ($token !== $tokenConfirm) {
+            $message = "Unable to verify details. Please try again later.";
+        }
 
-        $response->getBody()->write(json_encode(['success' => true, 'message' => 'Password changed successfully.']));
+        if ($csrf !== $data['csrf']) {
+            $message = "An error occured verifying your details. Please try again later.";
+        }
 
-        return $response;
+        if (empty($message)) {
+            $update = $this->user->update([
+                'ID' => $ID,
+                'data' => [
+                    'token' => null,
+                    'password' => password_hash($data['newPassword'], PASSWORD_BCRYPT)
+                ]
+            ]);
+
+            if ($update) {
+                $return['success'] = true;
+                $return['message'] = "Password changed successfully. You can login now.";
+                $return['hide_form'] = true;
+                $this->session->clear();
+            }
+        }
+
+        // return 
+        return $this->view->render($response, "public/pages/reset-update.php", $return);
     }
 }

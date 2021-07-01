@@ -55,7 +55,7 @@ final class PhpViewExtensionMiddleware implements MiddlewareInterface
             $time_difference = time() - strtotime($date);
 
             if ($time_difference < 1) {
-                return 'less than 1 second ago';
+                return 'less than a minute ago';
             }
             if($time_difference > 172800) {
                 return date("d M, Y", strtotime($date));

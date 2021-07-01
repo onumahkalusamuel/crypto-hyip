@@ -34,6 +34,8 @@ class UserRepository extends Repository
         'ltcAddress',
         'ltcBalance',
         'token',
+        'secretQuestion',
+        'secretAnswer',
         'isActive',
         'createdAt',
         'updatedAt'

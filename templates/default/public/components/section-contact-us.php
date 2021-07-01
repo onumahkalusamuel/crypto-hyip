@@ -51,7 +51,7 @@
                 <div class="col-md-8">
                     <h3 class="line-bottom mt-0 mb-30">Feedback Form</h3>
                     <!-- Contact Form -->
-                    <form id="contact_form" name="contact_form" class="" action="api/contact-us" method="post" novalidate="novalidate">
+                    <form id="contact_form" name="contact_form" class="" action="<?=$route->urlFor('contact-us-form');?>" method="post" novalidate="novalidate">
 
                         <div class="row">
                             <div class="col-sm-6">

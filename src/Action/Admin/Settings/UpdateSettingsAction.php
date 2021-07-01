@@ -15,12 +15,18 @@ final class UpdateSettingsAction
     private $settings;
     private $user;
     private $session;
+    private $sendMail;
 
-    public function __construct(Settings $settings, User $user, Session $session)
-    {
+    public function __construct(
+        Settings $settings,
+        User $user,
+        Session $session,
+        SendMail $sendMail
+    ) {
         $this->settings = $settings;
         $this->user = $user;
         $this->session = $session;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -51,8 +57,7 @@ final class UpdateSettingsAction
             $this->settings->minWithdrawal = $data['minWithdrawal'];
             $this->settings->payReferral = $data['payReferral'];
 
-            $mail = new SendMail();
-            $mail->sendSettingsChangedMail();
+            $this->sendMail->sendSettingsChangedMail();
         }
 
         // Clear all flash messages

@@ -10,10 +10,14 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ResetPasswordAction
 {
     private $user;
+    private $sendMail;
 
-    public function __construct(User $user)
-    {
+    public function __construct(
+        User $user,
+        SendMail $sendMail
+    ) {
         $this->user = $user;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -50,8 +54,7 @@ final class ResetPasswordAction
             }
 
             if (empty($message)) {
-                $mail = new SendMail();
-                $send = $mail->sendPasswordResetEmail($user->email, $user->fullName, $resetToken);
+                $this->sendMail->sendPasswordResetEmail($user->email, $user->fullName, $resetToken);
 
                 $response->getBody()->write(json_encode([
                     'success' => true,

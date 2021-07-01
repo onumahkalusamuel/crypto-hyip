@@ -17,17 +17,20 @@ final class WithdrawalsAction
     private $user;
     private $settings;
     private $session;
+    private $sendMail;
 
     public function __construct(
         Withdrawals $withdrawals,
         User $user,
         Settings $settings,
-        Session $session
+        Session $session,
+        SendMail $sendMail
     ) {
         $this->withdrawals = $withdrawals;
         $this->user = $user;
         $this->settings = $settings;
         $this->session = $session;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -83,12 +86,13 @@ final class WithdrawalsAction
         if (empty($message) && !empty($withdrawalId)) {
 
             // send mail
-            $mail = new SendMail();
-            $mail->sendWithdrawalRequestEmail($user->email, $data['cryptoCurrency'], $data['amount'], $user->fullName, $user->userName);
+            $this->sendMail->sendWithdrawalRequestEmail($user->email, $data['cryptoCurrency'], $data['amount'], $user->fullName, $user->userName);
 
             // Clear all flash messages
             $flash = $this->session->getFlashBag();
             $flash->clear();
+
+            $flash->set('success', "The withdrawal has been saved. It will become approved when the administrator checks statistics");
 
             // Get RouteParser from request to generate the urls
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();

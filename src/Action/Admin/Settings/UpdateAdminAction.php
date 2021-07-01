@@ -17,13 +17,20 @@ final class UpdateAdminAction
     private $user;
     private $session;
     private $container;
+    private $sendMail;
 
-    public function __construct(Settings $settings, User $user, Session $session, ContainerInterface $container)
-    {
+    public function __construct(
+        Settings $settings,
+        User $user,
+        Session $session,
+        ContainerInterface $container,
+        SendMail $sendMail
+    ) {
         $this->settings = $settings;
         $this->user = $user;
         $this->session = $session;
-	$this->container = $container;
+        $this->container = $container;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -35,13 +42,13 @@ final class UpdateAdminAction
         $ID = $this->session->get('ID');
         $data = (array) $request->getParsedBody();
 
-	// validate otp
-	$file = $this->container->get('settings')['temp'] . '/.admin-otp';
-	$token = file_get_contents($file);
+        // validate otp
+        $file = $this->container->get('settings')['temp'] . '/.admin-otp';
+        $token = file_get_contents($file);
 
-	if((filemtime($file) + 300) < time() || $data['OTP'] !== $token) {
-	    $message = "Token invalid or expired.";
-	}
+        if ((filemtime($file) + 300) < time() || $data['OTP'] !== $token) {
+            $message = "Token invalid or expired.";
+        }
 
         if ((int)$ID !== 1) {
             $message = "Operation forbidden.";
@@ -53,7 +60,7 @@ final class UpdateAdminAction
             $message = "Admin account not found.";
         }
 
-	if (empty($message) && $data['newPassword'] !== $data['newPasswordAgain']) {
+        if (empty($message) && $data['newPassword'] !== $data['newPasswordAgain']) {
             $message = "The two passwords did not match.";
         }
 
@@ -63,16 +70,15 @@ final class UpdateAdminAction
 
         if (empty($message)) {
             $update = $this->user->update([
-		'ID' => $ID,
-		'data' => [
-		    'password' => password_hash($data['newPassword'], PASSWORD_BCRYPT)
-		]
-	    ]);
+                'ID' => $ID,
+                'data' => [
+                    'password' => password_hash($data['newPassword'], PASSWORD_BCRYPT)
+                ]
+            ]);
 
-	    if($update) {
-            	$mail = new SendMail();
-            	$mail->sendAdminPasswordChangedMail();
-	    }
+            if ($update) {
+                $this->sendMail->sendAdminPasswordChangedMail();
+            }
         }
 
         // Clear all flash messages

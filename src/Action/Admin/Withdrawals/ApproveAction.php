@@ -5,9 +5,6 @@ namespace App\Action\Admin\Withdrawals;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\User\Service\User;
 use App\Domain\TrailLog\Service\TrailLog;
-use App\Domain\Plans\Service\Plans;
-use App\Domain\Referrals\Service\Referrals;
-use App\Domain\Settings\Service\Settings;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,29 +14,23 @@ use Slim\Routing\RouteContext;
 final class ApproveAction
 {
     private $withdrawals;
-    private $plans;
     private $user;
-    private $settings;
-    private $referrals;
     private $trailLog;
     private $session;
+    private $sendMail;
 
     public function __construct(
         Withdrawals $withdrawals,
-        Plans $plans,
         User $user,
-        Settings $settings,
-        Referrals $referrals,
         TrailLog $trailLog,
-        Session $session
+        Session $session,
+        SendMail $sendMail
     ) {
         $this->withdrawals = $withdrawals;
-        $this->plans = $plans;
         $this->user = $user;
-        $this->settings = $settings;
-        $this->referrals = $referrals;
         $this->trailLog = $trailLog;
         $this->session = $session;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
@@ -102,8 +93,7 @@ final class ApproveAction
                     : $withdrawal->withdrawalAddress;
 
 
-                $mail = new SendMail();
-                $mail->sendWithdrawalSentEmail(
+                $this->sendMail->sendWithdrawalSentEmail(
                     $user->email,
                     $withdrawal->cryptoCurrency,
                     $withdrawal->amount,

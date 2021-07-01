@@ -17,6 +17,9 @@ return function (App $app) {
             $group->post('page/reset-password[/]', \App\Action\ResetPasswordAction::class);
         })->addMiddleware(new JsonResponseMiddleware);
 
+        $group->get('reset/{token}/{email}[/]', \App\Action\ResetUpdateView::class);
+        $group->post('reset/{token}/{email}[/]', \App\Action\ResetUpdateAction::class);
+
         $group->post('page/login[/]', \App\Action\LoginAction::class);
 
         $group->get('logout[/]', \App\Action\LogoutAction::class)->setName('logout');
@@ -26,7 +29,7 @@ return function (App $app) {
         $group->post('reset[/]', \App\Action\ResetAction::class);
         $group->post('reset/update[/]', \App\Action\ResetUpdateAction::class);
         $group->get('reset/{token}[/]', \App\Action\ResetConfirmAction::class);
-        $group->post('contact-us[/]', \App\Action\ContactUsAction::class);
+        $group->post('contact-us[/]', \App\Action\ContactUsAction::class)->setName('contact-us-form');
 
         //catch-all page
         $group->get('page/{page}', \App\Action\PageView::class)->setName('page');

@@ -7,30 +7,12 @@
                 <p class="font-12 mt-20 mb-20"><?= $siteSettings['site_description']; ?></p>
                 <p class="mt-20"><?= $siteSettings['contact_address']; ?></p>
                 <ul class="list-inline">
-                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-phone text-gray mr-5"></i> <a class="text-gray" href="index-mp-layout4.html#"><?= $siteSettings['contact_phone']; ?></a> </li>
-                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-gray mr-5"></i> <a class="text-gray" href="index-mp-layout4.html#"><?= $siteSettings['contact_email']; ?></a> </li>
+                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-phone text-gray mr-5"></i> <a class="text-gray" href="tel:<?= str_replace([' ', '(', ')', '-'], '', $siteSettings['contact_phone']); ?>"><?= $siteSettings['contact_phone']; ?></a> </li>
+                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-gray mr-5"></i> <a class="text-gray" href="mailto:<?= $siteSettings['contact_email']; ?>"><?= $siteSettings['contact_email']; ?></a> </li>
                 </ul>
             </div>
         </div>
-        <style>
-            a.useful-link {
-                padding: 5px 10px;
-                border: 1px solid #888;
-                border-radius: 50px;
-                margin: 4px 2px;
-                display: inline-block;
-            }
 
-            a.useful-link:hover {
-                background-color: #aaa;
-                color: #222;
-            }
-
-            hr.divider {
-                border-color: #555;
-                margin: 5px 0px;
-            }
-        </style>
         <div class="col-md-8">
             <div class="row">
                 <div class="col-sm-6 col-md-6">

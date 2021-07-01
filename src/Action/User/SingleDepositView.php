@@ -50,9 +50,9 @@ final class SingleDepositView
             'params' => [
                 'where' => [
                     'userID' => $userID,
-                    'transactionID' => $ID,
-                    'logType' => 'deposit'
-                ]
+                    'transactionID' => $ID
+                ],
+		'like' => ['logType' => 'deposit'],
             ]
         ]);
 

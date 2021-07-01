@@ -6,6 +6,7 @@ use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Plans\Service\Plans;
 use App\Domain\Settings\Service\Settings;
 use App\Helpers\CryptoHelper;
+use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
@@ -18,19 +19,22 @@ final class DepositsAction
     private $settings;
     private $session;
     private $plans;
+    private $sendMail;
 
     public function __construct(
         Deposits $deposits,
         Settings $settings,
         CryptoHelper $cryptoHelper,
         Session $session,
-        Plans $plans
+        Plans $plans,
+        SendMail $sendMail
     ) {
         $this->deposits = $deposits;
         $this->settings = $settings;
         $this->cryptoHelper = $cryptoHelper;
         $this->session = $session;
         $this->plans = $plans;
+        $this->sendMail = $sendMail;
     }
 
     public function __invoke(
@@ -94,10 +98,10 @@ final class DepositsAction
 
             $data['depositAddress'] = $this->settings->$depositAddress;
 
-            if(empty($data['depositAddress'])) $message = "Unable to create payment link. Please try another Crypto Currency.";
+            if (empty($data['depositAddress'])) $message = "Unable to create payment link. Please try another Crypto Currency.";
 
             // Invoke the Domain with inputs and retain the result
-            if(empty($message)) $depositId = $this->deposits->create(['data' => $data]);
+            if (empty($message)) $depositId = $this->deposits->create(['data' => $data]);
         }
 
         // responses
@@ -106,6 +110,7 @@ final class DepositsAction
             $flash = $this->session->getFlashBag();
             $flash->clear();
 
+            $flash->set('success', "The deposit has been saved. It will become active when the administrator checks statistics");
             // Get RouteParser from request to generate the urls
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
@@ -116,6 +121,9 @@ final class DepositsAction
                 'message' => "Successful",
                 'redirect' => $url
             ]));
+
+            // notify admin
+            $this->sendMail->sendPendingDepositMailToAdmin($data['userName'], $data['amount']);
 
             // Redirect to protected page
             return $response;
