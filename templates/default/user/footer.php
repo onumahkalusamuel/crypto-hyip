@@ -8,7 +8,7 @@
                 <p class="mt-20"><?= $siteSettings['contact_address']; ?></p>
                 <ul class="list-inline">
                     <li class="m-0 pl-10 pr-10"> <i class="fa fa-phone text-gray mr-5"></i> <a class="text-gray" href="tel:<?= str_replace([' ', '(', ')', '-'], '', $siteSettings['contact_phone']); ?>"><?= $siteSettings['contact_phone']; ?></a> </li>
-                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-gray mr-5"></i> <a class="text-gray" href="index-mp-layout4.html#"><?= $siteSettings['contact_email']; ?></a> </li>
+                    <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-gray mr-5"></i> <a class="text-gray" href="mailto:<?= $siteSettings['contact_email']; ?>"><?= $siteSettings['contact_email']; ?></a> </li>
                 </ul>
             </div>
         </div>

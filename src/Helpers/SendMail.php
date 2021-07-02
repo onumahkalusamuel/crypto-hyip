@@ -156,6 +156,8 @@ class SendMail
         Name: $name<br/>
         Username: $username <br/>";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -187,6 +189,8 @@ class SendMail
         $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal Request has been sent";
         $data['message'] = "User $username requested to withdraw $$amount worth of " . strtoupper($cryptoCurency) . " from IP $IP.";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -224,6 +228,8 @@ class SendMail
         $data['subject'] = "Withdrawal has been sent";
         $data['message'] = "User $username received $$amount to Bitcoin account $account. Batch is $batch.";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -244,8 +250,7 @@ class SendMail
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
             &copy; " . date('Y', time()) . " {$this->siteName}
             <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>
-";
+            </div>";
 
         $this->send($data);
 
@@ -258,6 +263,8 @@ class SendMail
         $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal Declined for user";
         $data['message'] = "Withdrawal declined for $username.<br><em>$message</em>.";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -318,6 +325,8 @@ class SendMail
         $data['message'] =
             "$username received a referral commission of \${$amount} from {$ref_username}'s deposit.";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -352,6 +361,8 @@ class SendMail
         $data['subject'] = "Deposit Released to user";
         $data['message'] = "Investment deposit of \${$amount} has been released to {$username} and is now available for withdrawal.";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -369,6 +380,8 @@ class SendMail
             IP: {$IP} <br/>
             TIME: {$time}";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -381,6 +394,8 @@ class SendMail
         $data['message'] =
             "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
             Your confirmation token is: {$token} ";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -417,6 +432,8 @@ class SendMail
         $data['message'] =
             "A bonus <strong>$bonusType.</strong> of $$amount has been added successfully to $name ($userName).";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -429,6 +446,8 @@ class SendMail
         $data['message'] =
             "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
             Your confirmation token is: {$token}";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -455,6 +474,8 @@ class SendMail
             </div>
             ";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -468,6 +489,8 @@ class SendMail
             "A penalty of $$amount has been subtracted successfully from $name ($userName).<br/>
             $reason";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -478,6 +501,8 @@ class SendMail
         $data['name'] = $this->contactName;
         $data['subject'] = "Site Settings Changed";
         $data['message'] = "Some settings have been modified in the admin section from IP: $IP.";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -491,6 +516,8 @@ class SendMail
         <h1>$otp</h1><br/>
         <strong>Note:</strong> OTP expires in about 5 minutes.";
 
+        $this->mail->clearAttachments();
+
         return $this->send($data);
     }
 
@@ -501,6 +528,8 @@ class SendMail
         $data['name'] = $this->contactName;
         $data['subject'] = "Admin Password Changed successfully";
         $data['message'] = "Admin password has been changed from IP: $IP.";
+
+        $this->mail->clearAttachments();
 
         return $this->send($data);
     }
@@ -513,6 +542,8 @@ class SendMail
         $data['subject'] = "New Pending Deposit";
         $data['message'] = "You have a pending deposit amount of $$amount from {$username}.";
 
+        $this->mail->clearAttachments();
+        
         return $this->send($data);
     }
 }
