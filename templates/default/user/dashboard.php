@@ -6,6 +6,28 @@ $user = $data['user'];
 $referrals = $data['referrals'];
 $deposits = $data['deposits'];
 $withdrawals = $data['withdrawals'];
+$earnings = $data['earnings'];
+
+$depositsTotal = 0;
+foreach ($deposits as $d) {
+    if (in_array($d->status, ["approved", "released"])) {
+        $depositsTotal += $d->amount;
+    }
+}
+
+$withdrawalsTtotal = 0;
+foreach ($withdrawals as $d) {
+    if ($d->status == "approved") {
+        $withdrawalsTtotal += $d->amount;
+    }
+}
+
+$earningsTotal = 0;
+foreach ($earnings as $e) {
+    $earningsTotal += $e->amount;
+}
+
+$referralCount = $referrals->total;
 
 ?>
 <div class="main-content">
@@ -18,44 +40,38 @@ $withdrawals = $data['withdrawals'];
                 <div id="accordion1" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <h5> Welcome back, <?= $user->fullName; ?></h5>
-			<hr />
-			<h3 class="heading-line-bottom">Balances</h3>
-			<div class="row">
-			    <div class="col-sm-6 col-md-3 p-5"><div class="help">
-                                <h3 class="m-0">$<?=number_format($user->btcBalance,2);?></h3>
-                                <h6 class="m-0 text-uppercase">BTC BALANCE</h6></div>
-                            </div>
-                        </div>
-
-			<h3 class="heading-line-bottom">Deposits</h3>
-			<div class="row">
-			<?php foreach($deposits as $d):?>
-			    <div class="col-sm-6 col-md-3 p-5"><div class="help">
-				<h3 class="m-0">$<?=number_format($d->amount,2);?></h3>
-				<h6 class="m-0 text-uppercase"><?=$d->status;?></h6></div>
-			    </div>
-			<?php endforeach;?>
-			</div>
-
-			<h3 class="heading-line-bottom">Withdrawals</h3>
+                        <hr />
+                        <h3 class="heading-line-bottom">Overview</h3>
                         <div class="row">
-                        <?php foreach($withdrawals as $d):?>
-                            <div class="col-sm-6 col-md-3 p-5"><div class="help">
-                                <h3 class="m-0">$<?=number_format($d->amount,2);?></h3>
-                                <h6 class="m-0 text-uppercase"><?=$d->status;?></h6></div>
+                            <div class="col-sm-6 col-md-3 p-5">
+                                <div class="help">
+                                    <h3 class="m-0">$<?= number_format($depositsTotal, 2); ?></h3>
+                                    <h6 class="m-0 text-uppercase">Investments</h6>
+                                </div>
                             </div>
-                        <?php endforeach;?>
-                        </div>
-
-			<h3 class="heading-line-bottom">Referrals</h3>
-                        <div class="row">
-                            <div class="col-sm-6 col-md-3 p-5"><div class="help">
-                                <h3 class="m-0">$<?=number_format($referrals->amount,2);?></h3>
-                                <h6 class="m-0 text-uppercase">Earned so far</h6></div>
+                            <div class="col-sm-6 col-md-3 p-5">
+                                <div class="help">
+                                    <h3 class="m-0">$<?= number_format($earningsTotal, 2); ?></h3>
+                                    <h6 class="m-0 text-uppercase">All Earnings</h6>
+                                </div>
                             </div>
-			    <div class="col-sm-6 col-md-3 p-5"><div class="help">
-                                <h3 class="m-0"><?=number_format($referrals->total);?></h3>
-                                <h6 class="m-0 text-uppercase">Total Referrals</h6></div>
+                            <div class="col-sm-6 col-md-3 p-5">
+                                <div class="help">
+                                    <h3 class="m-0">$<?= number_format($withdrawalsTtotal, 2); ?></h3>
+                                    <h6 class="m-0 text-uppercase">Withdrawals</h6>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 p-5">
+                                <div class="help">
+                                    <h3 class="m-0">$<?= number_format($user->btcBalance, 2); ?></h3>
+                                    <h6 class="m-0 text-uppercase">Balance</h6>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 p-5">
+                                <div class="help">
+                                    <h3 class="m-0"><?= number_format($referrals->total); ?></h3>
+                                    <h6 class="m-0 text-uppercase">Total Referrals</h6>
+                                </div>
                             </div>
                         </div>
                     </div>

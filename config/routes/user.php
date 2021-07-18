@@ -38,9 +38,6 @@ return function (App $app) {
             $group->post('withdrawals[/]', \App\Action\User\WithdrawalsAction::class);
         })->addMiddleware(new JsonResponseMiddleware);
 
-        // catchall - redirect to dashboard
-        $group->get('{routes:.+}', function ($request, $response) {
-        });
     })
         ->add(UserAuthMiddleware::class);
 };

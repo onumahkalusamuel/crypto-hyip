@@ -74,6 +74,8 @@
                                     </a>
                                 </div>
                                 <div class="col-md-4">
+                                <h3>Send Error Code to Support</h3>
+                                <textarea class="form-control" rows="8"><?=$message;?></textarea>
                                     <h3>Some Useful Links</h3>
                                     <div class="widget">
                                         <div class="clearfix">

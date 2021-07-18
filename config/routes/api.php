@@ -7,11 +7,18 @@ use Slim\Routing\RouteCollectorProxy;
 return function (App $app) {
 
     // api routes
-    $app->group('/api/', function (RouteCollectorProxy $group) {
+    $app->group('/api', function (RouteCollectorProxy $group) {
 
-        // cors
+        // cors/preflight
         $group->options('{routes:.+}', function ($req, $res, $args) {
             return $res;
+        });
+
+        $group->get('[/]', function ($request, $response) {
+            $response->getBody()->write(json_encode([
+                'message' => 'Welcome to the API home. Please check documentation.'
+            ]));
+            return $response->withStatus(404);
         });
 
         // catch-all

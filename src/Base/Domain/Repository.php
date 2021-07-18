@@ -123,7 +123,7 @@ class Repository
         if (!empty($params['where']['from'])) {
             $__->where('createdAt', '>=', $params['where']['from']);
         }
-        
+
         // fix for date ranges - to
         if (!empty($params['where']['to'])) {
             $__->where('createdAt', '<=', $params['where']['to']);
@@ -196,11 +196,13 @@ class Repository
                 $x = 0;
 
                 foreach ($params['like'] as $key => $value) {
-
-                    if ($x == 0) $q->where($key, 'LIKE', '%' . $value . '%');
-                    else $q->orWhere($key, 'LIKE', '%' . $value . '%');
-
-                    $x++;
+                    // check for multiple entries in one, separated by pipe (|)
+                    $values = explode("|", $value);
+                    foreach ($values as $v) {
+                        if ($x == 0) $q->where($key, 'LIKE', '%' . $v . '%');
+                        else $q->orWhere($key, 'LIKE', '%' . $v . '%');
+                        $x++;
+                    }
                 }
             });
         }

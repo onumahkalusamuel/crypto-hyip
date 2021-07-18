@@ -31,7 +31,7 @@ if (empty($deposits)) {
 
 $now = time();
 
-// loop through each 
+// loop through each
 foreach ($deposits as $deposit) {
 
     // find user first
@@ -39,57 +39,12 @@ foreach ($deposits as $deposit) {
     if (empty($user->ID)) {
         // deposit without a user detected. Delete asap
         $depositRepository->delete(['ID' => $deposit->ID]);
-        logMessage("info", "User {$deposit->userName} ({$deposit->userID}) seems to have disappeared, leaving Deposit {$deposit->ID} as an opharn. Let the opharn go home");
-        continue;
-    }
-    // verify that interst date not passed
-    if (empty($deposit->finalInterestDate) || strtotime($deposit->finalInterestDate) < $now) {
-        // release deposits that have passed
-        $depositRepository->beginTransaction();
-        try {
-            $depositRepository->update([
-                'ID' => $deposit->ID,
-                'data' => [
-                    'depositStatus' => 'released',
-                ]
-            ]);
-
-            $wallet = $deposit->cryptoCurrency . "Balance";
-
-            $userRepository->update([
-                'ID' => $user->ID,
-                'data' => [$wallet => $user->$wallet + $deposit->amount]
-            ]);
-
-            // trail log
-            $trailLogRepository->create([
-                'data' => [
-                    'userID' => $user->ID,
-                    'userName' => $user->userName,
-                    'logType' => 'deposit-release',
-                    'cryptoCurrency' => $deposit->cryptoCurrency,
-                    'transactionDetails' => "Deposit amount \${$deposit->amount} released",
-                    'transactionID' => $deposit->ID,
-                    'amount' => "-" . $deposit->amount
-                ]
-            ]);
-
-            // commit finally
-            $depositRepository->commit();
-            logMessage('info', "Deposit {$deposit->ID} released without interest calculation.");
-        } catch (\Exception $e) {
-            $depositRepository->rollback();
-            logMessage('error', "{$e->getMessage()}, in file: {$e->getFile()}, line {$e->getLine()}");
-        }
+        logMessage("info", "User {$deposit->userName} ({$deposit->userID}) seems to have disappeared, leaving Deposit {$deposit->ID} as an orphan. Let the orphan go home!");
         continue;
     }
 
-    // skip the end plans jumped by mistake
-    if (!empty($deposit->interestBalance) && $deposit->profitFrequency === "end") {
-        continue;
-    }
-    // check the intrest plan, see whether the current time is good to pay interest
-    
+    // check the interest plan, see whether the current time is good to pay interest
+
     switch ($deposit->profitFrequency) {
         case 'yearly': {
                 $minimumInterval = 1 * 52 * 7 * 24 * 60 * 60; // yr*wk*dy*hr*min*secs
@@ -183,7 +138,54 @@ foreach ($deposits as $deposit) {
         // log the error
         $depositRepository->rollback();
         logMessage('error', "{$e->getMessage()}, in file: {$e->getFile()}, line {$e->getLine()}");
+	continue;
     }
+
+
+    // then check up on releases
+    // verify that its end of plan or interest date not passed
+    if (($deposit->profitFrequency === "end") || empty($deposit->finalInterestDate) || strtotime($deposit->finalInterestDate) < $now) {
+        // release deposits that have passed
+        $depositRepository->beginTransaction();
+        try {
+            $depositRepository->update([
+                'ID' => $deposit->ID,
+                'data' => [
+                    'depositStatus' => 'released',
+                ]
+            ]);
+
+            $wallet = $deposit->cryptoCurrency . "Balance";
+
+
+            $userRepository->update([
+                'ID' => $user->ID,
+                'data' => [$wallet => $user->$wallet + $deposit->amount]
+            ]);
+
+            // trail log
+            $trailLogRepository->create([
+                'data' => [
+                    'userID' => $user->ID,
+                    'userName' => $user->userName,
+                    'logType' => 'deposit-release',
+                    'cryptoCurrency' => $deposit->cryptoCurrency,
+                    'transactionDetails' => "Deposit amount \${$deposit->amount} released",
+                    'transactionID' => $deposit->ID,
+                    'amount' => "-" . $deposit->amount
+                ]
+            ]);
+
+            // commit finally
+            $depositRepository->commit();
+            logMessage('info', "Deposit ({$deposit->ID}) released.");
+        } catch (\Exception $e) {
+            $depositRepository->rollback();
+            logMessage('error', "{$e->getMessage()}, in file: {$e->getFile()}, line {$e->getLine()}");
+        }
+        continue;
+    }
+
 }
 
 //exit application

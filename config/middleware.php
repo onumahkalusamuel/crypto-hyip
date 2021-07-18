@@ -27,23 +27,26 @@ return function (App $app) {
         ?LoggerInterface $logger = null
     ) use ($app) {
 
-        //$logger->error($exception->getMessage());
-
         $view = $app->getContainer()->get(PhpRenderer::class);
-        
+
         $response = $app->getResponseFactory()->createResponse();
 
-        $errorPage = "404.php";
+        $message = openssl_encrypt(
+            $exception->getCode() . " ::: " . $exception->getMessage(),
+            openssl_get_cipher_methods()[0],
+            "CryptoHYIP"
+        );
 
-        $code = $exception->getCode();
-
-        if ($code === 500) $errorPage = "500.php";
-        
-        return $view->render($response, $errorPage);
-
+        return $view->render($response, "500.php", ['message' => $message]);
     };
 
     // // Add Error Middleware
     $errorMiddleware = $app->addErrorMiddleware(true, true, true);
     $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 };
+
+
+function decrypter($encoded): string
+{
+    return (string) openssl_decrypt($encoded, openssl_get_cipher_methods()[0], "CryptoHYIP");
+}

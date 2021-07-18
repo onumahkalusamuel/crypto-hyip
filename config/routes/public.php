@@ -15,6 +15,10 @@ return function (App $app) {
         $group->group('', function (RouteCollectorProxy $group) {
             $group->post('page/register[/]', \App\Action\RegisterAction::class);
             $group->post('page/reset-password[/]', \App\Action\ResetPasswordAction::class);
+            // components data (news, faqs, etc) to be implemented later
+            $group->get('components/news[/]', \App\Action\Components\NewsAction::class);
+            $group->get('components/investment-plans[/]', \App\Action\Components\InvestmentPlansAction::class);
+            $group->get('components/last-transactions[/]', \App\Action\Components\LastTransactionsAction::class);
         })->addMiddleware(new JsonResponseMiddleware);
 
         $group->get('reset/{token}/{email}[/]', \App\Action\ResetUpdateView::class);
@@ -26,20 +30,10 @@ return function (App $app) {
 
         $group->get('ref/{referralUserName}[/]', \App\Action\AffiliatesAction::class)->setName('ref');
 
-        $group->post('reset[/]', \App\Action\ResetAction::class);
-        $group->post('reset/update[/]', \App\Action\ResetUpdateAction::class);
-        $group->get('reset/{token}[/]', \App\Action\ResetConfirmAction::class);
         $group->post('contact-us[/]', \App\Action\ContactUsAction::class)->setName('contact-us-form');
 
         //catch-all page
         $group->get('page/{page}', \App\Action\PageView::class)->setName('page');
 
-        $group->get('trxlog[/]', \App\Action\TrailLog\TrxLogAction::class);
-
-        $group->get('token[/]', \App\Action\User\TokenCheckAction::class);
-
-
-        // cronjobs
-        $group->get('/calculate_interests', \App\Action\Deposits\CalculateInterestsAction::class);
     });
 };

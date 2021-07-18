@@ -35,7 +35,7 @@ if ($myhost !== 'localhost') {
 } else {
     $database = 'btc';
     $username = 'root';
-    $password = '';
+    $password = 'root';
 }
 
 // Database settings

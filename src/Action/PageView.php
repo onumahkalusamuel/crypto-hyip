@@ -49,6 +49,10 @@ class PageView
         }
 
         // fetch the page
-        return $this->view->render($response, "public/pages/{$page}.php", $data);
+        try {
+            return $this->view->render($response, "public/pages/{$page}.php", $data);
+        } catch(\Exception $e) {
+            return $this->view->render($response, "404.php");
+        }
     }
 }

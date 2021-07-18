@@ -6,6 +6,7 @@ use App\Domain\User\Service\User;
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\Referrals\Service\Referrals;
+use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,6 +19,7 @@ final class UserDashboardAction
     protected $deposits;
     protected $withdrawals;
     protected $referrals;
+    protected $trailLog;
     protected $view;
 
     public function __construct(
@@ -25,14 +27,16 @@ final class UserDashboardAction
         User $user,
         Deposits $deposits,
         Withdrawals $withdrawals,
-	Referrals $referrals,
+        Referrals $referrals,
+        TrailLog $trailLog,
         View $view
     ) {
         $this->user = $user;
         $this->session = $session;
         $this->deposits = $deposits;
         $this->withdrawals = $withdrawals;
-	$this->referrals = $referrals;
+        $this->referrals = $referrals;
+        $this->trailLog = $trailLog;
         $this->view = $view;
     }
 
@@ -43,14 +47,11 @@ final class UserDashboardAction
 
         $ID = $this->session->get('ID');
         // users
-        $user = $this->user->readSingle(['ID'=>$ID]);
+        $user = $this->user->readSingle(['ID' => $ID]);
 
         // deposits
-       //'where' => ['userID' => $ID]
-
-         // deposits
         $return['deposits'] = $this->deposits->readAll([
-	    'params' => ['where' => ['userID' => $ID]],
+            'params' => ['where' => ['userID' => $ID]],
             'select' => ['cryptoCurrency as currency', 'depositStatus as status'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
             'group_by' => ['currency', 'status']
@@ -58,7 +59,7 @@ final class UserDashboardAction
 
         // withdrawals
         $return['withdrawals'] = $this->withdrawals->readAll([
-	    'params' => ['where' => ['userID' => $ID]],
+            'params' => ['where' => ['userID' => $ID]],
             'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
             'group_by' => ['currency', 'status']
@@ -67,7 +68,7 @@ final class UserDashboardAction
 
         // referrals
         $referrals = $this->referrals->readAll([
-	    'params' => ['where' => ['referralUserID' => $ID]],
+            'params' => ['where' => ['referralUserID' => $ID]],
             'select' => ['ID'],
             'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount']
         ]);
@@ -78,16 +79,25 @@ final class UserDashboardAction
             'amount' => $referrals[0]->amount
         ];
 
+        // earnings
+        // deposit earnings 
+        $return['earnings'] = $this->trailLog->readAll([
+            'params' => [
+                'where' => ['userID' => $ID],
+                'like' => ['logType' => 'bonus|earning|referral']
+            ],
+            'select' => ['ID', 'cryptoCurrency'],
+            'select_raw' => ['SUM(ABS(amount)) as amount'],
+            'group_by' => ['cryptoCurrency']
+        ]);
 
         // Build the HTTP response
         unset($user->password);
-	unset($user->secretQuestion);
-	unset($user->secretAnswer);
+        unset($user->secretQuestion);
+        unset($user->secretAnswer);
 
         $return['user'] = $user;
 
-        return $this->view->render($response, 'user/dashboard.php', ['data'=>$return]);
-
+        return $this->view->render($response, 'user/dashboard.php', ['data' => $return]);
     }
-
 }
