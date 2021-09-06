@@ -43,8 +43,11 @@ foreach ($deposits as $deposit) {
         continue;
     }
 
-    // check the interest plan, see whether the current time is good to pay interest
+    // set a reference date for calculations
+    // use the deposit approval date if the last interest date is still null.
+    $referenceDate = !empty($deposit->lastInterestDate) ? $deposit->lastInterestDate : $deposit->depositApprovalDate;
 
+    // check the interest plan, see whether the current time is good to pay interest
     switch ($deposit->profitFrequency) {
         case 'yearly': {
                 $minimumInterval = 1 * 52 * 7 * 24 * 60 * 60; // yr*wk*dy*hr*min*secs
@@ -68,7 +71,7 @@ foreach ($deposits as $deposit) {
             }
         case 'end': {
                 // should be end of plan
-                $minimumInterval = strtotime($deposit->finalInterestDate) - strtotime($deposit->depositApprovalDate) - 10 * 60; // give 10 minutes grace
+                $minimumInterval = strtotime($deposit->finalInterestDate) - strtotime($referenceDate) - 10 * 60; // give 10 minutes grace
                 break;
             }
         default: {
@@ -78,9 +81,6 @@ foreach ($deposits as $deposit) {
     }
 
     if (empty($minimumInterval)) continue;
-
-    // use the deposit approval date if the last interest date is still null.
-    $referenceDate = !empty($deposit->lastInterestDate) ? $deposit->lastInterestDate : $deposit->depositApprovalDate;
 
     // be sure there is a date to work with
     if (empty($referenceDate)) {
@@ -102,10 +102,11 @@ foreach ($deposits as $deposit) {
         $interest = round($deposit->percentage / 100 * $deposit->amount, 2);
 
         $wallet = $deposit->cryptoCurrency . "Balance";
+        $user->$wallet = $user->$wallet + $interest;
 
         $userRepository->update([
             'ID' => $user->ID,
-            'data' => [$wallet => $user->$wallet + $interest]
+            'data' => [$wallet => $user->$wallet]
         ]);
 
         // update the deposit last paid interest
@@ -133,14 +134,13 @@ foreach ($deposits as $deposit) {
         $depositRepository->commit();
 
         // log success
-        logMessage('success', "Earning of {$interest} added to {$user->userName}.");
+        logMessage('success', "Earning of \${$interest} ({$deposit->cryptoCurrency}) added to {$user->userName}.");
     } catch (\Exception $e) {
         // log the error
         $depositRepository->rollback();
         logMessage('error', "{$e->getMessage()}, in file: {$e->getFile()}, line {$e->getLine()}");
 	continue;
     }
-
 
     // then check up on releases
     // verify that its end of plan or interest date not passed
@@ -191,7 +191,7 @@ foreach ($deposits as $deposit) {
 //exit application
 function logMessage($type, $message)
 {
-    $dir = __DIR__ . '/../logs/crons/' . date("Y-m-d", time());
+    $dir = __DIR__ . '/../logs/crons/';
 
     if (!is_dir($dir)) {
         mkdir($dir, 0777, true);
