@@ -85,6 +85,7 @@ final class ApproveAction
                         'transactionDetails' => "Withdrawal of \${$withdrawal->amount} Approved",
                         'transactionID' => $withdrawal->ID,
                         'amount' => $withdrawal->amount,
+                        'cryptoCurrency' => $withdrawal->cryptoCurrency
                     ]
                 ]);
 

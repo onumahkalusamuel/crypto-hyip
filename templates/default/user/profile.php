@@ -1,6 +1,9 @@
  <?php $this->addAttribute('pageTitle', 'Profile'); ?>
  <?php $this->setLayout('user/layout.php'); ?>
- <?php $profile = $data['profile']; ?>
+ <?php
+ $profile = $data['profile'];
+ $activeCurrencies = $data['activeCurrencies'];
+ ?>
 
  <div class="main-content">
      <div class="container pb-40 pt-20">
@@ -25,10 +28,12 @@
                                      <label for="email">Email Address:</label>
                                      <input class="form-control" id="email" name="email" value="<?= $esc->escapeHtml($profile->email); ?>" required />
                                  </div>
+                                 <?php foreach ($activeCurrencies as $currency) :?>
                                  <div class="form-group col-md-12">
-                                     <label for="btcAddress">Bitcoin Address:</label>
-                                     <input class="form-control" id="btcAddress" name="btcAddress" value="<?= $esc->escapeHtml($profile->btcAddress); ?>" />
+                                     <label for="<?=$currency;?>Address"><?=strtoupper($currency);?> Address:</label>
+                                     <input class="form-control" id="<?=$currency;?>Address" name="<?=$currency;?>Address" value="<?= $esc->escapeHtml($profile->{$currency .'Address'}); ?>" />
                                  </div>
+                                 <?php endforeach;?>
                                  <div class="form-group col-md-12">
                                      <label for="password">New Password:</label>
                                      <input class="form-control" id="password" name="password" aria-describedby="newPasswordHelp" type="password" />

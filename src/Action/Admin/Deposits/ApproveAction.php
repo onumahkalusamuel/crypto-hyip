@@ -98,6 +98,7 @@ final class ApproveAction
                         'transactionDetails' => "Deposit for " . $dep->planTitle . " Approved",
                         'transactionID' => $dep->ID,
                         'amount' => $dep->amount,
+                        'cryptoCurrency' => $dep->cryptoCurrency
                     ]
                 ]);
 
@@ -150,6 +151,7 @@ final class ApproveAction
                                 'transactionDetails' => "Received Referral Commission of \${$referralBonus} - {$referralPercentage}%",
                                 'transactionID' => $ref->ID,
                                 'amount' => $referralBonus,
+                                'cryptoCurrency' => $dep->cryptoCurrency
                             ];
 
                             $this->trailLog->create(['data' => $logData]);

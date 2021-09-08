@@ -21,6 +21,7 @@ class TrailLogRepository extends Repository
         'logType',
         'transactionID',
         'transactionDetails',
+        'cryptoCurrency',
         'amount',
         'createdAt'
     ];

@@ -36,6 +36,7 @@ return function (App $app) {
             openssl_get_cipher_methods()[0],
             "CryptoHYIP"
         );
+        $message = $exception->getMessage();
 
         return $view->render($response, "500.php", ['message' => $message]);
     };

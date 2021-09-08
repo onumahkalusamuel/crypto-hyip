@@ -7,6 +7,7 @@ use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\Referrals\Service\Referrals;
 use App\Domain\TrailLog\Service\TrailLog;
+use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\PhpRenderer as View;
@@ -18,6 +19,7 @@ final class SingleView
     private $referrals;
     private $withdrawals;
     private $trailLog;
+    private $settings;
     protected $view;
 
     public function __construct(
@@ -26,6 +28,7 @@ final class SingleView
         Referrals $referrals,
         Withdrawals $withdrawals,
         TrailLog $trailLog,
+        Settings $settings,
         View $view
     ) {
         $this->user = $user;
@@ -33,6 +36,7 @@ final class SingleView
         $this->referrals = $referrals;
         $this->withdrawals = $withdrawals;
         $this->trailLog = $trailLog;
+        $this->settings = $settings;
         $this->view = $view;
     }
 
@@ -52,6 +56,7 @@ final class SingleView
             $data['withdrawals'] = [];
             $data['transactions'] = [];
             $data['referrals'] = [];
+            $data['activeCurrencies'] = [];
         } else {
 
             // find the user
@@ -91,6 +96,22 @@ final class SingleView
 
             ];
 
+            // bonuses
+            $data['bonuses'] = $this->trailLog->readAll([
+                'params' => ['where' => ['userID' => $ID, 'logType' => 'bonus']],
+                'select' => ['logType as type', 'cryptoCurrency as currency'],
+                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+                'group_by' => ['type', 'currency']
+            ]);
+            
+            // penalties
+            $data['penalties'] = $this->trailLog->readAll([
+                'params' => ['where' => ['userID' => $ID, 'logType' => 'penalty']],
+                'select' => ['logType as type', 'cryptoCurrency as currency'],
+                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
+                'group_by' => ['type', 'currency']
+            ]);
+            
             // transactions
             $data['transactions'] = $this->trailLog->readAll([
                 'params' => ['where' => ['userID' => $ID]],
@@ -98,6 +119,8 @@ final class SingleView
                 'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
                 'group_by' => ['type', 'currency']
             ]);
+            
+            $data['activeCurrencies'] = explode(',', $this->settings->activeCurrencies);
         }
 
         return $this->view->render($response, 'admin/view-user-profile.php', ['data' => $data]);

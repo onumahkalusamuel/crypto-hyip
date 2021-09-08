@@ -56,7 +56,7 @@ final class DepositsAction
         // send to api (coming soon)
 
         // get btc amount
-        $data['cryptoAmount'] = $this->cryptoHelper->usdToBtc($data['amount']);
+        $data['cryptoAmount'] = $this->cryptoHelper->usdToCrypto($data['amount'], $data['cryptoCurrency']);
 
         if (empty($message) && empty($data['cryptoAmount'])) {
             $message = "One of our service providers seems to be busy at the moment. Please try again later.";
@@ -92,7 +92,6 @@ final class DepositsAction
             $data['planTitle'] = $plan->title;
             $data['percentage'] = $plan->percentage;
             $data['profitFrequency'] = $plan->profitFrequency;
-            $data['planTitle'] = $plan->title;
 
             $depositAddress = $data['cryptoCurrency'] . "DepositAddress";
 

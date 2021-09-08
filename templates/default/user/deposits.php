@@ -1,5 +1,10 @@
 <?php $this->addAttribute('pageTitle', 'Deposits'); ?>
 <?php $this->setLayout('user/layout.php'); ?>
+<?php
+$deposits = $data['deposits'];
+$plans = $data['plans'];
+$activeCurrencies = $data['activeCurrencies'];
+?>
 
 <div class="main-content">
     <div class="container pb-40 pt-20">
@@ -15,7 +20,7 @@
                                 <div class="form-group col-sm-4 col-md-4">
                                     <label for="planID">Select Plan:</label>
                                     <select id="planID" name="planID" class="form-control">
-                                        <?php foreach ($data['plans'] as $plan) : ?>
+                                        <?php foreach ($plans as $plan) : ?>
                                             <option <?= ($_POST['planID'] == $plan->ID ? 'selected' : null); ?> value="<?= $plan->ID; ?>">
 
                                                 <?= $plan->title; ?>
@@ -34,7 +39,9 @@
                                 <div class="form-group col-sm-4 col-md-3">
                                     <label for="cryptoCurrency">Mode of Payment:</label>
                                     <select id="cryptoCurrency" name="cryptoCurrency" class="form-control">
-                                        <option <?= ($_POST['cryptoCurrency'] == 'btc' ? 'selected' : null); ?> value="btc">Bitcoin</option>
+                                        <?php foreach($activeCurrencies as $currency):?>
+                                            <option <?= ($_POST['cryptoCurrency'] == $currency ? 'selected' : null); ?> value="<?=$currency;?>"><?=strtoupper($currency);?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-4 col-md-2">
@@ -58,7 +65,7 @@
                     <div class="panel-body">
                         <?php echo $this->fetch(
                             'user/components/deposits-table.php',
-                            ['deposits' => $data['deposits'] ?? []]
+                            ['deposits' => $deposits ?? []]
                         ); ?>
                     </div>
                 </div>

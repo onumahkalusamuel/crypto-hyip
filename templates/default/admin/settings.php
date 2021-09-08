@@ -1,6 +1,11 @@
  <?php $this->addAttribute('pageTitle', 'Settings'); ?>
  <?php $this->setLayout('admin/layout.php'); ?>
- <?php $settings = $data['settings']; ?>
+ <?php
+ 
+ $settings = $data['settings'];
+ $activeCurrencies = explode(',', $settings['activeCurrencies']);
+ 
+ ?>
 
  <div class="main-content">
 
@@ -14,12 +19,23 @@
                  <div id="profileAccordion" class="panel-collapse collapse in">
                      <div class="panel-body">
                          <form method="POST" action="<?= $route->urlFor('admin-update-settings'); ?>">
-                             <div class="form-group row">
-                                 <label for="btcDepositAddress" class="col-sm-2 col-form-label">Bitcoin Deposit Address</label>
+                             
+                            <div class="form-group row">
+                                 <label for="activeCurrencies" class="col-sm-2 col-form-label">Active Currencies</label>
                                  <div class="col-sm-10">
-                                     <input type="text" class="form-control" name="btcDepositAddress" id="btcDepositAddress" value="<?= $settings['btcDepositAddress']; ?>">
+                                     <input class="form-control" id="activeCurrencies" name="activeCurrencies" value="<?= $settings['activeCurrencies']; ?>">
+                                     <span class="font-12 p-0 m-0">separate currencies by comma (,). do not add spaces. e.g. (ltc,btc,doge,eth)</span>
                                  </div>
                              </div>
+                             
+                             <?php foreach($activeCurrencies as $currency):?>
+                             <div class="form-group row">
+                                 <label for="<?=$currency;?>DepositAddress" class="col-sm-2 col-form-label"><?=strtoupper($currency);?> Deposit Address</label>
+                                 <div class="col-sm-10">
+                                     <input type="text" class="form-control" name="<?=$currency;?>DepositAddress" id="<?=$currency;?>DepositAddress" value="<?= $settings[$currency .'DepositAddress']; ?>">
+                                 </div>
+                             </div>
+                             <?php endforeach;?>
                              <div class="form-group row">
                                  <label for="minWithdrawal" class="col-sm-2 col-form-label">Minimum Withdrawal Amount</label>
                                  <div class="col-sm-10">

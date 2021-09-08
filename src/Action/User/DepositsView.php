@@ -4,6 +4,7 @@ namespace App\Action\User;
 
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Plans\Service\Plans;
+use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -15,17 +16,20 @@ final class DepositsView
     protected $deposits;
     protected $plans;
     protected $view;
+    private $settings;
 
     public function __construct(
         Session $session,
         Deposits $deposits,
         Plans $plans,
+        Settings $settings,
         View $view
     ) {
         $this->session = $session;
         $this->deposits = $deposits;
         $this->plans = $plans;
         $this->view = $view;
+        $this->settings = $settings;
     }
 
     public function __invoke(
@@ -65,7 +69,8 @@ final class DepositsView
         // prepare the return data
         $data = [
             'deposits' => $deposits,
-            'plans' => $plans
+            'plans' => $plans,
+            'activeCurrencies' => explode(',', $this->settings->activeCurrencies)
         ];
 
         return $this->view->render($response, 'user/deposits.php', ['data' => $data]);

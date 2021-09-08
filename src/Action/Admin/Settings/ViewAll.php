@@ -26,11 +26,7 @@ final class ViewAll
     ): ResponseInterface {
 
         // settings
-        $data['settings'] = [
-            'btcDepositAddress' => $this->settings->btcDepositAddress,
-            'minWithdrawal' => $this->settings->minWithdrawal,
-            'payReferral' => $this->settings->payReferral,
-        ];
+        $data['settings'] = $this->settings->settings;
 
         return $this->view->render($response, 'admin/settings.php', ['data' => $data]);
     }

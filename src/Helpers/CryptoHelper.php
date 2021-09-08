@@ -10,6 +10,7 @@ class CryptoHelper
     public $validator;
     private $usdToBtcUrl = "https://blockchain.info/tobtc?currency=USD&value=%s";
     private $btcPaymentQrCodeUrl = "https://www.bitcoinqrcodemaker.com/api/?style=%s&amount=%s&address=%s";
+    private $convertEndpoint = "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=%s";
 
     public function __construct()
     {
@@ -27,6 +28,20 @@ class CryptoHelper
         } catch (\Exception $e) {
         }
         return $btc;
+    }
+    
+    public function usdToCrypto($amount, $cryptoCurrency) {
+        
+        $coin = strtolower($cryptoCurrency);
+        
+        if(in_array($coin, ['btc','eth','doge','ltc'])) {
+            $fetch = json_decode(file_get_contents(sprintf($this->convertEndpoint, $coin)), true);
+            
+            $amount = $fetch[strtoupper($coin)] * $amount;
+        }
+        
+        return $amount;
+
     }
 
     public function btcPaymentQrCode($amount, $address)

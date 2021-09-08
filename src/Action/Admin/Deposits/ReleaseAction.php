@@ -82,6 +82,7 @@ final class ReleaseAction
                         'transactionDetails' => "Deposit amount \${$dep->amount} released",
                         'transactionID' => $dep->ID,
                         'amount' => "-" . $dep->amount,
+                        'cryptoCurrency' => $dep->cryptoCurrency
                     ]
                 ]);
                 // send mail

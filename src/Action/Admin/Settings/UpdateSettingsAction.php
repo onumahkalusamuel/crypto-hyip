@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Helpers\CryptoHelper;
 
 final class UpdateSettingsAction
 {
@@ -16,17 +17,20 @@ final class UpdateSettingsAction
     private $user;
     private $session;
     private $sendMail;
+    protected $cryptoHelper;
 
     public function __construct(
         Settings $settings,
         User $user,
         Session $session,
-        SendMail $sendMail
+        SendMail $sendMail,
+        CryptoHelper $cryptoHelper
     ) {
         $this->settings = $settings;
         $this->user = $user;
         $this->session = $session;
         $this->sendMail = $sendMail;
+        $this->cryptoHelper = $cryptoHelper;
     }
 
     public function __invoke(
@@ -51,9 +55,42 @@ final class UpdateSettingsAction
         if (empty($message) && !password_verify($data['confirmPassword'], $user->password)) {
             $message = "Invalid password provided.";
         }
+        
+        // check for wallet addresses and vailidate
+        //BTC
+        if (empty($message) && !empty($data['btcDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('btc', $data['btcDepositAddress'])) {
+                $message = "Invalid BTC Address entered.";
+            } else {
+                $this->settings->btcDepositAddress = $data['btcDepositAddress'];   
+            }
+        }
+        //ETH
+        if (empty($message) && !empty($data['ethDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('eth', $data['ethDepositAddress'])) {
+                $message = "Invalid ETH Address entered.";
+            } else {
+                $this->settings->ethDepositAddress = $data['ethDepositAddress'];
+            }
+        }
+        // DOGE
+        if (empty($message) && !empty($data['dogeDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('doge', $data['dogeDepositAddress'])) {
+                $message = "Invalid DOGE Address entered.";
+            } else {
+                $this->settings->dogeDepositAddress = $data['dogeDepositAddress'];
+            }
+        }
+        // LTC
+        if (empty($message) && !empty($data['ltcDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('ltc', $data['ltcDepositAddress'])) {
+                $message = "Invalid LTC Address entered.";
+            } else {
+                $this->settings->ltcDepositAddress = $data['ltcDepositAddress'];
+            }
+        }
 
         if (empty($message)) {
-            $this->settings->btcDepositAddress = $data['btcDepositAddress'];
             $this->settings->minWithdrawal = $data['minWithdrawal'];
             $this->settings->payReferral = $data['payReferral'];
 

@@ -19,6 +19,14 @@ switch ($deposit->cryptoCurrency) {
             $protocol = "etherium";
             break;
         }
+    case "doge": {
+            $protocol = "dogecoin";
+            break;
+        }
+    case "ltc": {
+            $protocol = "litecoin";
+            break;
+        }
     default: {
             $protocol = "bitcoin";
             break;

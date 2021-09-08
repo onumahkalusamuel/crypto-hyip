@@ -127,7 +127,7 @@ foreach ($deposits as $deposit) {
                 'cryptoCurrency' => $deposit->cryptoCurrency,
                 'transactionDetails' => "Earning from deposit of $" . $deposit->amount . " - " . $deposit->percentage . "%",
                 'transactionID' => $deposit->ID,
-                'amount' => $interest,
+                'amount' => $interest
             ]
         ]);
         // commit transaction
@@ -191,7 +191,7 @@ foreach ($deposits as $deposit) {
 //exit application
 function logMessage($type, $message)
 {
-    $dir = __DIR__ . '/../logs/crons/';
+    $dir = __DIR__ . '/../logs/crons/' . date("Y-M");
 
     if (!is_dir($dir)) {
         mkdir($dir, 0777, true);

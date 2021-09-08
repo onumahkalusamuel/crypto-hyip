@@ -9,7 +9,7 @@ class Settings extends Service
 {
 
     protected $repository;
-    protected $settings = [];
+    public $settings = [];
 
     public function __construct(SettingsRepository $repository)
     {

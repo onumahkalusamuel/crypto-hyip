@@ -2,132 +2,196 @@
 
 namespace App\Action\Admin;
 
+use App\Domain\Deposits\Service\Deposits;
+use App\Domain\Plans\Service\Plans;
+use App\Domain\Referrals\Service\Referrals;
+use App\Domain\Settings\Service\Settings;
 use App\Domain\TrailLog\Service\TrailLog;
 use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
+use App\Helpers\CryptoHelper;
+use Slim\Routing\RouteContext;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\PhpRenderer as View;
 
 final class AddPenaltyAction
 {
 
     private $mail;
     private $user;
+    private $deposits;
     private $traillog;
+    private $referrals;
+    private $cryptoHelper;
+    private $session;
+    private $view;
     private $location;
 
-    public function __construct(SendMail $mail, User $user, TrailLog $traillog)
-    {
+    public function __construct(
+        SendMail $mail,
+        User $user,
+        Deposits $deposits,
+        TrailLog $traillog,
+        Referrals $referrals,
+        CryptoHelper $cryptoHelper,
+        Session $session,
+        View $view,
+        Settings $settings
+    ) {
         $this->mail = $mail;
         $this->user = $user;
+        $this->deposits = $deposits;
         $this->traillog = $traillog;
+        $this->referrals = $referrals;
+        $this->cryptoHelper = $cryptoHelper;
+        $this->session = $session;
+        $this->view = $view;
+        $this->settings = $settings;
         $location = dirname(__FILE__) . "/tmp/";
         if (!is_dir($location)) mkdir($location);
         $this->location = $location;
     }
 
-    public function __invoke(
+    public function viewPage(
         ServerRequestInterface $request,
         ResponseInterface $response,
         $args
     ): ResponseInterface {
-        // Collect args
-        $auth = $request->getAttribute("token")['data'];
-        if ($auth->userType != "admin") {
-            \http_response_code(403);
-            return $response;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == "GET") {
-            if (empty($args['confirmation_code'])) {
-                \http_response_code(400);
-                return $response;
-            }
-
-            if ($this->verifyTokenAndAddPenalty($args['confirmation_code']))
-                $response->getBody()->write(json_encode(['success' => true, 'message' => "Penalty subtracted successfully"]));
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $data = (array) $request->getParsedBody();
-            if ($this->setTokenAndSendMail($data))
-                $response->getBody()->write(json_encode(['success' => true, 'message' => "Token sent successfully"]));
-        }
-
-        return $response;
+    	$ID = $args['user_id'];
+    	$user = $this->user->readSingle(['ID' => $ID]);
+    	$currencies = explode(',', $this->settings->activeCurrencies);
+    	
+    	return $this->view->render($response, 'admin/add-penalty.php', ['user' => $user, 'currencies' => $currencies]);
+    
     }
+    
+    public function initTransaction(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface {
+        
+    	$flash = $this->session->getFlashBag();
+        $flash->clear();
 
-    private function setTokenAndSendMail($data)
-    {
+        // Get RouteParser from request to generate the urls
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+    	$data = (array) $request->getParsedBody();
+    	$message = "";
+    	
+    
         if (empty($data['ID']) || empty($data['fullName']) || empty($data['userName']) || empty($data['amount'])) {
-            \http_response_code(400);
-            return false;
+            $message = "Please provide all required data.";
+        }
+        
+        if(empty($message)) {
+            
+            $token = substr(strtoupper(sha1(uniqid())), 5, 10);
+
+            file_put_contents("$this->location/$token.json", json_encode($data, JSON_PRETTY_PRINT));
+            
+            $penaltyUrl = $routeParser->fullUrlFor($request->getUri(), 'admin-add-penalty-confirm', ['confirmation_code' => $token]);
+    
+            $sendMail = $this->mail->sendPenaltyConfirmToken($penaltyUrl, $data['fullName'], $data['userName'], $data['amount'], $data['cryptoCurrency']);
+            
+            if(empty($sendMail)) {
+                $message = "An error occured. Please try again later.";
+            }
+        }
+        
+
+        $url = $routeParser->urlFor('admin-add-penalty-view', ['user_id' => $data['ID']]);
+
+
+        if (empty($message)) {
+            $flash->set('success', "Penalty confirmation link sent to admin email. Click on the link to confirm action. Link will expire in 10 minutes.");
+        } else {
+            $flash->set('error', $message);
         }
 
-        $token = substr(strtoupper(sha1(uniqid())), 5, 10);
-
-        file_put_contents("$this->location/$token.json", json_encode($data, JSON_PRETTY_PRINT));
-
-        return $this->mail->sendPenaltyConfirmToken($token, $data['fullName'], $data['userName'], $data['amount']);
+        return $response->withStatus(302)->withHeader('Location', $url);
+        
     }
 
-    private function verifyTokenAndAddPenalty($token)
-    {
+    public function confirmTransaction(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ): ResponseInterface {
+    
+    	$token = $args['confirmation_code'];
+    	
         $file = "$this->location/$token.json";
 
         if (!is_file($file) || !is_readable($file)) {
-            \http_response_code(400);
-            return false;
+            $response->getBody()->write("Invalid link clicked. Generate a fresh one.");
+            return $response;
+        }
+        
+        if (time() > filemtime($file) + 36000) {
+            unlink($file);
+            $response->getBody()->write("Token expired.");
+            return $response;
         }
 
         $d = json_decode(file_get_contents($file));
 
-        // fetch user
-        $user = (object) $this->user->readUser($d->ID);
+        // discard file
+        unlink($file);
 
-        if (empty($user)) {
-            \http_response_code(400);
-            return false;
+        // fetch user
+        $user = (object) $this->user->readSingle(['ID'=>$d->ID]);
+        
+        // subtract from balance
+        $wallet = $d->cryptoCurrency . "Balance";
+        $cd = $this->user->update(['ID'=>$d->ID, 'data'=> [
+            $wallet => $user->$wallet - $d->amount,
+        ]]);
+       
+        if (empty($cd)) {
+            $response->getBody()->write("Unable to process request at the moment.");
+            return $response;
         }
 
-        // subtract from interest wallet balance
-        $this->user->updateUser($d->ID, [
-            'interestWalletBalance' => $user->interestWalletBalance - $d->amount,
-        ]);
+        // traillog it
+        $this->traillog->create(['data' =>
+            [
+                'userID' => $d->ID,
+                'userName' => $d->userName,
+                'logType' => 'penalty',
+                'transactionDetails' => "Penalty of $ $d->amount ({$d->cryptoCurrency}) subtracted from {$d->userName}",
+                'transactionID' => $d->ID,
+                'amount' => $d->amount,
+                'cryptoCurrency' => $d->cryptoCurrency
+            ]
+            ]
+        );
 
         // check if you can send notification 
-        if (!empty($d->sendEmailNotification)) {
+        if (!empty($d->notifyUserByEmail)) {
             // check the notification type
             $this->mail->sendPenaltySubtractedMail(
                 $user->email,
                 $user->fullName,
                 $d->amount,
-                $d->description
+                $d->cryptoCurrency,
+                $d->reason
             );
         }
 
-        // notify admin
+        // always notify admin
         $this->mail->sendPenaltySubtractedMailToAdmin(
             $user->userName,
             $user->fullName,
             $d->amount,
-            $d->description
+            $d->cryptoCurrency,
+            $d->reason
         );
 
-        // then traillog
-        $this->traillog->create(
-            [
-                'userID' => $d->ID,
-                'userName' => $d->userName,
-                'logType' => 'penalty',
-                'transactionDetails' => $d->description,
-                'transactionAdminID' => '',
-                'amount' => $d->amount
-            ]
-        );
+        $response->getBody()->write("Penalty processed successfully.");
+        return $response;
 
-        unlink($file);
-
-        return true;
     }
 }

@@ -84,16 +84,17 @@ final class WithdrawalsView
     {
 
         $wallets = [];
+        $activeCurrencies = explode(',', $this->settings->activeCurrencies);
         $user = $this->user->readSingle(['ID' => $ID]);
-
-        $wallets[] = $this->genWallet('btc', 'Bitcoin', $user->btcBalance, (bool) $user->btcAddress);
-        // $wallets[] = $this->genWallet('eth', 'Etherium', $user->ethBalance, (bool) $user->ethAddress);
+        foreach($activeCurrencies as $currency)
+            $wallets[] = $this->genWallet($currency, $user->{$currency . 'Balance'}, (bool) $user->{$currency . 'Address'});
 
         return $wallets;
     }
 
-    private function genWallet($ID, $title, $balance, $addressIsSet)
+    private function genWallet($ID, $balance, $addressIsSet)
     {
+        $title = strtoupper($ID);
         return compact('ID', 'title', 'balance', 'addressIsSet');
     }
 }

@@ -21,10 +21,11 @@
                                             <option value="<?= $wallet['ID']; ?>" <?= !$wallet['addressIsSet'] ? "disabled" : ""; ?>>
                                                 <?= $wallet['title']; ?>
                                                 ($<?= number_format($wallet['balance'] ?? 0, 2); ?>)
-                                                <?= !$wallet['addressIsSet'] ? "Wallet Address not set" : ""; ?>
+                                                <?= !$wallet['addressIsSet'] ? "no address" : ""; ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <h4 class="font-12 p-0 m-0">Set wallet addresses in profile.</h4>
                                 </div>
                                 <div class="form-group col-sm-4 col-md-3">
                                     <label for="amount">Enter Withdrawal Amount:</label>

@@ -76,18 +76,18 @@ class SendMail
         }
     }
 
-    public function sendContactMail(array $data)
+    public function sendContactMail(array $form)
     {
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
-        $data['subject'] = "Contact Us: " . $data['subject'];
+        $data['subject'] = "Contact Us: " . $form['subject'];
         $data['message'] =
             "<strong>Feedback Form:<br/>" .
-            "<p><strong>Name:</strong> " . $data['name'] . "</p>" .
-            "<p><strong>Email:</strong> " . $data['email'] . "</p>" .
-            "<p><strong>Suject:</strong> " . $data['subject'] . "</p>" .
-            "<p><strong>Message:</strong> " . $data['message'] . "</p>";
+            "<p><strong>Name:</strong> " . $form['name'] . "</p>" .
+            "<p><strong>Email:</strong> " . $form['email'] . "</p>" .
+            "<p><strong>Suject:</strong> " . $form['subject'] . "</p>" .
+            "<p><strong>Message:</strong> " . $form['message'] . "</p>";
 
         return $this->send($data);
     }
@@ -207,7 +207,7 @@ class SendMail
             Hello $name,<br/><br/>
             Your withdrawal has been sent to your account successfully.<br/><br/>
             Amount: $$amount<br/><br/>
-            Currency Type: " . strtoupper($cryptoCurrency) . "<br/><br/>
+            Currency: " . strtoupper($cryptoCurrency) . "<br/><br/>
             Account: $account<br/><br/>
             Transaction batch: $batch.
             <br/><br/>
@@ -218,15 +218,15 @@ class SendMail
 
         $this->send($data);
 
-        return $this->sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch);
+        return $this->sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch, $cryptoCurrency);
     }
 
-    private function sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch)
+    private function sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch, $cryptoCurrency)
     {
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal has been sent";
-        $data['message'] = "User $username received $$amount to Bitcoin account $account. Batch is $batch.";
+        $data['message'] = "User $username received $$amount ($cryptoCurrency) to address $account. Batch is $batch.";
 
         $this->mail->clearAttachments();
 
@@ -294,7 +294,7 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendDirectReferralCommissionEmail($email, $name, $amount, $ref_username, $username)
+    public function sendDirectReferralCommissionEmail($email, $name, $amount, $ref_username, $username, $cryptoCurrency)
     {
         $data['email'] = $email;
         $data['name'] = $name;
@@ -304,7 +304,7 @@ class SendMail
         <img src='cid:banner'/><br/>
      	<h2>REFERRAL COMMISSION</h2>
             Hello $name,<br/><br/>
-            You have received a referral commission of \${$amount} from {$ref_username}'s deposit. <br/>
+            You have received a referral commission of \${$amount} ($cryptoCurrency) from {$ref_username}'s deposit. <br/>
             Thank you. <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
             &copy; " . date('Y', time()) . " {$this->siteName}
@@ -314,16 +314,16 @@ class SendMail
 
         $this->send($data);
 
-        return $this->sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username);
+        return $this->sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username, $cryptoCurrency);
     }
 
-    private function sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username)
+    private function sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username, $cryptoCurrency)
     {
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
         $data['subject'] = "Direct Referral Commission sent to user";
         $data['message'] =
-            "$username received a referral commission of \${$amount} from {$ref_username}'s deposit.";
+            "$username received a referral commission of \${$amount} ($cryptoCurrency) from {$ref_username}'s deposit.";
 
         $this->mail->clearAttachments();
 
@@ -385,33 +385,34 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendBonusConfirmToken($token, $fullName, $userName, $amount)
+    public function sendBonusConfirmToken($bonusUrl, $fullName, $userName, $amount, $cryptoCurrency)
     {
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
-        $data['subject'] = "Bonus confirm token";
+        $data['subject'] = "Bonus Confirm Link for {$userName}";
         $data['message'] =
-            "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
-            Your confirmation token is: {$token} ";
+            "You have requested to add bonus of $$amount ($cryptoCurrency) to $fullName ($userName). <br/>
+            Click the link below or copy to a new tab to confirm this operation. Token expires in 10 minutes.<br/><br/>
+            <a href='$bonusUrl'>$bonusUrl</a> ";
 
         $this->mail->clearAttachments();
 
         return $this->send($data);
     }
 
-    public function sendBonusAddedMail($email, $name, $amount, $bonusType)
+    public function sendBonusAddedMail($email, $name, $amount, $cryptoCurrency)
     {
 
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Bonus added to account";
+        $data['subject'] = "Bonus Added to Account";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
         <img src='cid:banner'/><br/><br>
         <h2> BONUS RECEIVED </h2><br/>
             Hello $name,<br/><br/>
-            Congratulations, you just received a bonus <strong>$bonusType</strong> of $$amount.<br/><br/>
+            Congratulations, you just received a bonus of $$amount ($cryptoCurrency).<br/><br/>
             Thank you.
             <br/><br/>
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
@@ -423,36 +424,37 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendBonusAddedMailToAdmin($userName, $name, $amount, $bonusType)
+    public function sendBonusAddedMailToAdmin($userName, $name, $amount, $cryptoCurrency)
     {
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
         $data['subject'] = "Bonus added to user";
         $data['message'] =
-            "A bonus <strong>$bonusType.</strong> of $$amount has been added successfully to $name ($userName).";
+            "A bonus of $$amount ($cryptoCurrency) has been added successfully to $name ($userName).";
 
         $this->mail->clearAttachments();
 
         return $this->send($data);
     }
 
-    public function sendPenaltyConfirmToken($token, $fullName, $userName, $amount)
+    public function sendPenaltyConfirmToken($penaltyUrl, $fullName, $userName, $amount, $cryptoCurrency)
     {
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
-        $data['subject'] = "Penalty confirm token";
+        $data['subject'] = "Penalty Confirm Token for {$userName}";
         $data['message'] =
-            "You have requested to add bonus of $$amount to $fullName ($userName). <br/>
-            Your confirmation token is: {$token}";
+            "You have requested to subtract a penalty of $$amount ($cryptoCurrency) from $fullName ($userName). <br/>
+            Click the link below or copy to a new tab to confirm this operation. Token expires in 10 minutes.<br/><br/>
+            <a href='$penaltyUrl'>$penaltyUrl</a> ";
 
         $this->mail->clearAttachments();
 
         return $this->send($data);
     }
 
-    public function sendPenaltySubtractedMail($email, $name, $amount, $reason)
+    public function sendPenaltySubtractedMail($email, $name, $amount, $cryptoCurrency, $reason)
     {
 
         $data['email'] = $email;
@@ -463,8 +465,8 @@ class SendMail
         <img src='cid:banner'/><br/><br>
         <h2>PENALTY</h2><br>
             Hello $name,<br/><br/>
-            Sorry, a penalty of $$amount has been subtracted from your account.<br/>
-            $reason.<br/><br/>
+            Sorry, a penalty of $$amount ($cryptoCurrency) has been subtracted from your account.<br/>
+            Reason: $reason.<br/><br/>
             Thank you. <br/><br/>
 
             If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
@@ -479,15 +481,15 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendPenaltySubtractedMailToAdmin($userName, $name, $amount, $reason)
+    public function sendPenaltySubtractedMailToAdmin($userName, $name, $amount, $cryptoCurrency, $reason)
     {
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
         $data['subject'] = "Penalty subtracted from user";
         $data['message'] =
-            "A penalty of $$amount has been subtracted successfully from $name ($userName).<br/>
-            $reason";
+            "A penalty of $$amount ($cryptoCurrency) has been subtracted successfully from $name ($userName).<br/>
+            Reason: $reason";
 
         $this->mail->clearAttachments();
 
