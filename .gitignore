@@ -11,3 +11,12 @@ public/uploads/*
 !public/uploads/documents/
 tmp/*
 !tmp/index.php
+
+smarty/*
+!smarty/config/
+!smarty/cache/
+smarty/cache/*
+!smarty/cache/index.php
+!smarty/tmpl_c/
+smarty/tmpl_c/*
+!smarty/tmpl_c/index.php
