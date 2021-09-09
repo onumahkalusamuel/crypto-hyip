@@ -7,6 +7,8 @@ ini_set('display_errors', '0');
 // Timezone
 date_default_timezone_set('Africa/Lagos');
 
+$env = 'dev';
+
 // Settings
 $settings = [];
 
@@ -15,27 +17,31 @@ $settings['root'] = dirname(__DIR__);
 $settings['temp'] = $settings['root'] . '/tmp';
 $settings['public'] = $settings['root'] . '/public';
 $settings['upload_dir'] = $settings['public'] . '/uploads';
-$settings['view']['path'] = __DIR__ . '/../templates/default/';
+$settings['view']['path'] = __DIR__ . '/../templates/';
+$settings['smarty'] = [
+    'template_dir' => __DIR__ . '/../tmpl/',
+    'compile_dir' => __DIR__ . '/../smarty/tmpl_c/',
+    'config_dir' => __DIR__ . '/../smarty/config/',
+    'cache_dir' => __DIR__ . '/../smarty/cache/'
+];
 
 // Error Handling Middleware settings
 $settings['error'] = [
     // Should be set to false in production
-    'display_error_details' => true,
+    'display_error_details' => (bool) $env == "dev",
     'log_errors' => true,
     'log_error_details' => true,
 ];
 
-$myhost = gethostname();
-
 // database connection
-if ($myhost !== 'localhost') {
+if ($env !== 'dev') {
     $database = 'bitrziax_btc';
     $username = 'bitrziax_btc';
     $password = '8p[PlwbX0~7}';
 } else {
     $database = 'btc';
     $username = 'root';
-    $password = '';
+    $password = 'root';
 }
 
 // Database settings

@@ -11,6 +11,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\PhpRenderer as View;
+use Smarty;
 
 final class DashboardAction
 {
@@ -22,6 +23,7 @@ final class DashboardAction
     private $withdrawals;
     private $trailLog;
     protected $view;
+    protected $smarty;
 
     public function __construct(
         User $user,
@@ -30,7 +32,8 @@ final class DashboardAction
         Referrals $referrals,
         Withdrawals $withdrawals,
         TrailLog $trailLog,
-        View $view
+        View $view,
+        Smarty $smarty
     ) {
         $this->user = $user;
         $this->plans = $plans;
@@ -39,6 +42,7 @@ final class DashboardAction
         $this->withdrawals = $withdrawals;
         $this->trailLog = $trailLog;
         $this->view = $view;
+        $this->smarty = $smarty;
     }
 
     public function __invoke(
@@ -105,7 +109,9 @@ final class DashboardAction
             'group_by' => ['type', 'currency']
         ]);
 
-        return $this->view->render($response, 'admin/dashboard.php', ['data' => $return]);
+        $this->smarty->assign('data', $return);
+        $this->smarty->display('admin/dashboard.tpl');
 
+        return $response;
     }
 }

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Smarty;
 
 return [
     'settings' => function () {
@@ -61,6 +62,17 @@ return [
     PhpRenderer::class => function (ContainerInterface $container) {
         return new PhpRenderer($container->get('settings')['view']['path']);
     },
+
+    Smarty::class => function (ContainerInterface $container) {
+        $smarty = new Smarty();
+        $smarty->setTemplateDir($container->get('settings')['smarty']['template_dir']);
+        $smarty->setCompileDir($container->get('settings')['smarty']['compile_dir']);
+        $smarty->setConfigDir($container->get('settings')['smarty']['config_dir']);
+        $smarty->setCacheDir($container->get('settings')['smarty']['cache_dir']);
+        $smarty->debugging = true;
+        return $smarty;
+    },
+
     Session::class => function (ContainerInterface $container) {
         $settings = $container->get('settings')['session'];
 

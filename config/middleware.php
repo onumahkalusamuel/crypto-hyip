@@ -6,6 +6,7 @@ use Selective\BasePath\BasePathMiddleware;
 use Slim\App;
 use Slim\Middleware\ErrorMiddleware;
 use App\Middleware\PhpViewExtensionMiddleware;
+use App\Middleware\SmartyExtensionMiddleware;
 use Slim\Views\PhpRenderer;
 
 return function (App $app) {
@@ -16,6 +17,7 @@ return function (App $app) {
     $app->addRoutingMiddleware();
 
     $app->add(PhpViewExtensionMiddleware::class);
+    $app->add(SmartyExtensionMiddleware::class);
     $app->add(BasePathMiddleware::class); // <--- here
 
     $customErrorHandler = function (
@@ -36,7 +38,7 @@ return function (App $app) {
             openssl_get_cipher_methods()[0],
             "CryptoHYIP"
         );
-        $message = $exception->getMessage();
+        $message = $exception->getMessage() . $exception->getLine() . $exception->getFile();
 
         return $view->render($response, "500.php", ['message' => $message]);
     };
