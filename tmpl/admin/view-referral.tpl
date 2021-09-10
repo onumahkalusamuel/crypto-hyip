@@ -1,15 +1,7 @@
-<?php $this->addAttribute('pageTitle', 'Referrals'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
-<?php
+{include file='admin/header.tpl' pageTitle='Referral'}
 
-$referral = $data['referral'];
-$transactions = $data['trailLog'];
-
-if(empty($referral->ID)) {
-    header("Location: " . $route->urlFor('admin-referrals'));
-    exit();
-}
-?>
+{assign var=referral value=$data.referral}
+{assign var=transactions value=$data.trailLog}
 
 <div class="main-content">
 
@@ -57,13 +49,12 @@ if(empty($referral->ID)) {
                 <div id="accordion2" class="panel-collapse collapse in ">
                     <div class="panel-body">
                         <h5>All earnings and transactions for this referral will be listed here.</h5>
-                        <?php echo $this->fetch(
-                            'admin/components/transactions-table-only.php',
-                            ['transactions' => $transactions ?? []]
-                        ); ?>
+			{include file='admin/components/transactions-table-only.tpl' trasactions=$transactions}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{include file='admin/footer.tpl'}

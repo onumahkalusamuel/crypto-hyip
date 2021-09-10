@@ -5,7 +5,7 @@ namespace App\Action\Admin\Settings;
 use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -28,6 +28,9 @@ final class ViewAll
         // settings
         $data['settings'] = $this->settings->settings;
 
-        return $this->view->render($response, 'admin/settings.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/settings.tpl');
+
+        return $response;
     }
 }

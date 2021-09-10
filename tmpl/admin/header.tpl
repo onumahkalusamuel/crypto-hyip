@@ -18,6 +18,9 @@
     <link rel="apple-touch-icon" sizes="114x114" href="assets/images/apple-touch-icon-iphone-retina-120x120.png">
     <link rel="apple-touch-icon" sizes="144x144" href="assets/images/apple-touch-icon-ipad-retina-152x152.png">
 
+    <!--Stylesheet-->
+    <link rel="stylesheet" href="adminstyle.css" type="text/css"/>
+
     <style type="text/css">
         :root {
             --primary-color: #FF8D00;
@@ -83,7 +86,7 @@
 
 <body class="">
 <center>
-<table width="998" class="header" height="100">
+<table width="940" class="header" height="100">
     <tr>
         <td>
             <a class="" href="{$route->urlFor('admin-dashboard')}">
@@ -92,7 +95,8 @@
         </td>
     </tr>
 </table>
-<table width="998" class="body">
+<table width="940" class="body">
     <tr>
         <td width="198" style="border-right:1px solid orange">{include file='admin/navigation.tpl'}</td>
         <td>
+	    {include file='admin/components/flash-bag.tpl'}

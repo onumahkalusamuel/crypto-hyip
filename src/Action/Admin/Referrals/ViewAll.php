@@ -5,7 +5,7 @@ namespace App\Action\Admin\Referrals;
 use App\Domain\Referrals\Service\Referrals;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -51,10 +51,11 @@ final class ViewAll
         ]);
 
         // prepare the return data
-        $data = [
-            'referrals' => $referrals
-        ];
+        $data = ['referrals' => $referrals];
 
-        return $this->view->render($response, 'admin/referrals.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/referrals.tpl');
+
+        return $response;
     }
 }

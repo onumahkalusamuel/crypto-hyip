@@ -1,6 +1,5 @@
 {include file='admin/header.tpl' pageTitle='Dashboard'}
 
-
 <div class="main-content">
     <div class="container pb-40 pt-20">
         <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">

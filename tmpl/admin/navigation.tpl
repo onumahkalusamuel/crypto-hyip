@@ -12,7 +12,7 @@
 <span class="nav-divider"></span>
 
 <a class="first" href="{$route->urlFor('admin-withdrawals')}">Withdrawal Requests</a>
-<a href="{$route->urlFor('admin-deposits')}">Pending Deposits</a>
+<a href="{$route->urlFor('admin-deposits', [], ['depositStatus'=>'pending'])}">Pending Deposits</a>
 <a href="{$route->urlFor('admin-referrals')}">Referrals</a>
 
 <span class="nav-divider"></span>

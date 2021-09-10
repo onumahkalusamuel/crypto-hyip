@@ -31,7 +31,7 @@ class SendMail
         $this->contactAddress = $display['contact_address'];
         $this->contactEmail = $display['contact_email'];
         $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
-        $this->emailBanner = $this->settings['upload_dir'] . '/email/email-banner.jpg';
+        $this->emailBanner = $this->settings['assets_dir'] . '/email/email-banner.jpg';
 
         $mail = new PHPMailer(true);
 

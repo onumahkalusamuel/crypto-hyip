@@ -8,9 +8,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Smarty;
-use Laminas\Escaper\Escaper;
 use Symfony\Component\HttpFoundation\Session\Session;
-
 
 final class SmartyExtensionMiddleware implements MiddlewareInterface
 {
@@ -21,18 +19,14 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
 
     private $session;
 
-    private $escaper;
-
     public function __construct(
         App $app,
         Smarty $smarty,
-        Session $session,
-        Escaper $escaper
+        Session $session
     ) {
         $this->smarty = $smarty;
         $this->app = $app;
         $this->session = $session;
-        $this->escaper = $escaper;
     }
 
     public function process(
@@ -47,7 +41,6 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->smarty->assign('basePath', $this->app->getBasePath());
         $this->smarty->assign('route', $this->app->getRouteCollector()->getRouteParser());
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
-        $this->smarty->assign('esc', $this->escaper);
         $this->smarty->assign('getTimeAgo', function ($date = null) {
 
             if(empty($date)) return "";

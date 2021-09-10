@@ -1,15 +1,6 @@
-<?php $this->addAttribute('pageTitle', 'Add Penalty'); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
- <?php
-
-    $user = $data['user'];
-    $currencies = $data['currencies'];
-
-    if (empty($user->ID)) {
-        header("Location: " . $route->urlFor('admin-users'));
-        exit();
-    }
-    ?>
+{include file='admin/header.tpl' pageTitle='Add Penalty'}
+{assign var=user value=$data.user}
+{assign var=currencies value=$data.currencies}
 
  <div class="main-content">
 
@@ -111,3 +102,5 @@
  
  document.querySelector('#bonusUsage').addEventListener('change', bonusUsageMonitor);
  </script>
+
+{include file='admin/footer.tpl'}

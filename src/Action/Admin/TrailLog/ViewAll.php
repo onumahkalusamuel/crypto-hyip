@@ -5,7 +5,7 @@ namespace App\Action\Admin\TrailLog;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -49,6 +49,9 @@ final class ViewAll
             'filters' => $filters
         ]);
 
-        return $this->view->render($response, 'admin/transactions.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/transactions.tpl');
+
+        return $response;
     }
 }

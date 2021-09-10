@@ -1,5 +1,4 @@
-<?php $this->addAttribute('pageTitle', 'Referrals'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
+{include file='admin/header.tpl' pageTitle='Referrals'}
 
 <div class="main-content">
     <div class="container pb-40 pt-20">
@@ -10,13 +9,12 @@
                 </div>
                 <div id="accordion1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'admin/components/referrals-table.php',
-                            ['referrals' => $data['referrals'] ?? []]
-                        ); ?>
+			{include file='admin/components/referrals.tpl' referrals=$data.referrals}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{include file='admin/footer.tpl'}

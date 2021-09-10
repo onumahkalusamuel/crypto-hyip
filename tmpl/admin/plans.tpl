@@ -1,5 +1,4 @@
-<?php $this->addAttribute('pageTitle', 'Plans'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
+{include file='admin/header.tpl' pageTitle='Plans'}
 
 <div class="main-content">
     <div class="container pb-40 pt-20">
@@ -84,3 +83,5 @@
         </div>
     </div>
 </div>
+
+{include file='admin/footer.tpl'}

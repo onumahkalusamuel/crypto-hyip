@@ -5,19 +5,19 @@ namespace App\Action\Admin\Plans;
 use App\Domain\Plans\Service\Plans;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty;
 
 final class ViewAll
 {
     protected $plans;
-    protected $view;
+    protected $smarty;
 
     public function __construct(
         Plans $plans,
-        View $view
+        Smarty $smarty
     ) {
         $this->plans = $plans;
-        $this->view = $view;
+        $this->smarty = $smarty;
     }
 
     public function __invoke(
@@ -29,10 +29,11 @@ final class ViewAll
         $plans = $this->plans->readAll([]);
 
         // prepare the return data
-        $data = [
-            'plans' => $plans
-        ];
+        $data = ['plans' => $plans];
 
-        return $this->view->render($response, 'admin/plans.php', ['data' => $data]);
+	$this->smarty->assign('data', $data);
+        $this->smarty->display('admin/plans.tpl');
+
+	return $response;
     }
 }

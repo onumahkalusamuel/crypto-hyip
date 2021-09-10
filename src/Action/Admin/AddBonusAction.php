@@ -14,7 +14,7 @@ use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class AddBonusAction
 {
@@ -66,16 +66,21 @@ final class AddBonusAction
     	$user = $this->user->readSingle(['ID' => $ID]);
     	$plans = $this->plans->readAll([]);
     	$currencies = explode(',', $this->settings->activeCurrencies);
-    	
-    	return $this->view->render($response, 'admin/add-bonus.php', ['user' => $user, 'plans' => $plans, 'currencies' => $currencies]);
-    
+
+	$this->view->assign('user', $user);
+	$this->view->assign('plans', $plans);
+	$this->view->assign('currencies',$currencies);
+	$this->view->display('admin/add-bonus.tpl');
+
+    	return $response;
+
     }
-    
+
     public function initTransaction(
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-        
+
     	$flash = $this->session->getFlashBag();
         $flash->clear();
 
@@ -84,27 +89,26 @@ final class AddBonusAction
 
     	$data = (array) $request->getParsedBody();
     	$message = "";
-    	
-    
+
         if (empty($data['ID']) || empty($data['fullName']) || empty($data['userName']) || empty($data['amount'])) {
             $message = "Please provide all required data.";
         }
-        
+
         if(empty($message)) {
-            
+
             $token = substr(strtoupper(sha1(uniqid())), 5, 10);
 
             file_put_contents("$this->location/$token.json", json_encode($data, JSON_PRETTY_PRINT));
-            
+
             $bonusUrl = $routeParser->fullUrlFor($request->getUri(), 'admin-add-bonus-confirm', ['confirmation_code' => $token]);
-    
+
             $sendMail = $this->mail->sendBonusConfirmToken($bonusUrl, $data['fullName'], $data['userName'], $data['amount'], $data['cryptoCurrency']);
-            
+
             if(empty($sendMail)) {
                 $message = "An error occured. Please try again later.";
             }
         }
-        
+
 
         $url = $routeParser->urlFor('admin-add-bonus-view', ['user_id' => $data['ID']]);
 
@@ -116,7 +120,7 @@ final class AddBonusAction
         }
 
         return $response->withStatus(302)->withHeader('Location', $url);
-        
+
     }
 
     public function confirmTransaction(
@@ -124,9 +128,9 @@ final class AddBonusAction
         ResponseInterface $response,
         $args
     ): ResponseInterface {
-    
+
     	$token = $args['confirmation_code'];
-    	
+
         $file = "$this->location/$token.json";
 
         if (!is_file($file) || !is_readable($file)) {

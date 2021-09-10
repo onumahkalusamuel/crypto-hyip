@@ -1,31 +1,23 @@
-<?php $this->addAttribute('pageTitle', 'Deposits'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
-<?php
+{include file='admin/header.tpl' pageTitle='Deposit'}
 
-$deposit = $data['deposit'];
-$transactions = $data['trailLog'];
+{assign var=deposit value=$data.deposit}
+{assign var=transactions value=$data.trailLog}
 
-if(empty($deposit->ID)) {
-    header("Location: " . $route->urlFor('admin-deposits'));
-    exit();
-}
+{assign var=check value=$deposit.cryptoCurrency}
 
-switch ($deposit->cryptoCurrency) {
-    case "btc": {
-            $protocol = "bitcoin";
-            break;
-        }
-    case "eth": {
-            $protocol = "etherium";
-            break;
-        }
-    default: {
-            $protocol = "bitcoin";
-            break;
-        }
-}
+{if "btc" === $check}
+    {assign var=protocol value="bitcoin"}
+{elseif "eth" === $check}
+    {assign var=protocol value="etherium"}
+{elseif "ltc" === $check}
+    {assign var=protocol value="litecoin"}
+{elseif "doge" === $check}
+    {assign var=protocol value="dogecoin"}
+{else}
+    {assign var=protocol value="bitcoin"}
+{/if}
 
-$paymentLink = "https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount={$deposit->cryptoAmount}&address={$deposit->depositAddress}";
+{assign var=paymentLink value="https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount={$deposit.cryptoAmount}&address={$deposit.depositAddress}"}
 
 ?>
 
@@ -158,3 +150,7 @@ $paymentLink = "https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount
         background-color: #007bff;
     }
 </style>
+
+
+
+{include file='admin/footer.tpl'}

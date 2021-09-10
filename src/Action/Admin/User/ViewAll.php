@@ -5,7 +5,7 @@ namespace App\Action\Admin\User;
 use App\Domain\User\Service\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -55,6 +55,9 @@ final class ViewAll
             'users' => $user
         ];
 
-        return $this->view->render($response, 'admin/users.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/users.tpl');
+
+        return $response;
     }
 }

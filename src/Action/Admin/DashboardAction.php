@@ -10,7 +10,6 @@ use App\Domain\Referrals\Service\Referrals;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
 use Smarty;
 
 final class DashboardAction
@@ -22,7 +21,6 @@ final class DashboardAction
     private $referrals;
     private $withdrawals;
     private $trailLog;
-    protected $view;
     protected $smarty;
 
     public function __construct(
@@ -32,7 +30,6 @@ final class DashboardAction
         Referrals $referrals,
         Withdrawals $withdrawals,
         TrailLog $trailLog,
-        View $view,
         Smarty $smarty
     ) {
         $this->user = $user;
@@ -41,7 +38,6 @@ final class DashboardAction
         $this->referrals = $referrals;
         $this->withdrawals = $withdrawals;
         $this->trailLog = $trailLog;
-        $this->view = $view;
         $this->smarty = $smarty;
     }
 
@@ -74,22 +70,21 @@ final class DashboardAction
             'group_by' => ['currency', 'status']
         ]);
 
-        // withdrawals 
+        // withdrawals
         $return['withdrawals'] = $this->withdrawals->readAll([
             'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
             'group_by' => ['currency', 'status']
         ]);
 
-        // plans 
+        // plans
         $return['plans'] = $this->plans->readAll([
             'select' => ['durationType as type'],
             'select_raw' => ['COUNT(*) as total'],
             'group_by' => 'type'
         ]);
 
-
-        // referrals 
+        // referrals
         $referrals = $this->referrals->readAll([
             'select' => ['ID'],
             'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount']

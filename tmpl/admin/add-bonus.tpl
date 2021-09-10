@@ -1,18 +1,10 @@
-<?php $this->addAttribute('pageTitle', 'Add Bonus'); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
- <?php
+{include file='admin/header.tpl' pageTitle='Add Bonus'}
 
-    $user = $data['user'];
-    $plans = $data['plans'];
-    $currencies = $data['currencies'];
+{assign var=user value=$data.user}
+{assign var=plans value=$data.plans}
+{assign var=currencies value=$data.currencies}
 
-    if (empty($user->ID)) {
-        header("Location: " . $route->urlFor('admin-users'));
-        exit();
-    }
-    ?>
-
- <div class="main-content">
+<div class="main-content">
 
      <div class="container pb-40 pt-20">
 
@@ -126,3 +118,6 @@
  
  document.querySelector('#bonusUsage').addEventListener('change', bonusUsageMonitor);
  </script>
+
+
+{include file='admin/footer.tpl'}

@@ -10,7 +10,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleView
 {
@@ -103,7 +103,7 @@ final class SingleView
                 'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
                 'group_by' => ['type', 'currency']
             ]);
-            
+
             // penalties
             $data['penalties'] = $this->trailLog->readAll([
                 'params' => ['where' => ['userID' => $ID, 'logType' => 'penalty']],
@@ -111,7 +111,7 @@ final class SingleView
                 'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
                 'group_by' => ['type', 'currency']
             ]);
-            
+
             // transactions
             $data['transactions'] = $this->trailLog->readAll([
                 'params' => ['where' => ['userID' => $ID]],
@@ -119,10 +119,13 @@ final class SingleView
                 'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
                 'group_by' => ['type', 'currency']
             ]);
-            
+
             $data['activeCurrencies'] = explode(',', $this->settings->activeCurrencies);
         }
 
-        return $this->view->render($response, 'admin/view-user-profile.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/view-user-profile.tpl');
+
+        return $response;
     }
 }

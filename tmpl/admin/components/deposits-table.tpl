@@ -1,39 +1,32 @@
-<?php
-$default = ['data' => [], 'total_rows' => 0];
-
-[
-    'data' => $localData,
-    'total_rows' => $totalRows
-] = $deposits + $default;
-?>
+{assign var=localData value=$deposits.data}
+{assign var=totalRows value=$deposits.total_rows}
 <div class="pb-40 pt-sm-5">
     <div class="section-content">
         <div class="">
             <form class="row" action="" method="get">
                 <!-- set other parameters -->
-                <?php
-                foreach ($_GET as $key => $value) {
-                    if (!in_array($key, ['logType', 'from', 'to', 'rpp'])) {
-                        echo "<input name='$key' value='$value' hidden />";
-                    }
-                }
-                ?>
+                {foreach $smarty.get as $key => $value}
+                    {if $key|!in_array:['logType','from','to','rpp']}
+                        <input name="{$key}" value="{$value"} hidden />
+                    {/if}
+                {/foreach}
+
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="depositStatus">Deposit Status:</label>
                     <select id="depositStatus" name="depositStatus" class="form-control">
-                        <option <?= ($_GET['depositStatus'] == '' ? 'selected' : null); ?> value="">Show All</option>
-                        <option <?= ($_GET['depositStatus'] == 'approved' ? 'selected' : null); ?> value="approved">Approved</option>
-                        <option <?= ($_GET['depositStatus'] == 'pending' ? 'selected' : null); ?> value="pending">Pending</option>
-                        <option <?= ($_GET['depositStatus'] == 'released' ? 'selected' : null); ?> value="released">Released</option>
+                        <option {if $smarty.get.depositStatus==""}selected{/if} value="">Show All</option>
+                        <option {if $smarty.get.depositStatus=="approved"}selected{/if} value="approved">Approved</option>
+                        <option {if $smarty.get.depositStatus=="pending"}selected{/if} value="pending">Pending</option>
+                        <option {if $smarty.get.depositStatus=="released"}selected{/if} value="released">Released</option>
                     </select>
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="from">From:</label>
-                    <input class="form-control" type="date" id="from" name="from" value="<?= $_GET['from']; ?>" />
+                    <input class="form-control" type="date" id="from" name="from" value="{$smarty.get.from}" />
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="to">To:</label>
-                    <input class="form-control" type="date" id="to" name="to" value="<?= $_GET['to']; ?>" />
+                    <input class="form-control" type="date" id="to" name="to" value="{$smarty.get.to}" />
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <br class="hidden-xs hidden-sm" />
@@ -49,8 +42,8 @@ $default = ['data' => [], 'total_rows' => 0];
                     <th>Action</th>
                 </tr>
 
-                <?php if (!empty($localData)) : ?>
-                    <?php foreach ($localData as $index => $trans) : ?>
+                {if $localData|@count gt 0}
+                    {foreach $localData as $index => $trans}
                         <tr>
                             <td class="text-uppercase">
                                 <strong>
@@ -86,14 +79,14 @@ $default = ['data' => [], 'total_rows' => 0];
                                 <?php endif; ?>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
+                    {/foreach}
+                {else}
                     <tr>
                         <td colspan="5">
                             No data found.
                         </td>
                     </tr>
-                <?php endif; ?>
+                {/if}
             </table>
         </div>
         <?php echo $this->fetch(

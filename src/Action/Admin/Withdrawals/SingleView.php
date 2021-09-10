@@ -6,7 +6,7 @@ use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleView
 {
@@ -51,6 +51,9 @@ final class SingleView
             'trailLog' => $trailLog
         ];
 
-        return $this->view->render($response, 'admin/view-withdrawal.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/view-withdrawal.tpl');
+
+        return $response;
     }
 }

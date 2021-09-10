@@ -5,7 +5,7 @@ namespace App\Action\Admin\Withdrawals;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -51,6 +51,9 @@ final class ViewAll
             'withdrawals' => $withdrawals
         ];
 
-        return $this->view->render($response, 'admin/withdrawals.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+	$this->view->display('admin/withdrawals.tpl');
+
+        return $response;
     }
 }

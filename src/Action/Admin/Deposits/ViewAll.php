@@ -5,7 +5,7 @@ namespace App\Action\Admin\Deposits;
 use App\Domain\Deposits\Service\Deposits;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ViewAll
 {
@@ -54,6 +54,9 @@ final class ViewAll
             'deposits' => $deposits
         ];
 
-        return $this->view->render($response, 'admin/deposits.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/deposits.tpl');
+
+        return $response;
     }
 }

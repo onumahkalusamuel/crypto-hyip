@@ -1,13 +1,9 @@
- <?php $this->addAttribute('pageTitle', 'Settings'); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
- <?php
- 
- $settings = $data['settings'];
- $activeCurrencies = explode(',', $settings['activeCurrencies']);
- 
- ?>
+{include file='admin/header.tpl' pageTitle='Settings'}
 
- <div class="main-content">
+{assign var=settings value=$data.settings}
+{assign var=activeCurrencies value=","|explode:$settings.activeCurrencies}
+
+<div class="main-content">
 
      <div class="container pb-40 pt-20">
 
@@ -110,3 +106,6 @@
          </div>
      </div>
  </div>
+
+
+{include file='admin/footer.tpl'}

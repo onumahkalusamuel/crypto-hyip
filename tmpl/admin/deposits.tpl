@@ -1,5 +1,4 @@
-<?php $this->addAttribute('pageTitle', 'Deposits'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
+{include file='admin/header.tpl' pageTitle='Deposits'}
 
 <div class="main-content">
     <div class="container pb-40 pt-20">
@@ -10,13 +9,12 @@
                 </div>
                 <div id="accordion1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'admin/components/deposits-table.php',
-                            ['deposits' => $data['deposits'] ?? []]
-                        ); ?>
+			{include file='admin/components/deposits-table.tpl' deposits=$data.deposits}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{include file='admin/footer.tpl'}

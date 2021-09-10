@@ -1,21 +1,13 @@
- <?php $this->addAttribute('pageTitle', $data['user']->fullName); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
- <?php
+{include file='admin/header.tpl' pageTitle='User'}
 
-    $user = $data['user'];
-    $referrals = $data['referrals'];
-    $deposits = $data['deposits'];
-    $bonuses = $data['bonuses'];
-    $penalties = $data['penalties'];
-    $withdrawals = $data['withdrawals'];
-    $transactions = $data['transactions'];
-    $activeCurrencies = $data['activeCurrencies'];
-
-    if (empty($user->ID)) {
-        header("Location: " . $route->urlFor('admin-users'));
-        exit();
-    }
-    ?>
+{aasign var=user value=$data.user}
+{assign var=referrals value=$data.referrals}
+{assign var=deposits value=$data.deposits}
+{assign var=bonuses value=$data.bonuses}
+{assign var=penalties value=$data.penalties}
+{assign var=withdrawals value=$data.withdrawals}
+{assign var=transactions value=$data.transactions}
+{assign var=activeCurrencies value=$data.activeCurrencies}
 
  <div class="main-content">
 
@@ -82,7 +74,7 @@
                      </div>
                  </div>
              </div>
-             <?php if ($user->ID !== "new") : ?>
+             {if $user->ID !== "new"}
                  <div class="panel panel-default mb-20">
                      <div class="panel-heading">
                          <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#balancesAccordion">Balances </a> </div>
@@ -92,14 +84,14 @@
                              <div class="">
                                      <div class="col-md-12">
                                          <table class="table">
-                                             <?php foreach($activeCurrencies as $currency):?>
+                                             {foreach $activeCurrencies as $currency}
                                              <tr>
                                                  <td>
-                                                     <strong><?=strtoupper($currency);?> Balance:</strong><br />
+                                                     <strong>{$currency|upper} Balance:</strong><br />
                                                      $<?= number_format($user->{$currency .'Balance'}, 2); ?>
                                                  </td>
                                              </tr>
-                                             <?php endforeach;?>
+                                             {/foreach}
                                          </table>
                                      </div>
                              </div>
@@ -304,7 +296,9 @@
                          </div>
                      </div>
                  </div>
-             <?php endif;?>
+             {/endif}
          </div>
      </div>
  </div>
+
+{include file='admin/footer.tpl'}

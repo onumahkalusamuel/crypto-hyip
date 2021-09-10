@@ -6,7 +6,7 @@ use App\Domain\Referrals\Service\Referrals;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleView
 {
@@ -50,7 +50,9 @@ final class SingleView
             'referral' => $referral,
             'trailLog' => $trailLog
         ];
+	$this->view->assign('data', $data);
+        $this->view->display('admin/view-referral.tpl');
 
-        return $this->view->render($response, 'admin/view-referral.php', ['data' => $data]);
+        return $response;
     }
 }

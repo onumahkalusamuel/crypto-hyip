@@ -62,7 +62,7 @@ $settings['external_menu'] = [
 // this might be transferred to a database later.
 // modify as needed. also, delete irrelevant ones.
 // add new items to the array in the given format
-// e.g. ['question'=>'your quuestion', 'answer' -> 'your answer']
+// e.g. ['question'=>'your question', 'answer' -> 'your answer']
 $faqs = [
     [
         'question' => 'How high is my risk? ',

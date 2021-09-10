@@ -1,14 +1,6 @@
- <?php $this->addAttribute('pageTitle', 'Plans'); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
- <?php
+{include file='admin/header.tpl' pageTitle='Plan'}
 
-    $plan = $data['plan'];
-
-    if (empty($plan->ID)) {
-        header("Location: " . $route->urlFor('admin-plans'));
-        exit();
-    }
-    ?>
+{assign var=plan value=$data.plan}
 
  <div class="main-content">
 
@@ -122,6 +114,4 @@
  </div>
 
 
- <script>
-     $("#form").validate();
- </script>
+{include file='admin/footer.tpl'}

@@ -5,7 +5,7 @@ namespace App\Action\Admin\Plans;
 use App\Domain\Plans\Service\Plans;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleView
 {
@@ -36,10 +36,10 @@ final class SingleView
         }
 
         // prepare the return data
-        $data = [
-            'plan' => $plan,
-        ];
+        $data = ['plan' => $plan];
 
-        return $this->view->render($response, 'admin/view-plan.php', ['data' => $data]);
+	$this->view->assign('data', $data);
+        $this->view->display('admin/view-plan.tpl');
+        return $response;
     }
 }

@@ -14,7 +14,7 @@ use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class AddPenaltyAction
 {
@@ -62,16 +62,19 @@ final class AddPenaltyAction
     	$ID = $args['user_id'];
     	$user = $this->user->readSingle(['ID' => $ID]);
     	$currencies = explode(',', $this->settings->activeCurrencies);
-    	
-    	return $this->view->render($response, 'admin/add-penalty.php', ['user' => $user, 'currencies' => $currencies]);
-    
+
+	$this->view->assign('user', $user);
+        $this->view->assign('currencies',$currencies);
+        $this->view->display('admin/add-penalty.tpl');
+
+    	return $response;
     }
-    
+
     public function initTransaction(
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-        
+
     	$flash = $this->session->getFlashBag();
         $flash->clear();
 
@@ -80,14 +83,13 @@ final class AddPenaltyAction
 
     	$data = (array) $request->getParsedBody();
     	$message = "";
-    	
-    
+
         if (empty($data['ID']) || empty($data['fullName']) || empty($data['userName']) || empty($data['amount'])) {
             $message = "Please provide all required data.";
         }
-        
+
         if(empty($message)) {
-            
+
             $token = substr(strtoupper(sha1(uniqid())), 5, 10);
 
             file_put_contents("$this->location/$token.json", json_encode($data, JSON_PRETTY_PRINT));

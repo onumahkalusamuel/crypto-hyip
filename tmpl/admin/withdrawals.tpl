@@ -1,6 +1,4 @@
-<?php $this->addAttribute('pageTitle', 'Withdrawals'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
-
+{include file='admin/header.tpl' pageTitle='Withdrawals'}
 <div class="main-content">
     <div class="container pb-40 pt-20">
         <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
@@ -10,13 +8,13 @@
                 </div>
                 <div id="accordion1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'admin/components/withdrawals-table.php',
-                            ['withdrawals' => $data['withdrawals'] ?? []]
-                        ); ?>
+			{include file='admin/components/withdrawals-table.tpl' withdrawals=$data.withdrawals}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{include file='admin/footer.tpl'}
+

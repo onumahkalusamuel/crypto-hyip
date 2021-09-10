@@ -4,10 +4,15 @@
 error_reporting(0);
 ini_set('display_errors', '0');
 
-// Timezone
-date_default_timezone_set('Africa/Lagos');
+// load env variables
+$envPath = dirname(__DIR__) . '/.env';
+(new App\Helpers\DotEnvLoader($envPath))->load();
 
-$env = 'dev';
+// current env
+$env = $_ENV["APP_ENV"];
+
+// Timezone
+date_default_timezone_set($_ENV['TIMEZONE']);
 
 // Settings
 $settings = [];
@@ -17,12 +22,17 @@ $settings['root'] = dirname(__DIR__);
 $settings['temp'] = $settings['root'] . '/tmp';
 $settings['public'] = $settings['root'] . '/public';
 $settings['upload_dir'] = $settings['public'] . '/uploads';
+$settings['assets_dir'] = $settings['public'] . '/assets';
+
+// for php view
 $settings['view']['path'] = __DIR__ . '/../templates/';
+
+// for smarty
 $settings['smarty'] = [
-    'template_dir' => __DIR__ . '/../tmpl/',
-    'compile_dir' => __DIR__ . '/../smarty/tmpl_c/',
-    'config_dir' => __DIR__ . '/../smarty/config/',
-    'cache_dir' => __DIR__ . '/../smarty/cache/'
+    'template_dir' => $settings['root'] . '/tmpl/',
+    'compile_dir' => $settings['root'] . '/smarty/tmpl_c/',
+    'config_dir' => $settings['root'] . '/smarty/config/',
+    'cache_dir' => $settings['root'] . '/smarty/cache/'
 ];
 
 // Error Handling Middleware settings
@@ -33,24 +43,13 @@ $settings['error'] = [
     'log_error_details' => true,
 ];
 
-// database connection
-if ($env !== 'dev') {
-    $database = 'bitrziax_btc';
-    $username = 'bitrziax_btc';
-    $password = '8p[PlwbX0~7}';
-} else {
-    $database = 'btc';
-    $username = 'root';
-    $password = 'root';
-}
-
 // Database settings
 $settings['db'] = [
     'driver' => 'mysql',
-    'host' => 'localhost',
-    'username' => $username,
-    'database' => $database,
-    'password' => $password,
+    'host' => $_ENV['DBHOST'],
+    'username' => $_ENV['DBUSER'],
+    'database' => $_ENV['DBNAME'],
+    'password' => $_ENV['DBPASS'],
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_unicode_ci',
     'options' => [
@@ -69,9 +68,9 @@ $settings['db'] = [
 
 // email settings
 $settings['smtp'] = [
-    'email' => 'admin@bitrivetrading.com',
-    'password' => '5(;-0EYEu6aL',
-    'name' => 'Bitrive Admin',
+    'email' => $_ENV['SMTP_EMAIL'],
+    'password' => $_ENV['SMTP_PASSWORD'],
+    'name' => $_ENV['SMTP_SENDER_NAME'],
     'host' => gethostname()
 ];
 
@@ -83,7 +82,7 @@ $settings['session'] = [
 
 // fetch the definitions from the public file
 $settings['display_settings'] = function () {
-    return require __DIR__ . "/../___settings.php";
+    return require dirname(__DIR__) . "/settings.php";
 };
 
 return $settings;

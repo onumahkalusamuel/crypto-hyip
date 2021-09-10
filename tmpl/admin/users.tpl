@@ -1,5 +1,4 @@
- <?php $this->addAttribute('pageTitle', 'Users'); ?>
- <?php $this->setLayout('admin/layout.php'); ?>
+{include file='admin/header.tpl' pageTitle='Users'}
 
  <div class="main-content">
      <div class="container pb-40 pt-20">
@@ -11,15 +10,15 @@
                  <div id="accordion1" class="panel-collapse collapse in">
                      <div class="panel-body">
                          <h5 class="help">
-                             <a class="btn text-uppercase btn-theme-colored btn-flat" href="<?= $route->urlFor('admin-view-user', ['id' => 'new']); ?>">Add New User</a>
+                             <a class="btn text-uppercase btn-theme-colored btn-flat" href="{$route->urlFor('admin-view-user', ['id' => 'new'])}">Add New User</a>
                          </h5>
-                         <?php echo $this->fetch(
-                                'admin/components/users-table.php',
-                                ['users' => $data['users'] ?? []]
-                            ); ?>
+
+			{include file='admin/components/users-table.tpl' users=$data.users}
                      </div>
                  </div>
              </div>
          </div>
      </div>
  </div>
+
+{include file='admin/footer.tpl'}

@@ -1,14 +1,6 @@
-<?php $this->addAttribute('pageTitle', 'Withdrawals'); ?>
-<?php $this->setLayout('admin/layout.php'); ?>
-<?php
-$withdrawal = $data['withdrawal'];
+{include file='admin/header.tpl' pageTitle='Withdrawal'}
 
-if (empty($withdrawal->ID)) {
-    header("Location: " . $route->urlFor('admin-withdrawals'));
-    exit();
-}
-
-?>
+{assign var=withdrawal value=$data.withdrawal}
 
 <div class="main-content">
 
@@ -86,3 +78,5 @@ if (empty($withdrawal->ID)) {
         background-color: #007bff;
     }
 </style>
+
+{include file='admin/footer.tpl'}
