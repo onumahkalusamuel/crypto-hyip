@@ -86,7 +86,7 @@
 
 <body class="">
 <center>
-<table width="940" class="header" height="100">
+<table width="760" class="header" height="100">
     <tr>
         <td>
             <a class="" href="{$route->urlFor('admin-dashboard')}">
@@ -95,8 +95,8 @@
         </td>
     </tr>
 </table>
-<table width="940" class="body">
+<table width="760" class="body">
     <tr>
-        <td width="198" style="border-right:1px solid orange">{include file='admin/navigation.tpl'}</td>
+        <td width="160" style="border-right:1px solid orange">{include file='admin/navigation.tpl'}</td>
         <td>
 	    {include file='admin/components/flash-bag.tpl'}
