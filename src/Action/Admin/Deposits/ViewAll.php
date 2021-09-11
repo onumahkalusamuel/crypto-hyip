@@ -39,6 +39,10 @@ final class ViewAll
             $params['where']['depositStatus'] =  $_GET['depositStatus'];
         }
 
+	if (!empty($_GET['cryptoCurrency'])) {
+            $params['where']['cryptoCurrency'] =  $_GET['cryptoCurrency'];
+        }
+
         // paging
         $filters['page'] = !empty($_GET['page']) ? $_GET['page'] : 1;
         $filters['rpp'] = isset($_GET['rpp']) ? (int) $_GET['rpp'] : 20;

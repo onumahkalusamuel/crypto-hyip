@@ -37,9 +37,9 @@
                                         <option {if $smarty.get.depositStatus == "pending"}selected{/if}
                                             value="pending">
                                             Pending</option>
-                                        <option {if $smarty.get.depositStatus == "declined"}selected{/if}
-                                            value="declined">
-                                            Declined</option>
+                                        <option {if $smarty.get.depositStatus == "released"}selected{/if}
+                                            value="released">
+                                            Released</option>
                                     </select><br>
                                     <select name="cryptoCurrency" class="inpts">
                                         <option {if $smarty.get.cryptoCurrency == ""}selected{/if} value="">All

@@ -63,6 +63,10 @@ class TrailLogRepository extends Repository
             $__->where('logType', $where['logType']);
         }
 
+	if (!empty($where['cryptoCurrency'])) {
+            $__->where('cryptoCurrency', $where['cryptoCurrency']);
+        }
+
         if (!empty($where['userID'])) {
             $__->where('userID', $where['userID']);
         }

@@ -86,7 +86,7 @@
                                     <a class="badge badge-danger" target="_blank"
                                         href="{$route->urlFor('admin-view-user', ['id'=>$item->userID])}">edit</a>
                                     <a class="badge badge-info" target="_blank"
-                                        href="{$route->urlFor('admin-view-user', ['id'=>$item->userID])}">manage</a>
+                                        href="{$route->urlFor('admin-view-user-funds', ['id'=>$item->userID])}">manage</a>
                                     <br>
                                     <small style="color:gray"><b>{$item->logType|capitalize}:</b>
                                         &nbsp;{$item->transactionDetails}</small>

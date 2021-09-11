@@ -1,105 +1,97 @@
 {include file='admin/header.tpl' pageTitle='Add Bonus'}
 
-{assign var=user value=$data.user}
-{assign var=plans value=$data.plans}
-{assign var=currencies value=$data.currencies}
-
-<div class="main-content">
-
-     <div class="container pb-40 pt-20">
-
-         <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-             <div class="panel panel-default mb-20">
-                 <div class="panel-heading">
-                     <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#profileAccordion">Add Bonus </a> </div>
-                 </div>
-                 <div id="profileAccordion" class="panel-collapse collapse in">
-                     <div class="panel-body">
-                         <div class="">
-                             <form class="row" action="<?=$route->urlFor('admin-add-bonus', ['user_id'=> $user->ID]);?>" method="POST">
-                             <input type="hidden" name="ID" value="<?=$user->ID;?>"/>
-                                 <div class="col-md-12">
-                                     <table class="table">
-                                         <tr>
-                                             <td>
-                                                 <strong>Full Name:</strong><br />
-                                                 <?= ucwords($user->fullName); ?>
-                                                 <input type="hidden" name="fullName" value="<?=$user->fullName;?>"/>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td>
-                                                 <strong>Username:</strong><br />
-                                                 <?= $user->userName; ?>
-                                                 <input type="hidden" name="userName" value="<?=$user->userName;?>"/>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td>
-                                                 <strong>Email:</strong><br />
-                                                 <?= $user->email; ?>
-                                                 <input type="hidden" name="email" value="<?=$user->email;?>"/>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td><strong>Crypto Currency:</strong><br />
-                                                 <select name="cryptoCurrency" class="form-control">
-                                                 	<?php foreach($currencies as $currency):?>
-                                                 	    <option value="<?=$currency;?>"><?=strtoupper($currency);?></option>
-                                                 	<?php endforeach;?>
-                                                 </select>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td>
-                                                 <strong>Amount in Dollars:</strong><br />
-                                                 <input name="amount" class="form-control" />
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td><strong>Usage</strong><br />
-                                                 <select id="bonusUsage" name="bonusUsage" class="form-control">
-                                                     <option value="toBalance" selected>Add to available balance</option>
+<table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
+    <tbody>
+        <tr>
+            <td width="100%" valign="top" height="100%">
+                <h3>Add Bonus:</h3>
+    
+                <form method="post" action="{$route->urlFor('admin-add-bonus',  ['user_id'=> $user->ID])}">
+                <input type="hidden" name="ID" value="{$user->ID}"/>
+                    <table class="form settings">
+                        <tbody>
+                            <tr>
+                                <th>Full Name:</th>
+                                <td>
+                                   {$user->fullName}
+                                                 <input type="hidden" name="fullName" value="{$user->fullName}"/>
+                                                 
+                                        </td>
+                            </tr>
+                            <tr>
+                                <th>Username:</th>
+                                <td>
+                                   {$user->userName}
+                                                 <input type="hidden" name="userName" value="{$user->userName}"/>
+                                                 
+                                        </td>
+                            </tr>
+                            <tr>
+                                <th>Email:</th>
+                                <td>
+                                   {$user->email}
+                                                 <input type="hidden" name="email" value="{$user->email}"/>
+                                                 
+                                        </td>
+                            </tr>
+			    <tr>
+                                <th>Amount:</th>
+                                <td>$ <input type="number" name="amount" class="inpts"></td>
+                            </tr>
+                            <tr>
+                                <th>Crypto Currency:</th>
+                                <td>
+                                <select name="cryptoCurrency" class="inpts">
+				{foreach $currencies as $currency}
+				<option value="{$currency}">{$currency|upper}</option>
+				{/foreach}
+				</select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bonus Usage:</th>
+                                <td>
+                                    <select id="bonusUsage" name="bonusUsage" class="inpts">
+                                         <option value="toBalance" selected>Add to available balance</option>
                                                      <option value="toDeposit">Use as new investment</option>
-                                                 </select>
-                                             </td>
-                                         </tr>
-                                         <tr id="planContainer" style="display:none">
-                                             <td><strong>Investment Plans</strong><br />
-                                                 <select name="planID" class="form-control">
-                                                     <?php foreach($plans as $plan):?>
-                                                     	<option value="<?=$plan->ID;?>">
-                                                     	    <?=$plan->title;?> ($<?=$plan->minimum;?> - <?=!empty($plan->maximum) ? '$' . $plan->maximum : 'above';?>)
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="planContainer" style="display:none">
+                                <th>Investment:</th>
+                                <td>
+                                <select name="planID" class="inpts">
+                                                     {foreach $plans as $plan}
+                                                     	<option value="{$plan->ID}">
+                                                     	    {$plan->title} (${$plan->minimum} - {if $plan->maximum ne 0} ${$plan->maximum}{else}above{/if})
                                                      	</option>
-                                                      <?php endforeach;?>
+                                                      {/foreach}
                                                  </select>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td>
-                                                 <label><input type="checkbox" name="notifyUserByEmail"> Notify user by email for this transaction.</label><br/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                <label><input type="checkbox" name="notifyUserByEmail"> Notify user by email for this transaction.</label><br/>
                                                  <label id="payReferralCheckbox" style="display:none"><input type="checkbox" name="payReferralCommission"> Pay referral commission to upliner if transaction is eligible and referral bonus payment is turned on in settings.</label>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                             <td>
-                                                 <div>
-                                                     <h3 class="heading-title">
-                                                         <button type="submit" class="btn btn-dark btn-theme-colored btn-flat mb-5 text-uppercase">Add Bonus</i></button></h3>
-                                                 </div>
-                                             </td>
-                                         </tr>
-                                     </table>
-                                 </div>
-                             </form>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="alert alert-warning"> Active Currencies: The available currencies are
+                                        <strong>btc, eth, doge and ltc.</strong> When entering these values, separate them with comma
+                                        only. <strong>and without spaces.</strong><br>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <center> <input type="submit" value="add bonus" class="btn btn-success sbmt"> </center>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
  
  <script type="text/javascript">
  

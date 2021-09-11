@@ -6,7 +6,7 @@
             <tr>
                 <td>
                     <footer style="text-align: center; padding:10px 0px; margin:0;">
-                        Copyright &copy;&nbsp; <a href="mailto:onumahkalusamuel@gmail.com">Crypto-HYIP</a>. All
+                        Powered by <a href="mailto:onumahkalusamuel@gmail.com">Crypto-HYIP</a>. All
                         Rights Reserved. </p>
                     </footer>
                 </td>

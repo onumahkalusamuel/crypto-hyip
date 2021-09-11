@@ -73,22 +73,22 @@
                                             <tr>
                                                 <td style="width:50%">BTC:</td>
                                                 <td>
-                                                    <b style="color:gray">${$user->btcBalance}</b>
+                                                    <b style="color:gray">${$user->btcBalance|string_format:"%.2f"}</b>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>ETH:</td>
                                                 <td>
-                                                    <b style="color:gray">${$user->ethBalance}</b>
+                                                    <b style="color:gray">${$user->ethBalance|string_format:"%.2f"}</b>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>DOGE:</td>
-                                                <td> <b style="color:gray">${$user->dogeBalance}</b> </td>
+                                                <td> <b style="color:gray">${$user->dogeBalance|string_format:"%.2f"}</b> </td>
                                             </tr>
                                             <tr>
                                                 <td>LTC:</td>
-                                                <td> <b style="color:gray">${$user->ltcBalance}</b> </td>
+                                                <td> <b style="color:gray">${$user->ltcBalance|string_format:"%.2f"}</b> </td>
                                             </tr>
                                         </tbody>
                                     </table>

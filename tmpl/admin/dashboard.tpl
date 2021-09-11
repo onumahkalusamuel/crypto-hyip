@@ -48,7 +48,7 @@
                                 <th><img src="currencies/{$item->currency}.gif" /></th>
                                 <td>
                                     <a class="link strong"
-                                        href="{$route->urlFor('admin-withdrawals', [], ['withdrawalStatus'=>$item->status])}">
+                                        href="{$route->urlFor('admin-withdrawals', [], ['withdrawalStatus'=>$item->status, 'cryptoCurrency'=>$item->currency])}">
                                         {$item->status|capitalize}
                                     </a>
                                 </td>
@@ -77,7 +77,7 @@
                                 <th><img src="currencies/{$item->currency}.gif" /></th>
                                 <td>
                                     <a class="link strong"
-                                        href="{$route->urlFor('admin-deposits', [], ['depositStatus'=>$item->status])}">
+                                        href="{$route->urlFor('admin-deposits', [], ['depositStatus'=>$item->status, 'cryptoCurrency'=>$item->currency])}">
                                         {$item->status|capitalize}
                                     </a>
                                 </td>
@@ -106,7 +106,7 @@
                                 <th><img src="currencies/{$item->currency}.gif" /></th>
                                 <td>
                                     <a class="link strong text-{$item->type}"
-                                        href="{$route->urlFor('admin-transactions', [], ['logType'=>$item->type])}">
+                                        href="{$route->urlFor('admin-transactions', [], ['logType'=>$item->type, 'cryptoCurrency'=>$item->currency])}">
                                         {$item->type|capitalize}
                                     </a>
                                 </td>

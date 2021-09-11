@@ -50,51 +50,48 @@ final class UserFundsView
 
         $ID = $args['id'];
 
-        if ($ID === 'new') {
-            $user = new \stdClass;
-            $user->ID = "new";
-            $data['user'] = $user;
-            $data['deposits'] = [];
-            $data['withdrawals'] = [];
-            $data['transactions'] = [];
-            $data['referrals'] = [];
-            $data['activeCurrencies'] = $this->activeCurrencies;
-        } else {
+	$data = [];
 
+        if ($ID === 'new') $data['user']['ID'] = "new";
 
+        $data['activeCurrencies'] = $this->activeCurrencies;
+        $data['total_balance'] = 0;
+        $data['total_deposit'] = 0;
+        $data['active_deposit']= 0;
+        $data['total_earning'] = 0;
+        $data['total_withdrawal'] = 0;
+        $data['pending_withdrawal'] = 0;
+        $data['total_bonus']= 0;
+        $data['total_penalty']= 0;
+        $data['referral'] = 0;
+        $data['referral_commission'] = 0;
 
-
-            $data['total_balance'] = '';
-            $data['Total Deposit'] = 0;
-            $data['Active Deposit']=0;
-            $data['Total Earning']=	0;
-            $data['Total Withdrawal'] = 0;
-            $data['Pending Withdrawals'] = 0.00;
-            $data['Total Bonus']= 0;
-            $data['Total Penalty']= 0;
-            $data['Referrals'] =0;
-            $data['Referral Commissions'] = 0;
-
+	if($ID !== 'new') {
 
             // deposits
-            $data['deposits'] = $this->deposits->readAll([
-                'params' => ['where' => ['userID' => $ID]],
-                'select' => ['cryptoCurrency as currency', 'depositStatus as status'],
-                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-                'group_by' => ['currency', 'status'],
-                'order_by' => 'currency'
+            $d = $this->deposits->readAll([
+                'params' => ['where' => ['userID' => $ID, 'depositStatus'=>'approved']],
+                'select' => ['depositStatus as status'],
+                'select_raw' => ['SUM(amount) as amount'],
+                'group_by' => 'status',
+                'order_by' => 'status'
             ]);
 
-            // withdrawals 
-            $data['withdrawals'] = $this->withdrawals->readAll([
-                'params' => ['where' => ['userID' => $ID]],
-                'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
-                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-                'group_by' => ['currency', 'status'],
-                'order_by' => 'currency'
+	    $data['active_deposit'] = $d[0]->amount;
+
+
+            // withdrawals
+            $w = $this->withdrawals->readAll([
+                'params' => ['where' => ['userID' => $ID, 'withdrawalStatus'=>'pending']],
+                'select' => ['withdrawalStatus as status'],
+                'select_raw' => ['SUM(amount) as amount'],
+                'group_by' => 'status',
+                'order_by' => 'status'
             ]);
 
-            // referrals 
+	    $data['pending_withdrawal'] = $d[0]->amount;
+
+            // referrals
             $referrals = $this->referrals->readAll([
                 'params' => ['where' => ['referralUserID' => $ID]],
                 'select' => ['referralUserID'],
@@ -103,46 +100,34 @@ final class UserFundsView
                 'order_by' => 'referralUserID'
             ]);
 
-            $data['referrals'] = [];
-            if (!empty($referrals)) $data['referrals'] = [
-                'total' => $referrals[0]->total,
-                'amount' => $referrals[0]->amount,
+            if (!empty($referrals)) {
+                $data['referral'] = $referrals[0]->total;
+                $data['referral_commission'] = $referrals[0]->amount;
+            }
 
-            ];
-
-            // bonuses
-            $data['bonuses'] = $this->trailLog->readAll([
-                'params' => ['where' => ['userID' => $ID, 'logType' => 'bonus']],
-                'select' => ['logType as type', 'cryptoCurrency as currency'],
-                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-                'group_by' => ['type', 'currency'],
+            // transactions
+            $d = $this->trailLog->readAll([
+                'params' => ['where' => ['userID' => $ID]],
+                'select' => ['logType as type'],
+                'select_raw' => ['SUM(amount) as amount'],
+                'group_by' => ['type'],
                 'order_by' => 'type'
             ]);
 
-            // penalties
-            $data['penalties'] = $this->trailLog->readAll([
-                'params' => ['where' => ['userID' => $ID, 'logType' => 'penalty']],
-                'select' => ['logType as type', 'cryptoCurrency as currency'],
-                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-                'group_by' => ['type', 'currency'],
-                'order_by' => 'currency'
-            ]);
+	    foreach($d as $dd) {
 
-            // transactions
-            $data['transactions'] = $this->trailLog->readAll([
-                'params' => ['where' => ['userID' => $ID]],
-                'select' => ['logType as type', 'cryptoCurrency as currency'],
-                'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-                'group_by' => ['type', 'currency'],
-                'order_by' => 'currency'
-            ]);
-
-            // active currencieis
-            $data['activeCurrencies'] = $this->activeCurrencies;
+		if($dd->type=='bonus') $data['total_bonus'] = $dd->amount;
+                if($dd->type=='deposit') $data['total_deposit'] = $dd->amount;
+                if($dd->type=='withdrawal') $data['total_withdrawal'] = $dd->amount;
+                if($dd->type=='penalty') $data['total_penalty'] = $dd->amount;
+                if($dd->type=='referral') $data['total_referral'] = $dd->amount;
+		if($dd->type=='earning') $data['total_earning'] = $dd->amount;
+	    }
 
             // find the user
             $user = $this->user->readSingle(['ID' => $ID]);
 
+	    $data['user']['ID']= $user->ID;
             $data['user']['userName'] = $user->userName;
             $data['user']['fullName'] = $user->fullName;
             $data['user']['email'] = $user->email;
@@ -151,6 +136,7 @@ final class UserFundsView
             foreach ($this->activeCurrencies as $c) {
                 $data['user'][$c . 'Address'] = $user->{$c . 'Address'};
                 $data['user'][$c . 'Balance'] = $user->{$c . 'Balance'};
+		$data['total_balance'] += $user->{$c . 'Balance'};
             }
         }
 
