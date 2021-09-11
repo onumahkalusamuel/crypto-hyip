@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\ApiRequest;
 use Illuminate\Container\Container as IlluminateContainer;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;

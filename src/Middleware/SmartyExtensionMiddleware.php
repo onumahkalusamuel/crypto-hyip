@@ -8,6 +8,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Smarty;
+use Smarty_Internal_Template;
+use stdClass;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 final class SmartyExtensionMiddleware implements MiddlewareInterface
@@ -43,14 +45,14 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
         $this->smarty->assign('getTimeAgo', function ($date = null) {
 
-            if(empty($date)) return "";
+            if (empty($date)) return "";
 
             $time_difference = time() - strtotime($date);
 
             if ($time_difference < 1) {
                 return 'less than a minute ago';
             }
-            if($time_difference > 172800) {
+            if ($time_difference > 172800) {
                 return date("d M, Y", strtotime($date));
             }
 
@@ -73,6 +75,65 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
             }
         });
 
+        $this->smarty->registerPlugin('function', 'paginationLinks',[$this, 'paginationLinks']);
+
         return $handler->handle($request);
+    }
+
+    public function paginationLinks($params, $template)
+    {
+        $return = [];
+        $total_rows = $params['total_rows'];
+        $total_retrieved = $params['total_retrieved'];
+        $uri = $params['uri'];
+
+        if (empty($total_rows) || empty($total_retrieved)) return;
+        $get = $_GET;
+
+        $records_per_page = (int)($get['rpp'] ?? $total_retrieved);
+
+        if ($records_per_page == 0) return;
+        $first_page = 1;
+        // $return['first_page'] = $first_page;
+        $current_page = $get['page'] ?? $first_page;
+        $return['current_page'] = $current_page;
+
+        $last_page = ceil((int)$total_rows / (int)$records_per_page);
+        $return['last_page'];
+        // page links
+        // $first_page_link;
+        $get['page'] = $first_page;
+        $return['first_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+
+        // $prev1_page_link
+        if ($current_page - 2 >= $first_page) {
+            $get['page'] = $current_page - 2;
+            $return['prev1_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+        }
+
+        // $prev0_page_link
+        if ($current_page - 1 >= $first_page) {
+            $get['page'] = $current_page - 1;
+            $return['prev0_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+        }
+
+        // current
+        $get['page'] = $current_page;
+        $return['current_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+
+        if ($current_page + 1 <= $last_page) {
+            $get['page'] = $current_page + 1;
+            $return['next0_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+        }
+
+        if ($current_page + 2 <= $last_page) {
+            $get['page'] = $current_page + 2;
+            $return['next1_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+        }
+
+        $get['page'] = $last_page;
+        $return['last_page_link'] = $uri->getPath() . "?" . http_build_query($get);
+
+        $template->assign($params['out'], $return);
     }
 }

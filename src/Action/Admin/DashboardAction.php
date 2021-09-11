@@ -51,7 +51,8 @@ final class DashboardAction
             'params' => ['userType' => 'user'],
             'select' => ['isActive'],
             'select_raw' => ['COUNT(*) as total'],
-            'group_by' => 'isActive'
+            'group_by' => 'isActive',
+            'order_by' => 'isActive'
         ]);
 
         $return['users']['total'] = 0;
@@ -59,6 +60,8 @@ final class DashboardAction
         foreach ($users as $user) {
             if (!empty($user->isActive)) {
                 $return['users']['active'] = $user->total;
+            } else {
+                $return['users']['blocked'] = $user->total;
             }
             $return['users']['total'] += $user->total;
         }
@@ -67,27 +70,34 @@ final class DashboardAction
         $return['deposits'] = $this->deposits->readAll([
             'select' => ['cryptoCurrency as currency', 'depositStatus as status'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-            'group_by' => ['currency', 'status']
+            'group_by' => ['currency', 'status'],
+            'order_by' => 'currency'
         ]);
 
         // withdrawals
         $return['withdrawals'] = $this->withdrawals->readAll([
             'select' => ['cryptoCurrency as currency', 'withdrawalStatus as status'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-            'group_by' => ['currency', 'status']
+            'group_by' => ['currency', 'status'],
+            'order_by' => 'currency'
         ]);
 
         // plans
-        $return['plans'] = $this->plans->readAll([
-            'select' => ['durationType as type'],
+        $plans = $this->plans->readAll([
+            'select' => ['isActive'],
             'select_raw' => ['COUNT(*) as total'],
-            'group_by' => 'type'
+            'group_by' => 'isActive',
+            'order_by' => 'isActive'
         ]);
+
+        $return['plans'] = ['total' => $plans[0]->total];
 
         // referrals
         $referrals = $this->referrals->readAll([
             'select' => ['ID'],
-            'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount']
+            'select_raw' => ['COUNT(*) as total', 'SUM(referralBonus) as amount'],
+            'group_by' => 'ID',
+            'order_by' => 'ID'
         ]);
 
         $return['referrals'] = [];
@@ -101,7 +111,8 @@ final class DashboardAction
         $return['transactions'] = $this->trailLog->readAll([
             'select' => ['logType as type', 'cryptoCurrency as currency'],
             'select_raw' => ['COUNT(*) as total', 'SUM(amount) as amount'],
-            'group_by' => ['type', 'currency']
+            'group_by' => ['type', 'currency'],
+            'order_by' => 'currency'
         ]);
 
         $this->smarty->assign('data', $return);

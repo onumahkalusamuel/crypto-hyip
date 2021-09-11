@@ -1,5 +1,83 @@
 {include file='admin/header.tpl' pageTitle='User'}
+{assign var=user value=$data.user}
+{assign var=activeCurrencies value=$data.activeCurrencies}
 
-<table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0"> <tbody><tr> <td width="100%" valign="top" height="100%">  <h3>Edit User:</h3>  <div class="alert alert-warning"> <b>Demo version restriction!</b><br> You cannot edit this user information! </div>        <form method="post" name="regform"><input type="hidden" name="form_id" value="16312739215699"><input type="hidden" name="form_token" value="f0a89067d6315f536299a4301efb1a10"> <input type="hidden" name="a" value="user_edit"> <input type="hidden" name="action" value="save"> <input type="hidden" name="id" value="3256"> <input type="hidden" name="say" value=""> <table class="form">  <tbody><tr> <th>Full name:</th> <td><input type="text" name="name" value="fatoma mami" class="inpts" size="30"></td> </tr>  <tr> <th>Status:</th> <td><select name="status" class="inpts"> <option value="on" selected="">Active </option><option value="off">Disabled </option><option value="suspended">Suspended</option></select> </td> </tr>  <tr> <th>Username:</th> <td><input type="text" name="username" value="wathkat" class="inpts" size="30"></td> </tr> <tr> <th>E-mail:</th> <td><input type="text" name="email" value="sabqa1991@gmail.com" class="inpts" size="30"></td> </tr> <tr> <th>Password:</th> <td><input type="password" name="password" value="" class="inpts" size="30"></td> </tr><tr> <th>Retype password:</th> <td><input type="password" name="password2" value="" class="inpts" size="30"></td> </tr>   <tr> <th><img src="images/18.gif" alt="PerfectMoney" width="44" height="17" align="absmiddle"></th> <td><input type="text" name="processing_account[18]" value="U25332942" class="inpts" size="30"></td> </tr>  <tr> <th><img src="images/48.gif" alt="Bitcoin" width="44" height="17" align="absmiddle"></th> <td><input type="text" name="processing_account[48]" value="1BhLAnpvZabUBY1Dc8zpHA6RA3DmiitTPF" class="inpts" size="30"></td> </tr>    <tr> <th>Secret Question:</th> <td><input type="text" name="sq" value="Haw are you?" class="inpts"></td> </tr><tr> <th>Secret Answer:</th> <td><input type="text" name="sa" value="fine" class="inpts"></td> </tr>  <tr> <th>Auto-withdrawal Enabled:</th> <td> <select name="auto_withdraw" class="inpts"> <option value="1" selected="">Yes</option> <option value="0">No</option> </select> </td> </tr> <tr> <th>Pay Earnings Automatically:</th> <td> <select name="admin_auto_pay_earning" class="inpts"> <option value="1">Yes</option> <option value="0" selected="">No</option> </select> </td> </tr>  <tr> <th>Max Daily Withdraw:</th> <td><input type="text" name="max_daily_withdraw" value="0.00" class="inpts"><small>set 0 to skip limits</small></td> </tr>   <tr> <th>Came from:</th> <td><small><a href="https://www.youtube.com/" target="_blank">https://www.youtube.com/</a></small></td> </tr>  <tr> <th>Reset security settings:</th> <td><input type="checkbox" name="reset_security" value="1"> <small>(if user does not receive login pin and can't login)</small></td> </tr> <tr> <th>Demo Account:</th> <td><input type="checkbox" name="demo_acc" value="1"></td> </tr>  <tr> <th>Admin Note:</th> <td><textarea name="admin_desc" class="inpts"></textarea></td> </tr>  </tbody></table>  <br> <center> <input type="submit" value="Save" class="btn btn-success sbmt"> </center> </form>   </td> </tr> </tbody></table>
+<table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
+    <tbody>
+        <tr>
+            <td width="100%" valign="top" height="100%">
+                <h3>Edit User:</h3>
+                <form method="post">
+                    <input type="hidden" name="ID" value="{$user->ID}">
+                    <table class="form">
+                        <tbody>
+                            <tr>
+                                <th>Full Name:</th>
+                                <td><input type="text" name="fullName" value="{$user->fullName}" class="inpts"
+                                        size="30"></td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td><select name="isActive" class="inpts">
+                                        <option {if $user->isActive==1}selected{/if} value="1">Active </option>
+                                        <option {if $user->isActive==0}selected{/if} value="0">Disabled </option>
+                                    </select> </td>
+                            </tr>
+                            <tr>
+                                <th>Username:</th>
+                                <td><input type="text" name="userName" value="{$user->userName}" class="inpts"
+                                        size="30"></td>
+                            </tr>
+                            <tr>
+                                <th>E-mail:</th>
+                                <td><input type="text" name="email" value="{$user->email}" class="inpts" size="30">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Password:</th>
+                                <td><input type="password" name="password" value="" class="inpts" size="30"></td>
+                            </tr>
+                            <tr>
+                                <th>Retype password:</th>
+                                <td><input type="password" name="password2" value="" class="inpts" size="30"></td>
+                            </tr>
+                            {foreach $activeCurrencies as $currency}
+                                <tr>
+                                    <th>Wallet Address: <img src="currencies/{$currency}.gif" alt="{$currency|upper}"
+                                            width="44" height="17" align="absmiddle"></th>
+                                    {assign var=wallet value=$currency|cat:"Address" }
+                                    <td><input type="text" name="{$wallet}" value="{$user->$wallet}" class="inpts"
+                                            size="30"></td>
+                                </tr>
+                            {/foreach}
+                            <tr>
+                                <th>Secret Question:</th>
+                                <td><input type="text" name="secretQuestion" value="{$user->secretQuestion}"
+                                        class="inpts"></td>
+                            </tr>
+                            <tr>
+                                <th>Secret Answer:</th>
+                                <td><input type="text" name="secretAnswer" value="{$user->secretAnswer}" class="inpts">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Auto-withdrawal Enabled:</th>
+                                <td> <select name="auto_withdraw" class="inpts">
+                                        <option value="0" selected>No</option>
+                                        <option value="1" disabled>Yes</option>
+                                    </select> </td>
+                            </tr>
+                            <tr>
+                                <th>Admin Note:</th>
+                                <td><textarea name="adminNotice" disabled class="inpts"></textarea></td>
+                            </tr>
+                        </tbody>
+                    </table> <br>
+                    <center> <input type="submit" value="Save" class="btn btn-success sbmt"> </center>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 {include file='admin/footer.tpl'}

@@ -30,7 +30,7 @@ final class ViewAll
         // where
         $params['where']['userType'] = 'user';
 
-        if(!empty($_GET['ID'])) {
+        if (!empty($_GET['ID'])) {
             $params['where']['ID'] = $_GET['ID'];
         }
 
@@ -54,8 +54,8 @@ final class ViewAll
         $data = [
             'users' => $user
         ];
-
-	$this->view->assign('data', $data);
+        
+        $this->view->assign('data', $data);
         $this->view->display('admin/users.tpl');
 
         return $response;

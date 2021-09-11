@@ -333,11 +333,13 @@ table.list th {
     color: #493011;
 }
 
-table.list .row1 {
+table.list .row1,
+table .row1 td {
     background: #FCE7CA;
 }
 
-table.list .row2 {
+table.list .row2,
+table .row2 td {
     background: #FFF3E3;
 }
 
@@ -490,29 +492,82 @@ form button:disabled,
     border-radius: .25rem;
 }
 
-.badge-success {
+.text-success,
+.text-deposit,
+.text-bonus,
+.text-approved {
+    color: darkgreen;
+}
+
+.badge-success,
+.badge-deposit,
+.badge-bonus,
+.badge-approved {
     color: #fff;
     background-color: #28a745;
 }
 
-.badge-info {
+.text-info,
+.text-deposit-earning {
+    color: #17a2b8;
+}
+
+.badge-info,
+.badge-deposit-earning {
     color: #fff;
     background-color: #17a2b8;
 }
 
-.badge-danger {
+.text-danger,
+.text-penalty,
+.text-withdrawal,
+.text-declined {
+    color: #dc3545;
+}
+
+.badge-danger,
+.badge-penalty,
+.badge-withdrawal,
+.badge-declined {
     color: #fff;
     background-color: #dc3545;
 }
 
-.badge-warning {
+.badge-warning,
+.badge-pending {
     color: #212529;
     background-color: #ffc107;
 }
 
-.badge-primary {
+.text-warning,
+.text-pending {
+    background-color: #212529;
+    color: #ffc107;
+}
+
+.badge-primary,
+.badge-deposit-release {
     color: #fff;
     background-color: #007bff;
+}
+
+.text-primary,
+.text-deposit-release,
+.text-released {
+    color: #007bff;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+.link {
+    text-decoration: none;
+    color: #333;
+}
+
+.link:hover {
+    text-decoration: underline;
 }
 
 .badge.sticker {

@@ -35,7 +35,7 @@
             font-family: Arial;
             background-color: var(--background-color);
         }
-        .header {
+        .header, .footer {
             background-color: var(--primary-color)
         }
         .body{

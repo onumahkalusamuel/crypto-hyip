@@ -26,15 +26,15 @@
                     <tbody>
                         <tr>
                             <th>Username:</th>
-                            <td>wathkat</td>
+                            <td>{$user['userName']}</td>
                         </tr>
                         <tr>
                             <th>Full Name:</th>
-                            <td>fatoma mami</td>
+                            <td>{$user['fullName']}</td>
                         </tr>
                         <tr>
                             <th>E-mail:</th>
-                            <td><a href="mailto:sabqa1991@gmail.com">sabqa1991@gmail.com</a></td>
+                            <td><a href="mailto:{$user['email']}">{$user['email']}</a></td>
                         </tr>
                     </tbody>
                 </table> <br>
@@ -45,18 +45,16 @@
                             <th>Balance</th>
                             <th>Account</th>
                         </tr>
-                        <tr>
-                            <th style="text-align:right">PerfectMoney <img src="images/18.gif" witdth="44" height="17"
-                                    align="absmiddle"></th>
-                            <td>$0.00</td>
-                            <td> U25332942 </td>
-                        </tr>
-                        <tr>
-                            <th style="text-align:right">Bitcoin <img src="images/48.gif" witdth="44" height="17"
-                                    align="absmiddle"></th>
-                            <td>$0.00</td>
-                            <td> 1BhLAnpvZabUBY1Dc8zpHA6RA3DmiitTPF </td>
-                        </tr>
+                        {foreach $activeCurrencies as $currency}
+                            <tr>
+                                <th style="text-align:right">{$currency|upper} <img src="currencies/{$currency}.gif"
+                                        witdth="44" height="17" align="absmiddle"></th>
+                                {assign var=walletAddress value=$currency|cat:'Address'}
+                                {assign var=walletBalance value=$currency|cat:'Balance'}
+                                <td>$ {$user[$walletBalance]|string_format:"%.2f"}</td>
+                                <td> {if $user[$walletAddress]}{$user[$walletAddress]}{else} <em>not set</em>{/if} </td>
+                            </tr>
+                        {/foreach}
                     </tbody>
                 </table> <br>
                 <table class="form">
@@ -118,7 +116,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Referrals 1st Level:</th>
+                            <th>Referrals:</th>
                             <td>0 <div class="sbmt-group"> <a href="?a=user_refs&amp;id=3256"
                                         class="sbmt btn-sm btn-primary">referrals</a> <a
                                         href="?a=user_traffic&amp;id=3256" class="sbmt btn-sm btn-success">traffic</a>
@@ -131,19 +129,6 @@
                                         href="?a=transactions&amp;userid=3256&amp;ttype=commissions"
                                         class="sbmt btn-sm btn-info">history</a></div>
                             </td>
-                        </tr>
-                    </tbody>
-                </table> <br>
-                <h3>User IPs:</h3>
-                <table class="list">
-                    <tbody>
-                        <tr>
-                            <th>IP</th>
-                            <th>Last Access</th>
-                        </tr>
-                        <tr class="row1">
-                            <td>167.114.101.141</td>
-                            <td>Sep-9-2021 10:43:00 PM (12 hours)</td>
                         </tr>
                     </tbody>
                 </table> <br>
@@ -214,8 +199,9 @@
                                             <td><strong>
                                                     <?=strtoupper($currency);?> Address:
                                                 </strong><br />
-                                                <input value="<?= $user->{$currency.'Address'}; ?>"
-                                                    name="<?=$currency;?>Address" type="text" class="form-control" />
+                                                {* <input value="<?= $user->{$currency.'Address'}; ?>" *}
+                                                name="
+                                                <?=$currency;?>Address" type="text" class="form-control" />
                                             </td>
                                         </tr>
                                         <?php endforeach;?>
@@ -260,7 +246,7 @@
                                                 <td>
                                                     <strong>{$currency|upper} Balance:</strong><br />
                                                     $
-                                                    <?= number_format($user->{$currency .'Balance'}, 2); ?>
+                                                    {* <?= number_format($user->{$currency .'Balance'}, 2); ?> *}
                                                 </td>
                                             </tr>
                                         {/foreach}
@@ -514,9 +500,9 @@
                         </div>
                     </div>
                 </div>
-                {/endif}
-            </div>
+            {/if}
         </div>
     </div>
+</div>
 
-    {include file='admin/footer.tpl'}
+{include file='admin/footer.tpl'}
