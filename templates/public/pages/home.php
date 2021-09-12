@@ -214,11 +214,6 @@
 
     <?php echo $this->fetch('public/components/section-live-table.php'); ?>
 
-    <?php echo $this->fetch(
-        'public/components/section-latest-news.php',
-        ['latest_news' => $data['latest_news']]
-    ); ?>
-
 
 </div>
 <!-- end main-content -->

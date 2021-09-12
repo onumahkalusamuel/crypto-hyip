@@ -43,7 +43,7 @@ class HomeView
 
     private function getLatestNews(): array
     {
-        // return [];
+        return [];
         return $this->newsLoader->coinTelegraphNews(9);
     }
 

@@ -8,19 +8,19 @@ $settings = [];
 // basic info
 
 // The name of the website
-$settings['site_name'] = 'BitriveTrading Inc';
+$settings['site_name'] = 'Digital Signal Trade';
 
 // contact email
-$settings['contact_email'] = 'admin@bitrivetrading.com';
+$settings['contact_email'] = 'admin@digitalsignaltrade.com';
 
 // contact phone number. to be shown whereever contact is needed
-$settings['contact_phone'] = '+1 (213) 433‑5023';
+$settings['contact_phone'] = '+x xxx xxxx';
 
 // whatsapp number of site
-$settings['whatsapp_number'] = '+1 (213) 433‑5023';
+$settings['whatsapp_number'] = '+x xxx xxxx';
 
 // the address of company
-$settings['contact_address'] = '24, Jurong Hill, Singapore.';
+$settings['contact_address'] ='US.';
 
 // short description of site. Will show at the footer area
 $settings['site_description'] = $settings['site_name'] . ' stands firmly in support of financial freedom and the liberty that Bitcoin provides globally for anyone to voluntarily participate in a permissionless and decentralized network.';

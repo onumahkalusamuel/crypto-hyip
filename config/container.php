@@ -68,7 +68,7 @@ return [
         $smarty->setCompileDir($container->get('settings')['smarty']['compile_dir']);
         $smarty->setConfigDir($container->get('settings')['smarty']['config_dir']);
         $smarty->setCacheDir($container->get('settings')['smarty']['cache_dir']);
-        $smarty->debugging = true;
+        // $smarty->debugging = true;
         return $smarty;
     },
 
