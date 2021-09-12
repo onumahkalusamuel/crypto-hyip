@@ -49,7 +49,7 @@ final class SingleView
             $data['activeCurrencies'] = explode(',', $this->settings->activeCurrencies);
         }
 
-	$this->view->assign('data', $data);
+        $this->view->assign('data', $data);
         $this->view->display('admin/edit-user.tpl');
 
         return $response;

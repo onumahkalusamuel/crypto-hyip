@@ -42,13 +42,16 @@
                             <th>Actions</th>
                         </tr>
                         {foreach from=$localData item=user key=key}
-                            <tr class="{if $key % 2 == 0}row2{else}row1{/if}">
+                            <tr class="{if $key % 2 == 0}row1{else}row2{/if}">
                                 <td valign="top">
                                     <table class="list sub" width="100%">
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <b class="username">{$user->userName}</b>
+                                                    <b class="username">
+                                                        <a href="{$route->urlFor('admin-view-user-funds', ['id' => $user->ID])}"
+                                                            class="link" style="margin-bottom:2px;">{$user->userName}</a>
+                                                    </b>
                                                     <span class="badge badge-success">Active</span> <br>
                                                 </td>
                                             </tr>
@@ -84,11 +87,13 @@
                                             </tr>
                                             <tr>
                                                 <td>DOGE:</td>
-                                                <td> <b style="color:gray">${$user->dogeBalance|string_format:"%.2f"}</b> </td>
+                                                <td> <b style="color:gray">${$user->dogeBalance|string_format:"%.2f"}</b>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>LTC:</td>
-                                                <td> <b style="color:gray">${$user->ltcBalance|string_format:"%.2f"}</b> </td>
+                                                <td> <b style="color:gray">${$user->ltcBalance|string_format:"%.2f"}</b>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

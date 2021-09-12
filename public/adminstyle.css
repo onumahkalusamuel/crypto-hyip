@@ -1,3 +1,12 @@
+:root {
+    --table-dark-background: #aaa;
+    --table-dark-color: #000;
+    --table-lighter-background: #eee;
+    --row1-background: #eee;
+    --row2-background: #fff;
+    --darker-orange: #dba400;
+}
+
 form {
     margin-top: 0px;
     margin-bottom: 0px;
@@ -51,17 +60,18 @@ th {
     font-size: 10px;
     color: #000000;
     background-color: #fffff2;
-    border: 1px inset #fee498;
-    border-color: #ff8d00;
+    border: 1px inset var(--table-lighter-background);
+    border-color: var(--table-dark-background);
     border-style: solid;
+    box-sizing: border-box;
 }
 
 .sbmt {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
     color: #000000;
-    background-color: #ffecb0;
-    border: 1px outset #ffffe1;
+    background-color: var(--table-lighter-background);
+    border: 1px outset #333;
 }
 
 .hlp {
@@ -219,9 +229,11 @@ th {
 }
 
 .alert.alert-warning {
-    background: #FFFFEE;
-    border-color: yellow;
+    /* background: #FFFFEE; */
+    border-color: var(--table-dark-background);
     color: #333300;
+    font-style: italic;
+    font-size: 0.9em;
 }
 
 .alert.alert-success {
@@ -245,8 +257,8 @@ table.form th {
     padding: 3px;
     padding-right: 5px;
     text-align: right;
-    background: #FFC982;
-    color: #493011;
+    background: var(--table-dark-background);
+    color: var(--table-dark-color);
 }
 
 table.form th.title {
@@ -260,7 +272,7 @@ table.form td {
     width: 70%;
     padding: 3px;
     text-align: left;
-    background: #FEF5EA;
+    background: var(--table-lighter-background);
 }
 
 table.form.nosize td {
@@ -275,7 +287,7 @@ table.form thead th {
     width: auto;
     padding: 3px;
     text-align: center;
-    background: #FFC982;
+    background: var(--table-dark-background);
     color: #FFFFFF;
 }
 
@@ -329,18 +341,18 @@ table.list th {
     width: auto;
     padding: 3px;
     text-align: center;
-    background: #FFC982;
-    color: #493011;
+    background: var(--table-dark-background);
+    color: var(--table-dark-color);
 }
 
 table.list .row1,
 table .row1 td {
-    background: #FCE7CA;
+    background: var(--row1-background);
 }
 
 table.list .row2,
 table .row2 td {
-    background: #FFF3E3;
+    background: var(--row2-background);
 }
 
 form input[type=submit],
@@ -365,14 +377,14 @@ form input[type=submit]:hover,
 form input[type=button]:hover,
 form button:hover,
 .sbmt:hover {
-    background-color: #FAD252;
+    background-color: var(--table-dark-background);
 }
 
 form input[type=submit]:active,
 form input[type=button]:active,
 form button:active,
 .sbmt:active {
-    background-color: #FFC200;
+    background-color: var(--table-dark-background);
 }
 
 form input[type=submit]:focus,
@@ -536,13 +548,12 @@ form button:disabled,
 .badge-warning,
 .badge-pending {
     color: #212529;
-    background-color: #ffc107;
+    background-color: var(--darker-orange);
 }
 
 .text-warning,
 .text-pending {
-    background-color: #212529;
-    color: #ffc107;
+    color: var(--darker-orange);
 }
 
 .badge-primary,
@@ -615,9 +626,9 @@ form button:disabled,
     border-radius: .25rem;
     display: block;
     padding: .5rem 1rem;
-    color: #493011;
+    color: var(--table-dark-color);
     text-decoration: none;
-    background-color: #FFF3E3;
+    background-color: var(--row2-background);
     border: solid 1px transparent;
     -webkit-text-decoration-skip: objects;
     margin-top: 0.2rem;
@@ -630,16 +641,16 @@ form button:disabled,
 }
 
 .nav-link:hover {
-    background-color: #FFC982;
+    background-color: var(--table-dark-background);
 }
 
 .nav-link.active {
-    background-color: #FFC982;
+    background-color: var(--table-dark-background);
 }
 
 .nav-link:active,
 .nav-link:focus {
-    background-color: #FCE7CA
+    background-color: var(--row1-background)
 }
 
 .dropdown-toggle.show {
@@ -703,16 +714,16 @@ form button:disabled,
 }
 
 .dropdown-item:hover {
-    background-color: #FCE7CA;
+    background-color: var(--row1-background);
 }
 
 .dropdown-item.active {
-    background-color: #FFC982;
+    background-color: var(--table-dark-background);
 }
 
 .dropdown-item:active,
 .dropdown-item:focus {
-    background-color: #FCE7CA;
+    background-color: var(--row1-background);
 }
 
 a.sort_link {

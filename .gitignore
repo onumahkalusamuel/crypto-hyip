@@ -10,6 +10,8 @@ public/*
 !public/.htaccess
 !public/adminstyle.css
 !public/adminscript.js
+!public/ch-logo.png
+!public/ch-logo.jpg
 !public/currencies/
 !public/assets/
 public/assets/*

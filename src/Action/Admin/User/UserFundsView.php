@@ -50,46 +50,46 @@ final class UserFundsView
 
         $ID = $args['id'];
 
-	$data = [];
+        $data = [];
 
         if ($ID === 'new') $data['user']['ID'] = "new";
 
         $data['activeCurrencies'] = $this->activeCurrencies;
         $data['total_balance'] = 0;
         $data['total_deposit'] = 0;
-        $data['active_deposit']= 0;
+        $data['active_deposit'] = 0;
         $data['total_earning'] = 0;
         $data['total_withdrawal'] = 0;
         $data['pending_withdrawal'] = 0;
-        $data['total_bonus']= 0;
-        $data['total_penalty']= 0;
+        $data['total_bonus'] = 0;
+        $data['total_penalty'] = 0;
         $data['referral'] = 0;
         $data['referral_commission'] = 0;
 
-	if($ID !== 'new') {
+        if ($ID !== 'new') {
 
             // deposits
             $d = $this->deposits->readAll([
-                'params' => ['where' => ['userID' => $ID, 'depositStatus'=>'approved']],
+                'params' => ['where' => ['userID' => $ID, 'depositStatus' => 'approved']],
                 'select' => ['depositStatus as status'],
                 'select_raw' => ['SUM(amount) as amount'],
                 'group_by' => 'status',
                 'order_by' => 'status'
             ]);
 
-	    $data['active_deposit'] = $d[0]->amount;
+            $data['active_deposit'] = $d[0]->amount;
 
 
             // withdrawals
             $w = $this->withdrawals->readAll([
-                'params' => ['where' => ['userID' => $ID, 'withdrawalStatus'=>'pending']],
+                'params' => ['where' => ['userID' => $ID, 'withdrawalStatus' => 'pending']],
                 'select' => ['withdrawalStatus as status'],
                 'select_raw' => ['SUM(amount) as amount'],
                 'group_by' => 'status',
                 'order_by' => 'status'
             ]);
 
-	    $data['pending_withdrawal'] = $d[0]->amount;
+            $data['pending_withdrawal'] = $d[0]->amount;
 
             // referrals
             $referrals = $this->referrals->readAll([
@@ -114,20 +114,20 @@ final class UserFundsView
                 'order_by' => 'type'
             ]);
 
-	    foreach($d as $dd) {
+            foreach ($d as $dd) {
 
-		if($dd->type=='bonus') $data['total_bonus'] = $dd->amount;
-                if($dd->type=='deposit') $data['total_deposit'] = $dd->amount;
-                if($dd->type=='withdrawal') $data['total_withdrawal'] = $dd->amount;
-                if($dd->type=='penalty') $data['total_penalty'] = $dd->amount;
-                if($dd->type=='referral') $data['total_referral'] = $dd->amount;
-		if($dd->type=='earning') $data['total_earning'] = $dd->amount;
-	    }
+                if ($dd->type == 'bonus') $data['total_bonus'] = $dd->amount;
+                if ($dd->type == 'deposit') $data['total_deposit'] = $dd->amount;
+                if ($dd->type == 'withdrawal') $data['total_withdrawal'] = $dd->amount;
+                if ($dd->type == 'penalty') $data['total_penalty'] = $dd->amount;
+                if ($dd->type == 'referral') $data['total_referral'] = $dd->amount;
+                if ($dd->type == 'earning') $data['total_earning'] = $dd->amount;
+            }
 
             // find the user
             $user = $this->user->readSingle(['ID' => $ID]);
 
-	    $data['user']['ID']= $user->ID;
+            $data['user']['ID'] = $user->ID;
             $data['user']['userName'] = $user->userName;
             $data['user']['fullName'] = $user->fullName;
             $data['user']['email'] = $user->email;
@@ -136,7 +136,18 @@ final class UserFundsView
             foreach ($this->activeCurrencies as $c) {
                 $data['user'][$c . 'Address'] = $user->{$c . 'Address'};
                 $data['user'][$c . 'Balance'] = $user->{$c . 'Balance'};
-		$data['total_balance'] += $user->{$c . 'Balance'};
+                $data['total_balance'] += $user->{$c . 'Balance'};
+            }
+
+            // get upline
+            $ref = $this->referrals->find([
+                'params' => ['referredUserID' => $ID],
+                'select' => ['referralUserID as ID', 'referralUserName as userName']
+            ]);
+            
+            if (!empty($ref->ID)) {
+                $data['user']['upline_id'] = $ref->ID;
+                $data['user']['upline_username'] = $ref->userName;
             }
         }
 

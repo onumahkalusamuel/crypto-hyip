@@ -1,18 +1,16 @@
-{include file='admin/header.tpl' pageTitle='Plans'}
+{include file='admin/header.tpl' pageTitle='Investment Packages'}
 {assign var=plans value=$data.plans}
 
-<h3>Plans</h3>
+<h3>Investment Packages</h3>
 
-<table width="100%" cellspacing="1" cellpadding="2" border="0">
+<table class="list" width="100%" cellspacing="1" cellpadding="2" border="0">
     <tbody>
+       
         <tr>
-            <td colspan="4"><b>Available Investment Packages:</b></td>
-        </tr>
-        <tr>
-            <td bgcolor="FFC982" align="center"><b>Package name</b></td>
-            <td bgcolor="FFC982" align="center"><b>Deposit (US$)</b></td>
-            <td bgcolor="FFC982" align="center"><b>Details</b></td>
-            <td bgcolor="FFC982" align="center"><b>-</b></td>
+            <th><b>Package name</b></th>
+            <th><b>Deposit (US$)</b></th>
+            <th><b>Details</b></th>
+            <th><b>-</b></th>
         </tr>
         {foreach from=$plans item=plan key=key}
             <tr class="{if $key % 2 == 0}row1{else}row2{/if}">

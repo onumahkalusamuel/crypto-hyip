@@ -30,9 +30,23 @@
                             <th>E-mail:</th>
                             <td><a href="mailto:{$user['email']}">{$user['email']}</a></td>
                         </tr>
+                        {if $user['upline_id'] ne ''}
+                            <tr>
+                                <th>Upline:</th>
+                                <td><a
+                                        href="{$route->urlFor('admin-view-user', ['id' => $user['upline_id']] )}">{$user['upline_username']}</a>
+                                </td>
+                            </tr>
+                        {/if}
+                        <tr>
+                            <th>Referral Link:</th>
+                            <td><input class="inpts" style="width: 100%;"
+                                    value="{$route->fullUrlFor($uri, 'ref', ['referralUserName'=> $user['userName']])}" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table> <br>
-                <table class="list">
+                <table class="list form">
                     <tbody>
                         <tr>
                             <th>Processing</th>
@@ -46,7 +60,14 @@
                                 {assign var=walletAddress value=$currency|cat:'Address'}
                                 {assign var=walletBalance value=$currency|cat:'Balance'}
                                 <td>$ {$user[$walletBalance]|string_format:"%.2f"}</td>
-                                <td> {if $user[$walletAddress]}{$user[$walletAddress]}{else} <em>not set</em>{/if} </td>
+                                <td> {if $user[$walletAddress]}
+                                        {$user[$walletAddress]}
+                                    {else}
+                                        <a href="{$route->urlFor('admin-view-user', ['id' => $user['ID']])}"><em>not
+                                                set</em></a>
+
+                                    {/if}
+                                </td>
                             </tr>
                         {/foreach}
                     </tbody>
@@ -67,7 +88,8 @@
                         </tr>
                         <tr>
                             <th>Active Deposit:</th>
-                            <td>${$data.active_deposit|string_format:"%.2f"} <div class="sbmt-group"><a href="{$route->urlFor('admin-deposits', [], ['depositStatus'=>'approved', 'userID'=>$user['ID']])}"
+                            <td>${$data.active_deposit|string_format:"%.2f"} <div class="sbmt-group"><a
+                                        href="{$route->urlFor('admin-deposits', [], ['depositStatus'=>'approved', 'userID'=>$user['ID']])}"
                                         class="sbmt btn-sm btn-danger" style="float:right">manage deposits</a></div>
                             </td>
                         </tr>
@@ -87,16 +109,19 @@
                         </tr>
                         <tr>
                             <th>Pending Withdrawals:</th>
-                            <td>${$data.pending_withdrawal|string_format:"%.2f"} <div class="sbmt-group"><a href="{$route->urlFor('admin-withdrawals', [], ['withdrawalStatus'=>'pending', 'userID'=>$user['ID']])}"
+                            <td>${$data.pending_withdrawal|string_format:"%.2f"} <div class="sbmt-group"><a
+                                        href="{$route->urlFor('admin-withdrawals', [], ['withdrawalStatus'=>'pending', 'userID'=>$user['ID']])}"
                                         class="sbmt btn-sm btn-danger">process withdrawals</a></div>
                             </td>
                         </tr>
                         <tr>
                             <th>Total Bonus:</th>
-                            <td>${$data.total_bonus|string_format:"%.2f"} <div class="sbmt-group"> <a href="{$route->urlFor('admin-add-bonus-view', ['user_id'=>$user['ID']])}"
+                            <td>${$data.total_bonus|string_format:"%.2f"} <div class="sbmt-group"> <a
+                                        href="{$route->urlFor('admin-add-bonus-view', ['user_id'=>$user['ID']])}"
                                         class="sbmt btn-sm btn-danger">add a bonus</a>
-		<a href="{$route->urlFor('admin-transactions', [], ['logType'=>'bonus', 'userID'=>$user['ID']])}"
-                                        class="sbmt btn-sm btn-info">history</a></div>
+                                    <a href="{$route->urlFor('admin-transactions', [], ['logType'=>'bonus', 'userID'=>$user['ID']])}"
+                                        class="sbmt btn-sm btn-info">history</a>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -110,7 +135,8 @@
                         </tr>
                         <tr>
                             <th>Referrals:</th>
-                            <td>${$data.referral} <div class="sbmt-group"> <a href="{$route->urlFor('admin-referrals', [], ['referralUserID'=>$user['ID']])}"
+                            <td>{$data.referral} <div class="sbmt-group"> <a
+                                        href="{$route->urlFor('admin-referrals', [], ['referralUserID'=>$user['ID']])}"
                                         class="sbmt btn-sm btn-primary">referrals</a>
                                 </div>
                             </td>
@@ -124,13 +150,25 @@
                         </tr>
                     </tbody>
                 </table> <br>
-                <div class="alert alert-warning"> Manage user funds:<br> Account balance: how many funds can the user withdraw from the system.<br> Total deposit: how many funds has the user ever deposited to your system.<br> Total active deposit: the whole current deposit of this user.<br> Total earnings: how many funds has the user ever earned with your system.<br> Total withdrawals: how many funds has the user ever withdrawn from system.<br> Total bonus: how many funds has the administrator ever added to the user account as a bonus.<br> Total penalty: how many funds has the administrator ever deleted from the user account as a penalty.<br> Actions:<br> Transactions history - you can check the transactions history for this user.<br> Active deposits/Transactions history - you can check the deposits history for this user.<br> Earnings history - you can check the earnings history for this user.<br> Withdrawals history - you can check the withdrawals history for this user.<br> Process withdrawals - you can withdraw funds by clicking this link if a user asked you for a withdrawal.<br> Bonuses history - you can check the bonuses history for this user.<br>
-Penalties history - you can check the penalties history for this user.<br> Add a bonus and add a penalty - add a bonus or a penalty to this user.<br> </div>
+                <div class="alert alert-warning"> Manage user funds:<br> Account balance: how many funds can the user
+                    withdraw from the system.<br> Total deposit: how many funds has the user ever deposited to your
+                    system.<br> Total active deposit: the whole current deposit of this user.<br> Total earnings: how
+                    many funds has the user ever earned with your system.<br> Total withdrawals: how many funds has the
+                    user ever withdrawn from system.<br> Total bonus: how many funds has the administrator ever added to
+                    the user account as a bonus.<br> Total penalty: how many funds has the administrator ever deleted
+                    from the user account as a penalty.<br> Actions:<br> Transactions history - you can check the
+                    transactions history for this user.<br> Active deposits/Transactions history - you can check the
+                    deposits history for this user.<br> Earnings history - you can check the earnings history for this
+                    user.<br> Withdrawals history - you can check the withdrawals history for this user.<br> Process
+                    withdrawals - you can withdraw funds by clicking this link if a user asked you for a withdrawal.<br>
+                    Bonuses history - you can check the bonuses history for this user.<br>
+                    Penalties history - you can check the penalties history for this user.<br> Add a bonus and add a
+                    penalty - add a bonus or a penalty to this user.<br> </div>
             </td>
         </tr>
     </tbody>
 </table>
-                  
-          
+
+
 
 {include file='admin/footer.tpl'}

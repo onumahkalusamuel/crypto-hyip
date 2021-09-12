@@ -2,7 +2,7 @@
         </tr>
         </table>
         <!-- Footer -->
-        <table width="760" style="background-color:#eee;">
+        <table width="760" class="footer">
             <tr>
                 <td>
                     <footer style="text-align: center; padding:10px 0px; margin:0;">

@@ -63,11 +63,10 @@
                     <tbody>
                         <tr>
                             <th>UserName</th>
-                            <th>Amount</th>
-                            <th>-</th>
+                            <th>Amount Earned</th>
                         </tr>
                         {foreach from=$localData key=key item=item}
-                            <tr class="{if $key%2==0}row2{else}row1{/if}">
+                            <tr class="{if $key%2==0}row1{else}row2{/if}">
                                 <td class="trn_user">
                                     <b>{$item->referredUserName}</b>
                                     <br>
@@ -77,13 +76,7 @@
                                     <small>{$item->createdAt}</small>
                                 </td>
                                 <td nowrap="" align="right" class="strong">
-                                    <b>${$item->amount}</b>
-                                    <img src="currencies/{$item->cryptoCurrency}.gif" hspace="1" height="17"
-                                        align="absmiddle">
-                                </td>
-                                <td align="right">
-                                    <a href="{$route->urlFor('admin-view-referral', ['id' => $item->ID])}"
-                                        class="sbmt btn-sm btn-success" style="margin-bottom:2px;">view</a><br>
+                                    <b>${$item->amount|string_format:"%.2f"}</b>
                                 </td>
                             </tr>
                         {/foreach}

@@ -7,7 +7,7 @@
     <tbody>
         <tr>
             <td width="100%" valign="top" height="100%">
-                <h3>Plan</h3>
+                <h3>Package: {$plan->title}</h3>
                 <form method="post" action="">
                     <table class="form settings">
                         <tbody>

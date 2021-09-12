@@ -78,7 +78,7 @@
                             <th>-</th>
                         </tr>
                         {foreach from=$localData key=key item=item}
-                            <tr class="{if $key%2==0}row2{else}row1{/if}">
+                            <tr class="{if $key%2==0}row1{else}row2{/if}">
                                 <td class="trn_user">
                                     <b>{$item->userName}</b>
                                     <br>
