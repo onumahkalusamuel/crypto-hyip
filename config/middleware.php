@@ -39,9 +39,9 @@ return function (App $app) {
             "CryptoHYIP"
         );
         $message = $exception->getMessage() . $exception->getLine() . $exception->getFile();
-        
+
         $view->assign("message", $message);
-        $view->display("500.php");
+        $view->display("500.tpl");
         return $response;
     };
 
