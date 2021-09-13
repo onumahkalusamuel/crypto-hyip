@@ -29,7 +29,7 @@ return function (App $app) {
         ?LoggerInterface $logger = null
     ) use ($app) {
 
-        $view = $app->getContainer()->get(PhpRenderer::class);
+        $view = $app->getContainer()->get(Smarty::class);
 
         $response = $app->getResponseFactory()->createResponse();
 
@@ -39,8 +39,10 @@ return function (App $app) {
             "CryptoHYIP"
         );
         $message = $exception->getMessage() . $exception->getLine() . $exception->getFile();
-
-        return $view->render($response, "500.php", ['message' => $message]);
+        
+        $view->assign("message", $message);
+        $view->display("500.php");
+        return $response;
     };
 
     // // Add Error Middleware

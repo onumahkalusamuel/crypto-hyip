@@ -4,21 +4,15 @@ namespace App\Action;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer;
-use App\Helpers\NewsLoader;
-use App\Domain\Plans\Service\Plans;
+use Smarty;
 
 class PageView
 {
     private $view;
-    private $plans;
 
-    public function __construct(
-        PhpRenderer $view,
-        Plans $plans
-    ) {
+    public function __construct(Smarty $view)
+    {
         $this->view = $view;
-        $this->plans = $plans;
     }
 
     public function __invoke(
@@ -28,31 +22,14 @@ class PageView
     ) {
 
         // the page name
-        $page = $args['page'];
-        $data = [];
-
-        // fetch data
-        switch ($page) {
-            case 'investment-plans': {
-                    $data['investment_plans'] = $this->plans->readAll(['params' => ['isActive' => 1]]);
-                    break;
-                }
-            case 'latest-news': {
-                    $news = new NewsLoader;
-                    $data['latest_news'] = $news->coinTelegraphNews(20);
-                    break;
-                }
-
-            default:
-                # code...
-                break;
-        }
+        $page = $args['page'] ?? 'home';
 
         // fetch the page
         try {
-            return $this->view->render($response, "public/pages/{$page}.php", $data);
-        } catch(\Exception $e) {
-            return $this->view->render($response, "404.php");
+            $this->view->display("theme/public/pages/{$page}.tpl");
+        } catch (\Exception $e) {
+            $this->view->display("404.tpl");
         }
+        return $response;
     }
 }

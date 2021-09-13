@@ -1,99 +1,84 @@
 <html dir="ltr" lang="en">
 
 <head>
-    <base href="<?= $basePath; ?>/" />
+    <base href="{$basePath}/" />
     <!-- Meta Tags -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Consulting Finance Corporate Business - ConsultingPro HTML Template">
-    <meta name="keywords" content="consulting,finance,advisor,consultant,business,service,insurance,agency">
-    <meta name="author" content="ThemeMascot">
 
     <!-- Page Title -->
-    <title>Internal Server Error - <?php echo $siteSettings['site_name']; ?></title>
+    <title>Internal Server Error - {$siteSettings.site_name}</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            display: table;
+            width: 100%;
+            padding: 0;
+            margin: 0%;
+            height: 100vh;
+            color: #555;
+            padding-left: 5px;
+            padding-right: 5px;
+            box-sizing: border-box;
+        }
 
-    <!-- Favicon and Touch Icons -->
-    <link href="assets/images/favicon.png" rel="shortcut icon" type="image/png">
-    <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon">
-    <link href="assets/images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
-    <link href="assets/images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
-    <link href="assets/images/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
+        div.container {
+            display: table-cell;
+            vertical-align: middle;
+        }
 
-    <!-- Stylesheet -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="assets/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
-    <link href="assets/css/animate.css" rel="stylesheet" type="text/css">
-    <link href="assets/css/css-plugin-collections.css" rel="stylesheet">
-    <!-- CSS | menuzord megamenu skins -->
-    <link href="assets/css/menuzord-megamenu.css" rel="stylesheet">
-    <link id="menuzord-menu-skins" href="assets/css/menuzord-skins/menuzord-boxed.css" rel="stylesheet">
-    <!-- CSS | Main style file -->
-    <link href="assets/css/style-main.css" rel="stylesheet" type="text/css">
-    <!-- CSS | Preloader Styles -->
-    <link href="assets/css/preloader.css" rel="stylesheet" type="text/css">
-    <!-- CSS | Custom Margin Padding Collection -->
-    <link href="assets/css/custom-bootstrap-margin-padding.css" rel="stylesheet" type="text/css">
-    <!-- CSS | Responsive media queries -->
-    <link href="assets/css/responsive.css" rel="stylesheet" type="text/css">
-    <!-- CSS | Style css. This is the file where you can place your own custom css code. Just uncomment it and use it. -->
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css">
+        h1 {
+            font-size: 6em;
+            font-weight: lighter;
+            margin-bottom: 0;
+        }
 
-    <!-- CSS | Theme Color -->
-    <link href="assets/css/colors/theme-skin-color-set8.css" rel="stylesheet" type="text/css">
+        h2 {
+            margin-bottom: 0;
+            font-weight: lighter;
+        }
 
-    <!-- external javascripts -->
-    <script src="assets/js/jquery-2.2.4.min.js"></script>
-    <script src="assets/js/jquery-ui.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <!-- JS | jquery plugin collection for this theme -->
-    <script src="assets/js/jquery-plugin-collection.js"></script>
+        p {
+            margin-top: 1em;
+            margin-bottom: 2em;
+            font-size: 0.95em;
+        }
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+        a.button {
+            text-decoration: none;
+            color: #555;
+            border: 1px solid #555;
+            padding: 10px 15px;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        a.button-alt {
+            text-decoration: none;
+            color: #fff;
+            background-color: #555;
+            border: 1px solid #555;
+            padding: 10px 15px;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+    </style>
+
 </head>
 
-<body class="">
-    <div id="wrapper" class="clearfix">
-        <!-- Start main-content -->
-        <div class="main-content">
-            <!-- Section: home -->
-            <section id="home" class="fullscreen bg-lightest">
-                <div class="display-table text-center">
-                    <div class="display-table-cell">
-                        <div class="container pt-0 pb-0">
-                            <div class="row">
-                                <div class="col-md-7 mb-sm-60">
-                                    <h1 class="font-200 line-height-1em mt-0 mb-0 text-theme-colored2">500!</h1>
-                                    <h2 class="mt-0">Oops! Error Detected</h2>
-                                    <p>Please contact us with details of error.</p>
-                                    <a class="btn btn-border btn-lg btn-theme-colored smooth-scroll-to-target" href="<?= $route->urlFor('home'); ?>">Return Home
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                <h3>Send Error Code to Support</h3>
-                                <textarea class="form-control" rows="8"><?=$message;?></textarea>
-                                    <h3>Some Useful Links</h3>
-                                    <div class="widget">
-                                        <div class="clearfix">
-                                            <div class="col-md">
-                                                <a class="useful-link" href="<?= $route->urlFor('home'); ?>">Home</a>
-                                                <?php foreach ($siteSettings['secondary_menu'] as $menu) : ?>
-                                                    <a class="useful-link" href="<?= $route->urlFor('page', ['page' => $menu]); ?>"><?= (ucwords(str_replace("-", " ", $menu))); ?></a>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+<body>
+    <div class="container">
+        <h1 class="">5.oh.oh</h1>
+        <h2 class="">Oops! An Error Occured.</h2>
+        <p>Unable to process your request at the moment.</p>
+        <a class="button" href="{$route->urlFor('home')}">Return Home</a>
+        <a class="button-alt"
+            href="mailto:admin@{$smarty.server.HTTP_HOST}?{'subject=An Error Occured. Page -> '|escape}{$smarty.server.HTTP_HOST|escape}{$smarty.server.REQUEST_URI}">Contact
+            Support</a>
+        {if $message ne ''}
+            {$message}
+        {/if}
     </div>
 </body>
 

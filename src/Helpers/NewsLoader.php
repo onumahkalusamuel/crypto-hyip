@@ -11,37 +11,50 @@ class NewsLoader
 
     private $coinTelegraphRss = "https://cointelegraph.com/rss";
 
+    private $cacheLocation = "";
+
     public function __construct()
     {
         $this->streamContext = stream_context_create(
             array('http' => array('timeout' => 3))
         );
+        // cache location
+        $this->cacheLocation = dirname(dirname(__DIR__)) . '/tmp/newscache/';
+        if(!is_dir($this->cacheLocation)) mkdir($this->cacheLocation, 0777, true);
     }
 
     public function coinTelegraphNews($count = 20): array
     {
         $latestNews = [];
+        $fetch = [];
         try {
-            $latestNews =  $this->fetchCoinTelegraphNews($count);
-            shuffle($latestNews);
+            $fetch = $this->fetchCoinTelegraphNews();
         } catch (\Exception $e) {
-            // check if there is a local copy
-            $latestNews = (array) json_decode(
-                file_get_contents(
-                    __DIR__ . "/newscache/cointelegraph.json"
-                ),
-                true
-            );
-            // pick $count
-            $latestNews = array_chunk($latestNews, $count)[0];
+        }
+
+        if (!empty($fetch)) {
+            shuffle($fetch);
+            shuffle($fetch);
+            for ($i = 0; $i < $count; $i++) {
+                if (empty($fetch[$i])) break;
+                $latestNews[] = $fetch[$i];
+            }
         }
 
         return $latestNews;
     }
 
-    public function fetchCoinTelegraphNews($count = 40): array
+    public function fetchCoinTelegraphNews($count = 50): array
     {
         $latestNews = [];
+        $file = $this->cacheLocation . "cointelegraph.json";
+
+        if (is_file($file) && time() < filemtime($file) + 21600) {
+            return (array) json_decode(
+                file_get_contents($this->cacheLocation . "cointelegraph.json"),
+                true
+            );
+        }
 
         $dom = new DOMDocument();
         $dom2 = new DOMDocument();
@@ -54,6 +67,7 @@ class NewsLoader
 
         $title = $dom->getElementsByTagName('title')[0]->nodeValue;
         $items = $dom->getElementsByTagName('item');
+
         foreach ($items as $key => $item) {
 
             $latestNews[$key]['author'] = $title;
@@ -64,7 +78,7 @@ class NewsLoader
 
             $categories = $item->getElementsByTagName('category');
             foreach ($categories as $category) {
-                $latestNews[$key]['categories'][] = $category->nodeValue;
+                $latestNews[$key]['tags'][] = $category->nodeValue;
             }
 
             $dom2->loadHTML($item->getElementsByTagName('description')[0]->nodeValue);
@@ -73,6 +87,20 @@ class NewsLoader
             if ($key >= $count) break;
         }
 
+        $this->cacheNews('cointelegraph', $latestNews);
+
         return $latestNews;
+    }
+
+    private function cacheNews(string $channel, array $content): void
+    {
+        $file = $this->cacheLocation . "{$channel}.json";
+
+        // check file existence. nb: caching for 6 hours
+        if (empty($content) || (is_file($file) && time() < filemtime($file) + 21600)) {
+            return;
+        }
+
+        file_put_contents($file, json_encode($content));
     }
 }

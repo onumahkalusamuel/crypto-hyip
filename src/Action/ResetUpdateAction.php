@@ -3,10 +3,9 @@
 namespace App\Action;
 
 use App\Domain\User\Service\User;
-use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Views\PhpRenderer;
+use Smarty as View;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class ResetUpdateAction
@@ -18,7 +17,7 @@ class ResetUpdateAction
 
     public function __construct(
         User $user,
-        PhpRenderer $view,
+        View $view,
         Session $session
     ) {
 
@@ -76,6 +75,8 @@ class ResetUpdateAction
         }
 
         // return 
-        return $this->view->render($response, "public/pages/reset-update.php", $return);
+        $this->view->assign('data', $return);
+        $this->view->display("theme/public/pages/reset-update.tpl");
+        return $response;
     }
 }

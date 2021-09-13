@@ -7,7 +7,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleDepositView
 {
@@ -52,7 +52,7 @@ final class SingleDepositView
                     'userID' => $userID,
                     'transactionID' => $ID
                 ],
-		'like' => ['logType' => 'deposit'],
+                'like' => ['logType' => 'deposit'],
             ]
         ]);
 
@@ -62,6 +62,9 @@ final class SingleDepositView
             'trailLog' => $trailLog
         ];
 
-        return $this->view->render($response, 'user/view-deposit.php', ['data' => $data]);
+        $this->view->assign('data', $data);
+        $this->view->display('theme/user/view-deposit.tpl');
+
+        return $response;
     }
 }

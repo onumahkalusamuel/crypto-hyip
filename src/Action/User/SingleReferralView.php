@@ -7,7 +7,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class SingleReferralView
 {
@@ -62,6 +62,9 @@ final class SingleReferralView
             'trailLog' => $trailLog
         ];
 
-        return $this->view->render($response, 'user/view-referral.php', ['data' => $data]);
+        $this->view->assign('data', $data);
+        $this->view->display('theme/user/view-referral.tpl');
+
+        return $response;
     }
 }

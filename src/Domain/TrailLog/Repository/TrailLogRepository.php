@@ -43,6 +43,7 @@ class TrailLogRepository extends Repository
         [
             'params' => $params,
             'filters' => $filters,
+            'select' => $select,
             'order_by' => $order_by,
             'order' => $order
         ] = $props + self::DEFAULTS;
@@ -50,6 +51,8 @@ class TrailLogRepository extends Repository
         [ 'where' => $where ] = $params;
 
         $__ = $this->connection->table($this->table);
+
+        if (!empty($select)) $__->select($select);
 
         if (!empty($where['from'])) {
             $__->where('createdAt', '>=', $where['from']);

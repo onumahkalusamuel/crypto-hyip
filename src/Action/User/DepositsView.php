@@ -8,7 +8,7 @@ use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class DepositsView
 {
@@ -73,6 +73,9 @@ final class DepositsView
             'activeCurrencies' => explode(',', $this->settings->activeCurrencies)
         ];
 
-        return $this->view->render($response, 'user/deposits.php', ['data' => $data]);
+        $this->view->assign('data', $data);
+        $this->view->display('theme/user/deposits.tpl');
+
+        return $response;
     }
 }

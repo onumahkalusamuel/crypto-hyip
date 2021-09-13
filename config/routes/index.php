@@ -1,7 +1,6 @@
 <?php
 
 use Slim\App;
-use Slim\Views\PhpRenderer;
 
 return function (App $app) {
     // get public
@@ -15,7 +14,8 @@ return function (App $app) {
 
     // catchall - for 404 - Not Found
     $app->map(['GET', 'POST', 'PUT', 'DELETE'], '{routes:.+}', function ($request, $response) {
-        $view = $this->get(PhpRenderer::class);
-        return $view->render($response, "404.php");
+        $view = $this->get(Smarty::class);
+        $view->display("404.tpl");
+        return $response;
     });
 };

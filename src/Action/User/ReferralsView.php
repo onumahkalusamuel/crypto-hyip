@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class ReferralsView
 {
@@ -99,6 +99,9 @@ final class ReferralsView
             ],
         ];
 
-        return $this->view->render($response, 'user/referrals.php', ['data' => $data]);
+        $this->view->assign('data', $data);
+        $this->view->display('theme/user/referrals.tpl');
+
+        return $response;
     }
 }

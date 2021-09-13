@@ -9,7 +9,7 @@ use App\Domain\Plans\Service\Plans;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class WithdrawalsView
 {
@@ -77,7 +77,10 @@ final class WithdrawalsView
             'min_withdrawal' => $minWithdrawal
         ];
 
-        return $this->view->render($response, 'user/withdrawals.php', ['data' => $data]);
+        $this->view->assign('data', $data);
+        $this->view->display('theme/user/withdrawals.tpl');
+
+        return $response;
     }
 
     public function getAvailableWallets($ID): array
@@ -86,7 +89,7 @@ final class WithdrawalsView
         $wallets = [];
         $activeCurrencies = explode(',', $this->settings->activeCurrencies);
         $user = $this->user->readSingle(['ID' => $ID]);
-        foreach($activeCurrencies as $currency)
+        foreach ($activeCurrencies as $currency)
             $wallets[] = $this->genWallet($currency, $user->{$currency . 'Balance'}, (bool) $user->{$currency . 'Address'});
 
         return $wallets;

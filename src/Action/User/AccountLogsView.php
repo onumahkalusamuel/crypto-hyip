@@ -6,7 +6,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class AccountLogsView
 {
@@ -49,6 +49,8 @@ final class AccountLogsView
             'filters' => $filters
         ]);
 
-        return $this->view->render($response, 'user/account-logs.php', ['data' => $trailLog]);
+        $this->view->assign('data', $trailLog);
+        $this->view->display('theme/user/account-log.tpl');
+        return $response;
     }
 }

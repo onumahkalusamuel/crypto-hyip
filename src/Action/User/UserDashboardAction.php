@@ -10,7 +10,7 @@ use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Slim\Views\PhpRenderer as View;
+use Smarty as View;
 
 final class UserDashboardAction
 {
@@ -98,6 +98,9 @@ final class UserDashboardAction
 
         $return['user'] = $user;
 
-        return $this->view->render($response, 'user/dashboard.php', ['data' => $return]);
+        $this->view->assign('data', $return);
+        $this->view->display('theme/user/dashboard.tpl');
+
+        return $response;
     }
 }
