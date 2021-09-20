@@ -1,27 +1,27 @@
-<?php if (!empty($latest_news)) : ?>
-<!-- Section: latest news -->
-    <section id="blog">
-        <div class="container mb-40">
-            <div class="section-title">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="text-uppercase title">Latest <span class="text-theme-colored2">News</span></h2>
-                        <div class="diamond-line-left-theme-colored2"></div>
-                        <p class="mt-10">Information is power! Get acquainted with recent happenings. Maximize your profit by expanding your knowledge</p>
+{getNews out=latest_news count=3}
+{if (!empty($latest_news))}
+    <!-- Section: latest news -->
+
+    <section id="blog" class="blog blog-grid pb-60">
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
+                    <div class="heading heading-3 mb-50 text--center">
+                        <p class="heading--subtitle">Don’t Miss Latest</p>
+                        <h2 class="heading--title">News & Headlines</h2>
+                        <p class="heading--desc mb-0">Follow our latest news and thoughts which focuses exclusively on
+                            investment strategy guide, blockchain tech, crypto-trading and mining.</p>
                     </div>
                 </div>
             </div>
-            <div class="section-content">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="owl-carousel-3col owl-nav-top" data-nav="true">
-                            <?php foreach ($latest_news as $news) : ?>
-                                <?php echo $this->fetch('public/components/news.php', ['news' => $news]); ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
+            <div class="row">
+                {foreach from=$latest_news item=news key=key}
+                    {include file="theme/public/components/news.tpl" news=$news key=$key}
+                {/foreach}
             </div>
+
         </div>
+
     </section>
-<?php endif; ?>
+
+{/if}

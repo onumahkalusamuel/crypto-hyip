@@ -77,7 +77,9 @@
             href="mailto:admin@{$smarty.server.HTTP_HOST}?{'subject=An Error Occured. Page -> '|escape}{$smarty.server.HTTP_HOST|escape}{$smarty.server.REQUEST_URI}">Contact
             Support</a>
         {if $message ne ''}
+            <div style="max-width:500px; padding:10px; margin:auto">
             {$message}
+            </div>
         {/if}
     </div>
 </body>

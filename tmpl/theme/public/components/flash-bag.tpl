@@ -1,16 +1,19 @@
-<?php
-$errors = $flashBag->get('error');
-$successes = $flashBag->get('success');
-?>
-<?php foreach ($errors as $error) : ?>
-    <strong class="alert alert-danger alert-dismissable text-center display-block">
-        <button aria-hidden="true" data-dismiss="alert" class="close" type="button"> × </button>
-        <?= $esc->escapeHtml($error); ?>
-    </strong>
-<?php endforeach; ?>
-<?php foreach ($successes as $success) : ?>
-    <strong class="alert alert-success alert-dismissable text-center display-block">
-        <button aria-hidden="true" data-dismiss="alert" class="close" type="button"> × </button>
-        <?= $esc->escapeHtml($success); ?>
-    </strong>
-<?php endforeach; ?>
+{assign var=errors value=$flashBag->get('error')}
+{assign var=successes value=$flashBag->get('success')}
+
+{foreach $errors as $error}
+    <div class="alert alert-danger alert-dismissible" role="alert" style="font-weight: bolder;">
+        {$error}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{/foreach}
+{foreach $successes as $success}
+    <div class="alert alert-success alert-dismissible" role="alert" style="font-weight: bolder;">
+        {$success}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{/foreach}

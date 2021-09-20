@@ -23,7 +23,6 @@ class NewsAction
 
         $channel = $args['channel'] ?? 'cointelegraph';
         $count = $_GET['count'] ?? 10;
-        $data = [];
 
         switch ($channel) {
             case 'cointelegraph': {

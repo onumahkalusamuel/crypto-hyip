@@ -2,14 +2,16 @@
 
 namespace App\Middleware;
 
+use App\Domain\Plans\Repository\PlansRepository;
+use App\Domain\Plans\Service\Plans;
+use App\Helpers\NewsLoader;
+use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Smarty;
-use Smarty_Internal_Template;
-use stdClass;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 final class SmartyExtensionMiddleware implements MiddlewareInterface
@@ -21,14 +23,18 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
 
     private $session;
 
+    private $plans;
+
     public function __construct(
         App $app,
         Smarty $smarty,
-        Session $session
+        Session $session,
+        Plans $plans
     ) {
         $this->smarty = $smarty;
         $this->app = $app;
         $this->session = $session;
+        $this->plans = $plans;
     }
 
     public function process(
@@ -75,7 +81,9 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
             }
         });
 
-        $this->smarty->registerPlugin('function', 'paginationLinks',[$this, 'paginationLinks']);
+        $this->smarty->registerPlugin('function', 'paginationLinks', [$this, 'paginationLinks']);
+        $this->smarty->registerPlugin('function', 'getNews', [$this, 'getNews']);
+        $this->smarty->registerPlugin('function', 'getInvestmentPlans', [$this, 'getInvestmentPlans']);
 
         return $handler->handle($request);
     }
@@ -135,5 +143,34 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $return['last_page_link'] = $uri->getPath() . "?" . http_build_query($get);
 
         $template->assign($params['out'], $return);
+    }
+
+    public function getNews($params, $template)
+    {
+        $channel = $params['channel'] ?? 'cointelegraph';
+        $count = $params['count'] ?? 10;
+        $news = new NewsLoader;
+        
+        switch ($channel) {
+            case 'cointelegraph': {
+                $latestNews = $news->coinTelegraphNews($count);
+                break;
+            }
+            case 'bitcoinnews': {
+                $latestNews = $news->coinTelegraphNews($count);
+                break;
+            }
+            default: {
+                $latestNews = [];
+            }
+        }
+
+        $template->assign($params['out'], $latestNews);
+    }
+
+    public function getInvestmentPlans($params, $template)
+    {
+        $plans = $this->plans->readAll([]);
+        $template->assign($params['out'], $plans);
     }
 }

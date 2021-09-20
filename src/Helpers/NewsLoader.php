@@ -20,7 +20,7 @@ class NewsLoader
         );
         // cache location
         $this->cacheLocation = dirname(dirname(__DIR__)) . '/tmp/newscache/';
-        if(!is_dir($this->cacheLocation)) mkdir($this->cacheLocation, 0777, true);
+        if (!is_dir($this->cacheLocation)) mkdir($this->cacheLocation, 0777, true);
     }
 
     public function coinTelegraphNews($count = 20): array
@@ -79,6 +79,7 @@ class NewsLoader
             $categories = $item->getElementsByTagName('category');
             foreach ($categories as $category) {
                 $latestNews[$key]['tags'][] = $category->nodeValue;
+                if (count($latestNews[$key]['tags']) == 3) break;
             }
 
             $dom2->loadHTML($item->getElementsByTagName('description')[0]->nodeValue);

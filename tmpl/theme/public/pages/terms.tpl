@@ -1,12 +1,4 @@
-<?php $this->addAttribute('pageTitle', 'Terms'); ?>
-<?php $this->setLayout('public/layout.php'); ?>
+{include file="theme/public/header.tpl" pageTitle="Terms" active="terms"}
 
-<div class="main-content">
 
-    <?php echo $this->fetch('public/components/page-inner-header.php'); ?>
-
-    <?php echo $this->fetch('public/components/section-terms.php'); ?>
-    
-    <?php echo $this->fetch('public/components/section-referral.php'); ?>
-
-</div>
+{include file="theme/public/footer.tpl"}

@@ -1,37 +1,42 @@
- <div class="col-xs-12 col-sm-6 col-md-3 hvr-float-shadow mb-sm-30">
-     <div class="pricing-table style2 bg-white border-1px text-center">
-         <div class="pt-0 pb-40">
-             <div class="bg-theme-colored position-relative overflow-hidden pt-15 pb-20">
-                 <h2 class="package-type text-uppercase line-bottom-centered text-white font-24 mb-0"><?= $plan->title; ?></h2>
-                 <div class="package-icon"><i class="fa fa-cubes"></i></div>
-                 <?php if (!empty($plan->hasBadge)) : ?>
-                     <div class="pricing-ribbon">
-                         <h5>featured</h5>
-                     </div>
-                 <?php endif; ?>
-             </div>
-             <h1 class="price font-25 font-weight-600 text-theme-colored bg-white line-height-1 font-opensans m-0 pt-15 pb-15">
-                 <span class="font-15 text-theme-colored font-raleway font-weight-600 currency">$</span><?= number_format($plan->minimum ?? 1); ?>
-                 -
-                 <span class="font-15 text-theme-colored font-raleway font-weight-600 currency"><?= !empty($plan->maximum) ? '$' : null; ?></span><?= empty($plan->maximum) ? 'above' : number_format($plan->maximum); ?>
-             </h1>
-             <ul class="table-list pt-0 pl-0">
-                 <!-- Duration -->
-                 <li>
-                     <?= $plan->duration . ' ' .
-                            ucwords($plan->durationType) .
-                            ($plan->durationType > 1 ? 's' : ''); ?> Duration</li>
-                 <!-- Profit Frequency -->
-                 <li><strong><?= $plan->percentage . '% ' .
-                            ($plan->profitFrequency === 'end'
-                                ? " ROI at End of Plan"
-                                : ucwords($plan->profitFrequency) . ' ROI'); ?></strong></li>
-                 <li><?= $plan->referralPercentage; ?>% Referral Commission</li>
-                 <?php foreach ($plan->features as $feature) : ?>
-                     <li><?= $feature; ?></li>
-                 <?php endforeach; ?>
-             </ul>
-             <a class="btn btn-lg btn-theme-colored text-uppercase btn-block pt-20 pb-20 btn-flat" href="<?= $route->urlFor('page', ['page' => 'register']); ?>">Register</a>
-         </div>
-     </div>
- </div>
+<div class="col-xs-12 col-sm-12 col-md-4 price-table {if $plan->hasBadge}pricing-active{/if} wow fadeInUp"
+    data-wow-delay="{$key}00ms">
+    <div class="pricing-panel">
+        <div class="pricing--heading text--center">
+            <div class="pricing--icon">
+                {if $plan->hasBadge}
+                    <img src="assets/images/icons/BitcoinIcon5.png" alt="Bitcoin Icon">
+                {else}
+                    <img src="assets/images/icons/BitcoinIcon4.png" alt="Bitcoin Icon">
+                {/if}
+            </div>
+            <h4>{$plan->title}</h4>
+            <p>{$plan->percentage}<span class="currency">%</span></p>
+            <div class="pricing--desc">
+                Enjoy your investment with Bitcoin, Ethereum, Litecoin or Dogecoin growing every day.
+            </div>
+            <a class="btn {if $plan->hasBadge}btn--white{else}btn--secondary{/if} btn--bordered btn--rounded"
+                href="{$route->urlFor('page',['page'=>'login'])}">Invest Now</a>
+            <div class="pricing--footer" style="margin-top:30px">
+                <ul class="{if $plan->hasBadge}white{/if}">
+                    <li style="font-size: 1.3em;">
+                        ${$plan->minimum} - {if empty($plan->maximum)}above{else}${$plan->maximum}{/if}
+                    </li>
+                    <li>
+                        {$plan->duration} {$plan->durationType|capitalize}{if $plan->duration gt '1'}s{/if} Duration
+                    </li>
+                    <li>
+                        {$plan->percentage}%
+                        {if $plan->profitFrequency eq 'end'}
+                            ROI at End of Plan
+                        {else}
+                            {$plan->profitFrequency|capitalize} ROI
+                        {/if}
+                    </li>
+                    <li>
+                        {$plan->referralPercentage}% Referral Commission
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

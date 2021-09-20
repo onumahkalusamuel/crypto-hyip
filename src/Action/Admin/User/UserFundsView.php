@@ -121,7 +121,7 @@ final class UserFundsView
                 if ($dd->type == 'withdrawal') $data['total_withdrawal'] = $dd->amount;
                 if ($dd->type == 'penalty') $data['total_penalty'] = $dd->amount;
                 if ($dd->type == 'referral') $data['total_referral'] = $dd->amount;
-                if ($dd->type == 'earning') $data['total_earning'] = $dd->amount;
+                if ($dd->type == 'deposit-earning') $data['total_earning'] = $dd->amount;
             }
 
             // find the user

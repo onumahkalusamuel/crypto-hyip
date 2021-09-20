@@ -1,85 +1,94 @@
-<?php $this->addAttribute('pageTitle', 'Dashboard'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
-<?php
+{include file="theme/user/header.tpl" pageTitle="Dashboard" active="dashboard"}
 
-$user = $data['user'];
-$referrals = $data['referrals'];
-$deposits = $data['deposits'];
-$withdrawals = $data['withdrawals'];
-$earnings = $data['earnings'];
-
-$depositsTotal = 0;
-foreach ($deposits as $d) {
-    if (in_array($d->status, ["approved", "released"])) {
-        $depositsTotal += $d->amount;
-    }
-}
-
-$withdrawalsTtotal = 0;
-foreach ($withdrawals as $d) {
-    if ($d->status == "approved") {
-        $withdrawalsTtotal += $d->amount;
-    }
-}
-
-$earningsTotal = 0;
-foreach ($earnings as $e) {
-    $earningsTotal += $e->amount;
-}
-
-$referralCount = $referrals->total;
-
-?>
-<div class="main-content">
-    <div class="container pb-40 pt-20">
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1" aria-expanded="true">Account Dashboard</a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <h5> Welcome back, <?= $user->fullName; ?></h5>
-                        <hr />
-                        <h3 class="heading-line-bottom">Overview</h3>
-                        <div class="row">
-                            <div class="col-sm-6 col-md-3 p-5">
-                                <div class="help">
-                                    <h3 class="m-0">$<?= number_format($depositsTotal, 2); ?></h3>
-                                    <h6 class="m-0 text-uppercase">Investments</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3 p-5">
-                                <div class="help">
-                                    <h3 class="m-0">$<?= number_format($earningsTotal, 2); ?></h3>
-                                    <h6 class="m-0 text-uppercase">All Earnings</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3 p-5">
-                                <div class="help">
-                                    <h3 class="m-0">$<?= number_format($withdrawalsTtotal, 2); ?></h3>
-                                    <h6 class="m-0 text-uppercase">Withdrawals</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3 p-5">
-                                <div class="help">
-                                    <h3 class="m-0">$<?= number_format($user->btcBalance, 2); ?></h3>
-                                    <h6 class="m-0 text-uppercase">Balance</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3 p-5">
-                                <div class="help">
-                                    <h3 class="m-0"><?= number_format($referrals->total); ?></h3>
-                                    <h6 class="m-0 text-uppercase">Total Referrals</h6>
-                                </div>
-                            </div>
-                        </div>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1>Dashboard</h1>
                     </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Dashboard</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <?php $this->fetch('public/components/section-live-table.php');
-    ?>
-</div>
+<section>
+    <div class="container">
+        <div class="row">
+            <h3>Overview</h3>
+            <div class="content-container">
+                <div class="item">
+                    <div class="title">Username:</div>
+                    <div class="content">{$data.user_name}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Full Name:</div>
+                    <div class="content">{$data.full_name}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Registration Date:</div>
+                    <div class="content">{$data.registration_date}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Account Balance:</div>
+                    <div class="content">
+                        {foreach from=$data.account_balance item=item key=key name=name}
+                            {$key|upper}: ${$item} <img src="currencies/{$key}.gif" alt="{$key}" /><br />
+                        {/foreach}
+                        <strong>Total Balance: ${$data.total_balance}</strong>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">Total Deposit Earnings:</div>
+                    <div class="content">${$data.total_earning}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Pending Withdrawals:</div>
+                    <div class="content">${$data.pending_withdrawal}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Total Withdrawn:</div>
+                    <div class="content">${$data.total_withdrawal}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Active Deposits:</div>
+                    <div class="content">${$data.active_deposit}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Total Deposits:</div>
+                    <div class="content">${$data.total_deposit}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Total Referrals Earnings:</div>
+                    <div class="content">${$data.referral_commission}</div>
+                </div>
+
+                <div class="item">
+                    <div class="title">No. of Referrals:</div>
+                    <div class="content">{$data.referral}</div>
+                </div>
+
+                <div class="item">
+                    <div class="title">Total Bonuses:</div>
+                    <div class="content">${$data.total_bonus}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Total Penalties:</div>
+                    <div class="content">${$data.total_penalty}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{include file="theme/user/footer.tpl"}
