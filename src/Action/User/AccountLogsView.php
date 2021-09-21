@@ -50,7 +50,7 @@ final class AccountLogsView
         ]);
 
         $this->view->assign('data', $trailLog);
-        $this->view->display('theme/user/account-log.tpl');
+        $this->view->display('theme/user/account-logs.tpl');
         return $response;
     }
 }

@@ -1,79 +1,61 @@
-<?php
-$default = ['data' => [], 'total_rows' => 0];
-
-[
-    'data' => $localData,
-    'total_rows' => $totalRows
-] = $referrals + $default;
-?>
-<div class="pb-40 pt-sm-5">
-    <div class="section-content">
-        <div class="">
-            <form class="row" action="" method="get">
+<form action="" method="get">
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="query">Enter Referral Username:</label>
-                    <input class="form-control" type="text" id="query" name="query" value="<?= $esc->escapeHtml($_GET['query']); ?>" />
+                    <input class="form-control" type="text" id="query" name="query" value="{$smarty.get.query}" />
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="from">From:</label>
-                    <input class="form-control" type="date" id="from" name="from" value="<?= $esc->escapeHtml($_GET['from']); ?>" />
+                    <input class="form-control" type="date" id="from" name="from" value="{$smarty.get.from}" />
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <label for="to">To:</label>
-                    <input class="form-control" type="date" id="to" name="to" value="<?= $esc->escapeHtml($_GET['to']); ?>" />
+                    <input class="form-control" type="date" id="to" name="to" value="{$smarty.get.to}" />
                 </div>
                 <div class="form-group col-sm-4 col-md-3">
                     <br class="hidden-xs hidden-sm" />
-                    <button type="submit" class="form-control btn btn-dark btn-theme-colored2">Go</button>
+                    <button type="submit" class="btn btn-warning">Go</button>
                 </div>
             </form>
-        </div>
-        <div class="table-responsive border-theme-colored">
-            <table class="table table-striped table-hover">
-                <tr>
-                    <th>Details</th>
-                    <th>Earned</th>
-                    <th>Action</th>
-                </tr>
 
-                <?php if (!empty($localData)) : ?>
-                    <?php foreach ($localData as $index => $trans) : ?>
-                        <tr>
-                            <td class="text-uppercase">
+
+        <div class="row">
+            <div class="content-container">
+                <div class="item">
+                    <div class="title content">Details</div>
+                    <div class="title content">Earned</div>
+                    <div class="title content">Action</div>
+                </div>
+
+                {if !empty($localData)}
+                    {foreach from=$localData key=index item=trans}
+                        <div class="item">
+                            <div class="content">
                                 <strong>
-                                    <?= $trans->referredUserName; ?>
+                                    {$trans->referredUserName}
                                 </strong><br />
                                 <small>
                                     <strong>Referred by:</strong>
-                                    <?= $trans->referralUserName; ?><br />
+                                    {$trans->referralUserName}<br />
                                     <strong>Date:</strong>
-                                    <?= $getTimeAgo($trans->createdAt); ?><br />
+                                    {$trans->createdAt}<br />
                                 </small>
-                            </td>
-                            <td>
-                                $<?= number_format($trans->referralBonus, 2); ?><br />
-                            </td>
-                            <td class="">
-                                <a href="<?= $route->urlFor('user-view-referral', ['id' => $trans->ID]) ?>" class="btn btn-dark btn-theme-colored btn-sm btn-flat mb-5">VIEW</i></a><br />
-                                <?php if ($trans->referralstatus === "approved") : ?>
-                                    <a href="" class="btn btn-dark btn-theme-colored2 btn-sm btn-flat mb-5" onclick="return releaseDeposit(<?= $esc->escapeJs($trans->ID); ?>)">RELEASE</i></a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <tr>
-                        <td colspan="5">
+                            </div>
+                            <div class="content">
+                                ${$trans->referralBonus}<br />
+                            </div>
+                            <div class="content">
+                                <a href="{$route->urlFor('user-view-referral', ['id' => $trans->ID])}" class="btn btn-dark btn-theme-colored btn-sm btn-flat mb-5">VIEW</i></a><br />
+                            </div>
+                        </div>
+                    {/foreach}
+                {else}
+                    <div class="item">
+                        <div class="content">
                             No data found.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </table>
+                        </div>
+                    </div>
+                {/if}
+            </div>
         </div>
 
-        <?php echo $this->fetch(
-            'user/components/pagination.php',
-            ['total_rows' => $totalRows, 'total_retrieved' => count($localData)]
-        ); ?>
-    </div>
-</div>
+          {include file="theme/user/components/pagination.tpl" total_rows=$totalRows total_retrieved=$localData|@count}

@@ -1,6 +1,5 @@
-<div class="content-container">
 
-    <form class="row" action="" method="get">
+    <form action="" method="get">
         <div class="form-group col-sm-4 col-md-3">
             <label for="depositStatus">Deposit Status:</label>
             <select id="depositStatus" name="depositStatus" class="form-control">
@@ -23,7 +22,7 @@
         </div>
         <div class="form-group col-sm-4 col-md-3">
             <br class="hidden-xs hidden-sm" />
-            <button type="submit" class="form-control btn btn-dark btn-theme-colored2">Go</button>
+            <button type="submit" class="btn btn-warning btn-block">Go</button>
         </div>
     </form>
     <style>
@@ -39,18 +38,19 @@
             background-color: #007bff;
         }
     </style>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <tr>
-                <th>Details</th>
-                <th>Amount</th>
-                <th>Action</th>
-            </tr>
+    
+    <div class="row">
+    <div class="content-container">
+        <div class="item">
+                <div class="title content">Details</div>
+                <div class="title content">Amount</div>
+                <div class="title content">Action</div>
+       </div>
 
             {if !empty($localData)}
                 {foreach from=$localData key=$index item=$trans}
-                    <tr>
-                        <td class="text-uppercase">
+                    <div class="item">
+                        <div class="content text-uppercase">
                             <strong>
                                 {$trans->planTitle}
                             </strong>&nbsp;
@@ -67,24 +67,23 @@
                                     ${$trans->interestBalance}
                                 </small>
                             {/if}
-                        </td>
-                        <td>${$trans->amount}<br />
+                        </div>
+                        <div class="content">${$trans->amount}<br />
                             <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
-                        </td>
-                        <td class="">
+                        </div>
+                        <div class="content">
                             <a href="{$route->urlFor('user-view-deposit', ['id' => $trans->ID])}"
-                                class="btn btn-dark btn-theme-colored btn-sm btn-flat mb-5">VIEW</i></a><br />
-                        </td>
-                    </tr>
+                                class="btn btn-primary btn-sm btn-flat mb-5">VIEW</i></a><br />
+                        </div>
+                    </div>
                 {/foreach}
             {else}
-                <tr>
-                    <td colspan="5">
+                <div class="item">
+                    <div class="content">
                         No data found.
-                    </td>
-                </tr>
+                    </div>
+                </div>
             {/if}
-        </table>
+        </div>
     </div>
     {include file="theme/user/components/pagination.tpl" total_rows=$totalRows total_retrieved=$localData|@count}
-</div>

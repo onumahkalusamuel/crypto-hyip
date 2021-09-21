@@ -83,7 +83,7 @@ final class DepositsAction
             $message = "Amount ($" .
                 $data['amount'] .
                 ") is higher than maximum deposit ($" .
-                $plan->minimum .
+                $plan->maximum .
                 ") for this plan";
         }
 

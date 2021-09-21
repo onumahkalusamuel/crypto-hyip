@@ -1,6 +1,3 @@
-<?php
-$transactions = $transactions ?? [];
-?>
 
             <style>
                 .penalty {
@@ -27,39 +24,41 @@ $transactions = $transactions ?? [];
                     background-color: #007bff;
                 }
             </style>
-            <div class="table-responsive border-theme-colored">
-                <table class="table table-striped table-hover">
-                    <tr>
-                        <th>Details</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
+            
+            <div class="row">
+                <div class="content-container">
+                    <div class="item">
+                        <div class="title content">Details</div>
+                        <div class="title content">Amount</div>
+                        <div class="title content">Date</div>
+                    </div>
 
-                    <?php if (!empty($transactions)) : ?>
-                        <?php foreach ($transactions as $index => $trans) : ?>
-                            <tr>
-                                <td class="text-uppercase">
+                    {if !empty($transactions)}
+                        {foreach from=$transactions  key=index item=trans}
+                            <div class="item">
+                                <div class="content text-uppercase">
                                     <strong>
-                                        <?= $trans->userName; ?>
+                                        {$trans->userName}
                                     </strong>&nbsp;
-                                    <small class="badge <?= $trans->logType; ?>"><?= $trans->logType; ?></small><br />
-                                    <small><?= $trans->transactionDetails; ?></small>
-                                </td>
-                                <td>
-                                    <?= number_format($trans->amount, 2); ?><br />
-                                    <img src="assets/images/currencies/<?=$trans->cryptoCurrency;?>.gif" alt="<?=$trans->cryptoCurrency;?>" />
-                                </td>
-                                <td class="">
-                                    <small><?= $getTimeAgo($trans->createdAt); ?></small>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <tr>
-                            <td colspan="5">
+                                    <small class="badge {$trans->logType}">{$trans->logType}</small><br />
+                                    <small>{$trans->transactionDetails}</small>
+                                </div>
+                                <div class="content">
+                                    ${$trans->amount}<br />
+                                    <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
+                                </div>
+                                <div class="content">
+                                    <small> {$trans->createdAt}</small>
+                                </div>
+                            </div>
+                        {/foreach}
+                    {else}
+                        <div class="item">
+                            <div class="content">
                                 No transactions found.
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </table>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
             </div>
+            

@@ -1,90 +1,72 @@
-<?php $this->addAttribute('pageTitle', 'Withdrawals'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
+{include file="theme/user/header.tpl" pageTitle="Withdrawals" active="withdrawals"}
 
-<div class="main-content">
-    <div class="container pb-40 pt-20">
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1" aria-expanded="true">Make a withdrawal</a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <h4 class="text-center font-16 heading-line-bottom">Minimum Withdrawal Amount: $<?= $data['min_withdrawal']; ?></h4>
-                        <div class="">
-                            <form id="new_withdrawal" class="row" action="" method="post">
-                                <div class="form-group col-sm-4 col-md-4">
-                                    <label for="cryptoCurrency">Select Wallet:</label>
-                                    <select id="cryptoCurrency" name="cryptoCurrency" class="form-control">
-                                        <option value="0">--Select--</option>
-                                        <?php foreach ($data['wallets'] as $wallet) : ?>
-                                            <option value="<?= $wallet['ID']; ?>" <?= !$wallet['addressIsSet'] ? "disabled" : ""; ?>>
-                                                <?= $wallet['title']; ?>
-                                                ($<?= number_format($wallet['balance'] ?? 0, 2); ?>)
-                                                <?= !$wallet['addressIsSet'] ? "no address" : ""; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <h4 class="font-12 p-0 m-0">Set wallet addresses in profile.</h4>
-                                </div>
-                                <div class="form-group col-sm-4 col-md-3">
-                                    <label for="amount">Enter Withdrawal Amount:</label>
-                                    <input class="form-control" id="amount" type="number" name="amount" min="<?= $data['min_withdrawal']; ?>" value="<?= $_POST['amount']; ?>" required />
-                                </div>
-                                <div class="form-group col-sm-4 col-md-2">
-                                    <br class="hidden-xs hidden-sm" />
-                                    <button type="submit" class="form-control btn btn-dark btn-theme-colored2" data-loading-text="Please wait...">Make Withdrawal</button>
-                                </div>
-                            </form>
-                        </div>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1 style="font-size:4em">Withdrawals</h1>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion2">
-                            Withdrawal History
-                        </a>
-                    </div>
-                </div>
-                <div id="accordion2" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'user/components/withdrawals-table.php',
-                            ['withdrawals' => $data['withdrawals'] ?? []]
-                        ); ?>
-                    </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Withdrawals</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<script type="text/javascript">
-    $("#new_withdrawal").validate({
-        submitHandler: function(form) {
-            var form_btn = $(form).find('button[type="submit"]');
-            var form_result_div = '#form-result';
-            $(form_result_div).remove();
-            form_btn.before('<div id="form-result" class="alert alert-success" role="alert" style="display: none;"></div>');
-            var form_btn_old_msg = form_btn.html();
-            form_btn.html(form_btn.prop('disabled', true).data("loading-text"));
-            $(form).ajaxSubmit({
-                dataType: 'json',
-                success: function(data) {
-                    if (data.success === true) {
-                        window.location.assign(data.redirect)
-                    } else {
-                        alert(data.message);
-                    }
-                    form_btn.prop('disabled', false).html(form_btn_old_msg);
-                },
-                error: function(e) {
-                    alert(e.responseJSON.message);
-                    form_btn.prop('disabled', false).html(form_btn_old_msg);
-                }
-            });
-        }
-    });
-</script>
+<section>
+    <div class="container">
+        <div class="row mb-60">
+            <h3 class="section-title">Make Withdrawal</h3>
+            <form id="new_withdrawal" class="row" action="{$route->urlFor('user-withdrawals')}" method="post"
+                onsubmit="return ajaxPost('new_withdrawal')">
+                <div class="content-container">
+                    <div class="item">
+                        <div class="title">Minimum Withdrawal Amount</div>
+                        <div class="content">${$data.min_withdrawal}. <em>You must have the minimum withdrawal amount for withdrawal to be active.</em></div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="title">Select Wallet Currency:</div>
+                        <div class="content">
+                            <select id="cryptoCurrency" name="cryptoCurrency" class="form-control" required>
+                                {foreach $data.wallets as $wa}
+                                    <option {if $wa.balance lt $data.min_withdrawal || $wa.addressIsSet ne 'true'}disabled{/if} value="{$wa.ID}">
+                                        {$wa.title} (${$wa.balance})
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Withdrawal Amount</div>
+                        <div class="content">
+                            <input class="form-control" id="amount" type="number" name="amount" min="{$data.min_withdrawal}" required />
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title"></div>
+                        <div class="content">
+                            <button type="submit" class="btn btn-primary">Make Withdrawal</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row">
+            <h3 class="section-title">Withdrawal History</h3>
+            {include file="theme/user/components/withdrawals-table.tpl" localData=$data.withdrawals.data totalRows=$data.withdrawals.total_rows}
+        </div>
+    </div>
+</section>
+
+{include file="theme/user/footer.tpl"}

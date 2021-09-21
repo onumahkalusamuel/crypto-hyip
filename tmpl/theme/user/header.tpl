@@ -120,9 +120,9 @@
                         </button>
                         <a class="logo" href="{$route->urlFor('home')}">
                             <img class="logo-light" src="assets/images/logo/logo-light.png" height="60px"
-                                alt="Enrmous Logo">
+                                alt="Site Logo">
                             <img class="logo-dark" src="assets/images/logo/logo-dark.png" height="60px"
-                                alt="Enrmous Logo">
+                                alt="Site Logo">
                         </a>
                     </div>
                     <div class="collapse navbar-collapse pull-right" id="navbar-collapse-1">
@@ -149,7 +149,7 @@
                             </li>
                             <li>
                                 <a href="{$route->urlFor('logout')}" class="menu-item"
-                                    onclick="return confirm('Are you sure you want to logout?');">Profile</a>
+                                    onclick="return confirm('Are you sure you want to logout?');">Logout</a>
                             </li>
                         </ul>
                     </div>

@@ -79,7 +79,7 @@ final class UserDashboardAction
             'order_by' => 'status'
         ]);
 
-        $data['active_deposit'] = $d[0]->amount;
+        $data['active_deposit'] = (float) $d[0]->amount;
 
         // withdrawals
         $w = $this->withdrawals->readAll([
@@ -90,7 +90,7 @@ final class UserDashboardAction
             'order_by' => 'status'
         ]);
 
-        $data['pending_withdrawal'] = $d[0]->amount;
+        $data['pending_withdrawal'] = (float) $d[0]->amount;
 
         // referrals
         $referrals = $this->referrals->readAll([
@@ -102,8 +102,8 @@ final class UserDashboardAction
         ]);
 
         if (!empty($referrals)) {
-            $data['referral'] = $referrals[0]->total;
-            $data['referral_commission'] = $referrals[0]->amount;
+            $data['referral'] = (float) $referrals[0]->total;
+            $data['referral_commission'] = (int) $referrals[0]->amount;
         }
 
         // transactions
@@ -117,12 +117,12 @@ final class UserDashboardAction
 
         foreach ($d as $dd) {
 
-            if ($dd->type == 'bonus') $data['total_bonus'] = $dd->amount;
-            if ($dd->type == 'deposit') $data['total_deposit'] = $dd->amount;
-            if ($dd->type == 'withdrawal') $data['total_withdrawal'] = $dd->amount;
-            if ($dd->type == 'penalty') $data['total_penalty'] = $dd->amount;
-            if ($dd->type == 'referral') $data['total_referral'] = $dd->amount;
-            if ($dd->type == 'deposit-earning') $data['total_earning'] = $dd->amount;
+            if ($dd->type == 'bonus') $data['total_bonus'] = (float) $dd->amount;
+            if ($dd->type == 'deposit') $data['total_deposit'] = (float) $dd->amount;
+            if ($dd->type == 'withdrawal') $data['total_withdrawal'] = (float) $dd->amount;
+            if ($dd->type == 'penalty') $data['total_penalty'] = (float) $dd->amount;
+            if ($dd->type == 'referral') $data['total_referral'] = (float) $dd->amount;
+            if ($dd->type == 'deposit-earning') $data['total_earning'] = (float) $dd->amount;
         }
 
         // aggregate from user

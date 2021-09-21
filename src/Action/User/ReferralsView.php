@@ -94,8 +94,8 @@ final class ReferralsView
             'referrals' => $referrals,
             'referral_link' => $referral_link,
             'referral_overview' => [
-                'total_referrals' => $r->total_referrals,
-                'total_referral_commission' => $r->total_referral_commission
+                'total_referrals' => (int) $r->total_referrals,
+                'total_referral_commission' => (float) $r->total_referral_commission
             ],
         ];
 

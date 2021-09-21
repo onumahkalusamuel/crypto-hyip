@@ -1,23 +1,34 @@
-<?php $this->addAttribute('pageTitle', 'Account Logs'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
+{include file="theme/user/header.tpl" pageTitle="Account Logs" active="account_logs"}
 
-<div class="main-content">
-
-    <div class="container pb-40 pt-20">
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1" aria-expanded="true">Account Logs</a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'user/components/account-logs-table.php',
-                            ['logs' => $data]
-                        ); ?>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1 style="font-size:4em">Account Logs</h1>
                     </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Account Logs</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="row mb-60">
+            <h3 class="section-title">Account Logs</h3>
+            {include file="theme/user/components/account-logs-table.tpl" localData=$data.data totalRows=$data.total_rows}
+        </div>
+    </div>
+</section>
+
+{include file="theme/user/footer.tpl"}

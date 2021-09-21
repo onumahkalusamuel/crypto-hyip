@@ -1,61 +1,68 @@
-<?php $this->addAttribute('pageTitle', 'Referrals'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
-<?php
+{include file="theme/user/header.tpl" pageTitle="Referrals" active="referrals"}
 
-$referralLink = $data['referral_link'];
-$referralOverview = $data['referral_overview'];
-$referrals = $data['referrals'];
-
-?>
-<div class="main-content">
-    <div class="container pb-40 pt-20">
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1" aria-expanded="true">Referral Overview </a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body text-center">
-                        <div class="h5 font-16">
-                            Total Referrals:
-                            <?= $referralOverview['total_referrals']; ?>
-                        </div>
-                        <div class="h5 font-16">
-                            Total Commission Earned:
-                            $<?= $referralOverview['total_referral_commission']; ?>
-                        </div>
-                        <div class="h5 font-16">
-                            Referral Link:
-                        </div>
-                        <div class="h5 font-14">
-                            <span>
-                                <input class="border-theme-colored2 p-10 text-center" style="border-style: solid; width:100%" id="referral_link" value="<?= $referralLink ?>" />
-                            </span>
-                            <br /><br />
-                            <small><button class="btn btn-dark" onclick="copyLink()">click to copy</button></small>
-                        </div>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1 style="font-size:4em">Referrals</h1>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion2">
-                            Referral History
-                        </a>
-                    </div>
-                </div>
-                <div id="accordion2" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <?php echo $this->fetch(
-                            'user/components/referrals-table.php',
-                            ['referrals' => $data['referrals'] ?? []]
-                        ); ?>
-                    </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Referrals</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="row mb-60">
+            <h3 class="section-title">Referrals Overview</h3>
+            <div class="row">
+                <div class="content-container">
+                    <div class="item">
+                        <div class="title">Referral Link</div>
+                        <div class="content">
+                            <span>
+                                <input class=" form-control" id="referral_link" value="{$data.referral_link}" />
+                            </span>
+                            <small><button class="btn btn-primary" onclick="copyLink()">click to copy</button></small>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="title">Total Referrals:</div>
+                        <div class="content">
+                            {$data.referral_overview.total_referrals}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Total Commission Earned:</div>
+                        <div class="content">
+                               ${$data.referral_overview.total_referral_commission}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <h3 class="section-title">Referrals History</h3>
+            {include file="theme/user/components/referrals-table.tpl" localData=$data.referrals.data totalRows=$data.referrals.total_rows}
+        </div>
+    </div>
+</section>
+
+{include file="theme/user/footer.tpl"}
 
     <script>
         function copyLink() {

@@ -24,7 +24,7 @@
 
 <section>
     <div class="container">
-        <div class="row">
+        <div class="row mb-60">
             <h3 class="section-title">Make Deposit</h3>
             <form id="new_deposit" class="row" action="{$route->urlFor('user-deposits')}" method="post"
                 onsubmit="return ajaxPost('new_deposit')">
@@ -68,7 +68,7 @@
             </form>
         </div>
 
-        <div class="row">
+        <div class="row mb-60">
             <h3 class="section-title">Deposit History</h3>
             {include file="theme/user/components/deposits-table.tpl" localData=$data.deposits.data totalRows=$data.deposits.total_rows}
         </div>

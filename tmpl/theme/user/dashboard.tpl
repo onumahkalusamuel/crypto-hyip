@@ -24,8 +24,9 @@
 
 <section>
     <div class="container">
-        <div class="row">
-            <h3>Overview</h3>
+        <div class="row mb-60">
+            <h3 class="section-title">Overview</h3>
+            <div class="row">
             <div class="content-container">
                 <div class="item">
                     <div class="title">Username:</div>
@@ -86,6 +87,7 @@
                     <div class="title">Total Penalties:</div>
                     <div class="content">${$data.total_penalty}</div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
