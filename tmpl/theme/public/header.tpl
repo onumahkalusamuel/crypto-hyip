@@ -62,8 +62,10 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="logo" href="{$route->urlFor('home')}">
-                            <img class="logo-light" src="assets/images/logo/logo-light.png" height="60px" alt="Enrmous Logo">
-                            <img class="logo-dark" src="assets/images/logo/logo-dark.png" height="60px" alt="Enrmous Logo">
+                            <img class="logo-light" src="assets/images/logo/logo-light.png" height="60px"
+                                alt="Enrmous Logo">
+                            <img class="logo-dark" src="assets/images/logo/logo-dark.png" height="60px"
+                                alt="Enrmous Logo">
                         </a>
                     </div>
                     <div class="collapse navbar-collapse pull-right" id="navbar-collapse-1">

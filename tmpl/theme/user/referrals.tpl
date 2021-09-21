@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row mb-60">
             <h3 class="section-title">Referrals Overview</h3>
-            <div class="row">
+            <div class="container">
                 <div class="content-container">
                     <div class="item">
                         <div class="title">Referral Link</div>
@@ -35,10 +35,10 @@
                                 <input class=" form-control" id="referral_link" value="{$data.referral_link}" />
                             </span>
                             <small><button class="btn btn-primary" onclick="copyLink()">click to copy</button></small>
-                            
+
                         </div>
                     </div>
-                    
+
                     <div class="item">
                         <div class="title">Total Referrals:</div>
                         <div class="content">
@@ -48,13 +48,13 @@
                     <div class="item">
                         <div class="title">Total Commission Earned:</div>
                         <div class="content">
-                               ${$data.referral_overview.total_referral_commission}
+                            ${$data.referral_overview.total_referral_commission}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <h3 class="section-title">Referrals History</h3>
             {include file="theme/user/components/referrals-table.tpl" localData=$data.referrals.data totalRows=$data.referrals.total_rows}
@@ -64,21 +64,21 @@
 
 {include file="theme/user/footer.tpl"}
 
-    <script>
-        function copyLink() {
-            /* Get the text field */
-            var copyText = document.getElementById("referral_link");
+<script>
+    function copyLink() {
+        /* Get the text field */
+        var copyText = document.getElementById("referral_link");
 
-            /* Select the text field */
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
-            /* Copy the text inside the text field */
-            document.execCommand("copy");
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
 
-            /* Alert the copied text */
-            alert("Referral Link Copied");
+        /* Alert the copied text */
+        alert("Referral Link Copied");
 
-            return false;
-        }
-    </script>
+        return false;
+    }
+</script>

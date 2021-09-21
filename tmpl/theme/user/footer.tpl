@@ -58,14 +58,15 @@
     </div>
 </footer>
 
+{* Google translate widget *}
+{include file="theme/public/components/google-translate-widget.tpl"}
+
 <div id="back-to-top" class="backtop"><i class="fa fa-long-arrow-up"></i></div>
 </div>
 <script src="assets/js/jquery-2.2.4.min.js"></script>
 <script src="assets/js/plugins.js"></script>
 <script src="assets/js/functions.js"></script>
 <script src="assets/js/script.js"></script>
-
-<script src="assets/js/rsconfig.js"></script>
 </body>
 
 </html>

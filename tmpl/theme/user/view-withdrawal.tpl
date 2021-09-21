@@ -1,98 +1,81 @@
-<?php $this->addAttribute('pageTitle', 'Withdrawals'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
-<?php
-$withdrawal = $data['withdrawal'];
+{include file='theme/user/header.tpl' pageTitle='Withdrawals' active="withdrawals"}
 
-if (empty($withdrawal->ID)) {
-    header("Location: " . $route->urlFor('user-withdrawals'));
-    exit();
-}
+{assign var=withdrawal value=$data.withdrawal}
 
-?>
-
-<div class="main-content">
-
-    <div class="container pb-40 pt-20">
-
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1">Withdrawal Details </a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h3 class=" heading-title heading-line-bottom text-capitalize">Full details</h3>
-                                    <table class="table">
-                                        <tr>
-                                            <td>
-                                                <strong>Withdrawal Request Date:</strong><br/>
-                                                <?= $getTimeAgo($withdrawal->createdAt); ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Username:</strong> <br />
-                                                <?= $withdrawal->userName; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Crypto Currency:</strong><br />
-                                                <?= strtoupper($withdrawal->cryptoCurrency); ?>&nbsp;
-                                                <img src="assets/images/currencies/<?= $withdrawal->cryptoCurrency; ?>.gif" alt="<?= $withdrawal->cryptoCurrency; ?>" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Withdrawal Address:</strong> <br />
-                                                <?= $withdrawal->withdrawalAddress; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Amount Requested:</strong><br />
-                                                $<?= number_format($withdrawal->amount, 2); ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Withdrawal Status:</strong>
-                                                <small class="badge text-uppercase <?= $withdrawal->withdrawalStatus; ?>"><?= $withdrawal->withdrawalStatus; ?></small>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Message from Admin:</strong>
-                                                <?= $withdrawal->messageFromAdmin; ?>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-md-6">
-                                    <!-- Can be used for crypto fun facts later on -->
-                                </div>
-                            </div>
-                        </div>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1 style="font-size:4em">Withdrawal</h1>
                     </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Withdrawal</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<style>
-    .pending {
-        background-color: #ffc107;
-    }
+<section>
+    <div class="container">
+        <div class="row mb-60">
+            <h3 class="section-title">Withdrawal #{$withdrawal->ID}</h3>
+            <div class="container">
+                <div class="content-container">
+                    <div class="item">
+                        <div class="title">Withdrawal Request Date:</div>
+                        <div class="content">{$withdrawal->createdAt}</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Username:</div>
+                        <div class="content">{$withdrawal->userName}</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Crypto Currency:</div>
+                        <div class="content">{$withdrawal->cryptoCurrency}&nbsp;
+                            <img src="currencies/{$withdrawal->cryptoCurrency}.gif"
+                                alt="{$withdrawal->cryptoCurrency|upper}" />
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Withdrawal Address:</div>
+                        <div class="content">{$withdrawal->withdrawalAddress}</div>
+                    </div>
 
-    .approved {
-        background-color: #28a745;
-    }
+                    <div class="item">
+                        <div class="title">Amount Requested:</div>
+                        <div class="content">
+                            {$withdrawal->amount}
+                        </div>
+                    </div>
 
-    .declined {
-        background-color: #007bff;
-    }
-</style>
+                    <div class="item">
+                        <div class="title">Withdrawal Status:</div>
+                        <div class="content">
+                            <small class="badge text-uppercase {$withdrawal->withdrawalStatus}">
+                                {$withdrawal->withdrawalStatus}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="title">Message From Admin:</div>
+                        <div class="content">
+                            {$withdrawal->messageFromAdmin}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file='theme/user/footer.tpl'}

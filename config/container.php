@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-//use Smarty;
 
 return [
     'settings' => function () {
@@ -68,7 +67,7 @@ return [
         $smarty->setCompileDir($container->get('settings')['smarty']['compile_dir']);
         $smarty->setConfigDir($container->get('settings')['smarty']['config_dir']);
         $smarty->setCacheDir($container->get('settings')['smarty']['cache_dir']);
-        $smarty->debugging = true;
+        $smarty->debugging = $_ENV['APP_ENV'] == 'dev';
         return $smarty;
     },
 

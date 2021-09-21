@@ -26,53 +26,56 @@
     <div class="container">
         <div class="row mb-60">
             <h3 class="section-title">User Profile</h3>
-	    <div class="col-12">
-            	<div class="" style="padding:10px">
+            <div class="col-12">
+                <div class="" style="padding:10px">
                     {include file="theme/public/components/flash-bag.tpl"}
-            	</div>
+                </div>
             </div>
-            <form id="profile" class="row" action="{$route->urlFor('user-profile')}" method="post">
+            <form id="profile" class="container" action="{$route->urlFor('user-profile')}" method="post">
                 <div class="content-container">
                     <div class="item">
-                        <div class="title">Username</div>
+                        <div class="title">Username:</div>
                         <div class="content"> {$data.profile->userName}</div>
                     </div>
                     <div class="item">
-                        <div class="title">Full Name</div>
+                        <div class="title">Full Name:</div>
                         <div class="content">
-                        <input name="fullName" value="{$data.profile->fullName}" class="form-control" /> </div>
+                            <input name="fullName" value="{$data.profile->fullName}" class="form-control" />
+                        </div>
                     </div>
                     <div class="item">
-                        <div class="title">Email</div>
+                        <div class="title">Email:</div>
                         <div class="content">
-                        <input name="email" value="{$data.profile->email}" class="form-control" /> </div>
+                            <input name="email" value="{$data.profile->email}" class="form-control" />
+                        </div>
                     </div>
                     {foreach $data.activeCurrencies as $currency}
-                    <div class="item">
-                        <div class="title">{$currency|upper} Address:</div>
-                        <div class="content">
-                        {assign var=address value=$currency|cat:"Address"}
-                                     <input class="form-control" name="{$address}" value="{$data.profile->$address}" />
+                        <div class="item">
+                            <div class="title">{$currency|upper} Address:</div>
+                            <div class="content">
+                                {assign var=address value=$currency|cat:"Address"}
+                                <input class="form-control" name="{$address}" value="{$data.profile->$address}" />
+                            </div>
                         </div>
-                    </div>
                     {/foreach}
                     <div class="item">
-                        <div class="title">New Password</div>
+                        <div class="title">New Password:</div>
                         <div class="content">
-                            <input class="form-control" type="text" name="password" /><small><em>Only fill new password of you can change password.</em></small>
+                            <input class="form-control" type="text" name="password" /><small><em>Only fill new password
+                                    if you can change password.</em></small>
                         </div>
                     </div>
                     <div class="item">
-                        <div class="title">Confirm New Password</div>
+                        <div class="title">Confirm New Password:</div>
                         <div class="content">
                             <input class="form-control" type="text" name="confirmPassword" />
-                            <small><em>Only fill new password of you can change password.</em></small>
+                            <small><em>Only fill new password if you can change password.</em></small>
                         </div>
                     </div>
                     <div class="item">
-                        <div class="title">Old Password</div>
+                        <div class="title">Old Password:</div>
                         <div class="content">
-                            <input class="form-control" type="password" name="oldPassword" required/>
+                            <input class="form-control" type="password" name="oldPassword" required />
                         </div>
                     </div>
                     <div class="item">

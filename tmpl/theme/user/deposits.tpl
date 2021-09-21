@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row mb-60">
             <h3 class="section-title">Make Deposit</h3>
-            <form id="new_deposit" class="row" action="{$route->urlFor('user-deposits')}" method="post"
+            <form id="new_deposit" class="container" action="{$route->urlFor('user-deposits')}" method="post"
                 onsubmit="return ajaxPost('new_deposit')">
                 <div class="content-container">
                     <div class="item">
@@ -41,7 +41,7 @@
                             </select></div>
                     </div>
                     <div class="item">
-                        <div class="title">Deposit Amount</div>
+                        <div class="title">Deposit Amount:</div>
                         <div class="content">
                             <input class="form-control" id="amount" type="number" name="amount" required />
                         </div>

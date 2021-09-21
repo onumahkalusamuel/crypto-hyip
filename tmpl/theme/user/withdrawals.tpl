@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row mb-60">
             <h3 class="section-title">Make Withdrawal</h3>
-            <form id="new_withdrawal" class="row" action="{$route->urlFor('user-withdrawals')}" method="post"
+            <form id="new_withdrawal" class="container" action="{$route->urlFor('user-withdrawals')}" method="post"
                 onsubmit="return ajaxPost('new_withdrawal')">
                 <div class="content-container">
                     <div class="item">

@@ -78,6 +78,7 @@ final class ReferralsView
             ],
             'select' => ['referralUserID'],
             'group_by' => 'referralUserID',
+            'order_by' => 'referralUserID',
             'params' => [
                 'where' => [
                     'referralUserID' => $ID

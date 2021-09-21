@@ -37,12 +37,7 @@
 
     <style>
         div.content-container {
-            border-radius: 5px;
             border: 1px solid #3335;
-            margin-left: 20px;
-            margin-right:20px;
-            {* padding: 10px; *}
-
         }
 
         h3.section-title {
@@ -63,7 +58,8 @@
 
         div.item .title {
             font-weight: bold;
-            width: 30%;
+            width: 40%;
+            text-transform: uppercase;
         }
 
         div.item .content {
@@ -89,6 +85,9 @@
             div.item .title {
                 width: 100%;
                 display: block;
+            }
+            .text-sm-left {
+                text-align: left;
             }
         }
     </style>

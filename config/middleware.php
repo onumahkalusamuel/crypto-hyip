@@ -38,7 +38,9 @@ return function (App $app) {
             openssl_get_cipher_methods()[0],
             "CryptoHYIP"
         );
-        $message = $exception->getMessage() . $exception->getLine() . $exception->getFile();
+        if ($_ENV['APP_ENV'] == 'dev') {
+            $message = $exception->getMessage() . $exception->getLine() . $exception->getFile();
+        }
 
         $view->assign("message", $message);
         $view->display("500.tpl");

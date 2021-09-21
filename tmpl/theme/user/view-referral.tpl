@@ -1,69 +1,60 @@
-<?php $this->addAttribute('pageTitle', 'Referrals'); ?>
-<?php $this->setLayout('user/layout.php'); ?>
-<?php
+{include file='theme/user/header.tpl' pageTitle='Referrals' active="referrals"}
 
-$referral = $data['referral'];
-$transactions = $data['trailLog'];
+{assign var=referral value=$data.referral}
+{assign var=transactions value=$data.trailLog}
 
-if(empty($referral->ID)) {
-    header("Location: " . $route->urlFor('user-referrals'));
-    exit();
-}
-?>
-
-<div class="main-content">
-
-    <div class="container pb-40 pt-20">
-
-        <div id="accordion" class="panel-group toggle accordion-classic accordion-classic-theme-colored2 accordion-flat">
-            <div class="panel panel-default mb-20">
-                <div class="panel-heading">
-                    <div class="panel-title"> <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion1">Referral Details </a> </div>
-                </div>
-                <div id="accordion1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h3 class=" heading-title heading-line-bottom text-capitalize">Full details</h3>
-                                    <table class="table">
-                                        <tr>
-                                            <th>Referer:</th>
-                                            <td><?= $referral->referralUserName; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Referrered:</th>
-                                            <td><?= $referral->referredUserName; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Referral Bonus Received:</th>
-                                            <td>$<?= number_format($referral->referralBonus, 2); ?></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
+    <div class="bg-section">
+        <img src="assets/images/page-titles/18.jpg" alt="Background" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="title title-6 text-center" style="padding:150px 0 50px">
+                    <div class="title--heading">
+                        <h1 style="font-size:4em">Referral</h1>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        <a class="active font-24 pt-0 pb-0 text-capitalize" data-toggle="collapse" href="#accordion2" aria-expanded="true">
-                            Referral Transactions
-                        </a>
-                    </div>
-                </div>
-                <div id="accordion2" class="panel-collapse collapse in ">
-                    <div class="panel-body">
-                        <h5>All earnings and transactions for this referral will be listed here.</h5>
-                        <?php echo $this->fetch(
-                            'user/components/account-logs-table-only.php',
-                            ['transactions' => $transactions ?? []]
-                        ); ?>
-                    </div>
+                    <div class="clearfix"></div>
+                    <ol class="breadcrumb">
+                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
+                        <li class="active">Referral</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="row mb-60">
+            <h3 class="section-title">Referral Details</h3>
+            <div class="container">
+                <div class="content-container">
+                    <div class="item">
+                        <div class="title">Referrer:</div>
+                        <div class="content">{$referral->referralUserName}</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Referred:</div>
+                        <div class="content">
+                            {$referral->referredUserName}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Referral Bonus Received:</div>
+                        <div class="content">{$referral->referralBonus}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-60">
+            <h3 class="section-title">Referral Logs</h3>
+            {include file="theme/user/components/account-logs-table-only.tpl" transactions=$transactions}
+        </div>
+
+    </div>
+</section>
+
+{include file='theme/user/footer.tpl'}

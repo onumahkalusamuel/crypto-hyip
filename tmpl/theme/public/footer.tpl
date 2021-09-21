@@ -57,6 +57,8 @@
         </div>
     </div>
 </footer>
+{* Google translate widget *}
+{include file="theme/public/components/google-translate-widget.tpl"}
 
 <div id="back-to-top" class="backtop"><i class="fa fa-long-arrow-up"></i></div>
 </div>
