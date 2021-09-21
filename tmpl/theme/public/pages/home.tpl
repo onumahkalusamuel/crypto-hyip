@@ -246,7 +246,7 @@
 
 <section id="" class="featured featured-3  pb-5">
     <div class="bg-section">
-        <img src="assets/images/background/6.jpg" alt="background">
+        <img src="assets/images/background/4.jpg" alt="background">
     </div>
     <div class="container">
         <div class="row">
