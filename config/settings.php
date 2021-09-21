@@ -24,9 +24,6 @@ $settings['public'] = $settings['root'] . '/public';
 $settings['upload_dir'] = $settings['public'] . '/uploads';
 $settings['assets_dir'] = $settings['public'] . '/assets';
 
-// for php view
-$settings['view']['path'] = __DIR__ . '/../templates/';
-
 // for smarty
 $settings['smarty'] = [
     'template_dir' => $settings['root'] . '/tmpl/',

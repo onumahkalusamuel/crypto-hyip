@@ -1,1 +1,0 @@
-<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="93cf9503-d514-46c6-9dd5-527b76c87aa7";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>

@@ -7,7 +7,6 @@ use Slim\App;
 use Slim\Middleware\ErrorMiddleware;
 use App\Middleware\PhpViewExtensionMiddleware;
 use App\Middleware\SmartyExtensionMiddleware;
-use Slim\Views\PhpRenderer;
 
 return function (App $app) {
     // Parse json, form data and xml

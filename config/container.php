@@ -8,7 +8,6 @@ use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Middleware\ErrorMiddleware;
-use Slim\Views\PhpRenderer;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -56,9 +55,6 @@ return [
 
     PDO::class => function (ContainerInterface $container) {
         return $container->get(Connection::class)->getPdo();
-    },
-    PhpRenderer::class => function (ContainerInterface $container) {
-        return new PhpRenderer($container->get('settings')['view']['path']);
     },
 
     Smarty::class => function (ContainerInterface $container) {

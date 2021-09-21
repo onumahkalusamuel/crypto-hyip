@@ -139,7 +139,8 @@ final class ApproveAction
                                     $referer->fullName,
                                     $referralBonus,
                                     $ref->referredUserName,
-                                    $referer->userName
+                                    $referer->userName,
+                                    $dep->cryptoCurrency
                                 );
                             }
 
