@@ -43,14 +43,25 @@
                                 <div class="col-xs-12 col-sm-6 col-md-6">
                                     <div class="contact--info">
                                         <h3>Our Address</h3>
-                                        <p>{$siteSettings.contact_address}</p>
+                                        <p style="font-size: 1.3em;">{$siteSettings.contact_address}</p>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-6">
                                     <div class="contact--info">
                                         <h3>Our Phone</h3>
-                                        <p>Office Telephone: {$siteSettings.contact_phone}</p>
-                                        <p>WhatsApp Line: {$siteSettings.whatsapp_number}</p>
+                                        <p style="font-size: 1.3em;">
+                                            <a href='tel:{$siteSettings.contact_phone|regex_replace:"/[\+\s\(\)]/":""}'>
+                                                <span class="fa fa-phone"></span>
+                                                {$siteSettings.contact_phone}
+                                            </a>
+                                        </p>
+                                        <p style="font-size: 1.3em;">
+                                            <a
+                                                href='https://wa.me/{$siteSettings.whatsapp_number|regex_replace:"/[\+\s\(\)]/":""}'>
+                                                <span class="fa fa-whatsapp"></span>
+                                                {$siteSettings.whatsapp_number}
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -58,10 +69,10 @@
                                 <div class="col-xs-12 col-sm-6 col-md-6">
                                     <div class="contact--info">
                                         <h3>Our Email</h3>
-                                        <p>Main Email : <a
+                                        <p style="font-size: 1.3em;">Main Email : <a
                                                 href="mailto:{$siteSettings.contact_email}">{$siteSettings.contact_email}</a>
                                         </p>
-                                        <p>Inquiries : <a
+                                        <p style="font-size: 1.3em;">Inquiries : <a
                                                 href="mailto:{$siteSettings.contact_email}">{$siteSettings.contact_email}</a>
                                         </p>
                                     </div>

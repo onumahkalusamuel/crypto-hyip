@@ -27,7 +27,7 @@ final class ContactUsAction
             $send['message'] = "Unable to send mail at the moment";
         }
 
-        if($send['sucess']) $send['message'] = "Message sent successfully.";
+        if($send['success']) $send['message'] = "Message sent successfully.";
         else $send['message'] = "Unable to send message at the moment. Please try again later.";
 
         $response->getBody()->write(json_encode($send));

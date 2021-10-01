@@ -6,7 +6,7 @@
                 <div class="heading mb-60">
                     <h2 class="heading--title color-white">Start Earning in Crypto with Confidence Today!</h2>
                     <p class="heading--desc color-white">We are fully registered and therefore are here to increase your
-                        funds through trading. Be rest assured, your money is in safe hands!</p>
+                        funds through trading. Be rest assured, your money is in safe hands! <strong>Click on the image for verification.</strong></p>
                 </div>
 
                 <div class="feature-card wow fadeInUp" data-wow-delay="100ms">
@@ -48,7 +48,10 @@
 
             <div class="col-xs-12 col-sm-12 col-md-6 pr-0 wow fadeInRight" data-wow-delay="100ms">
                 <div class="featured-img">
-                    <img src="assets/images/certificate/dst-certificate.jpg" alt="chart">
+                    <a target="_blank"
+                        href="https://find-and-update.company-information.service.gov.uk/company/10712614">
+                        <img src="assets/images/certificate/dst-certificate.jpg" alt="chart">
+                    </a>
                 </div>
             </div>
 

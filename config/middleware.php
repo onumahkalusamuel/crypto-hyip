@@ -5,7 +5,6 @@ use Psr\Log\LoggerInterface;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\App;
 use Slim\Middleware\ErrorMiddleware;
-use App\Middleware\PhpViewExtensionMiddleware;
 use App\Middleware\SmartyExtensionMiddleware;
 
 return function (App $app) {
@@ -15,7 +14,6 @@ return function (App $app) {
     // Add the Slim built-in routing middleware
     $app->addRoutingMiddleware();
 
-    $app->add(PhpViewExtensionMiddleware::class);
     $app->add(SmartyExtensionMiddleware::class);
     $app->add(BasePathMiddleware::class); // <--- here
 
