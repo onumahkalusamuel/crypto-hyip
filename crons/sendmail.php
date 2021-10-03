@@ -27,7 +27,6 @@ if (empty($jobs)) {
 }
 
 $totalSent = 0;
-$incomplete = false;
 
 // loop through each
 foreach ($jobs as $job) {
@@ -62,7 +61,6 @@ foreach ($jobs as $job) {
         if (empty($send['success'])) {
             $userIds[] = $currentUserId;
             logMessage('error', 'Queue: ' . $job->ID . '; User: ' . $user->ID . '; Message: '  . $send['message']);
-            $incomplete = true;
             break;
         }
 
@@ -74,7 +72,7 @@ foreach ($jobs as $job) {
     $data['to'] = implode(",", $userIds);
 
     $queuedJobsRepository->update([
-        'ID' => $job->id,
+        'ID' => $job->ID,
         'data' => [
             'data' => json_encode($data),
             'status' => $status
