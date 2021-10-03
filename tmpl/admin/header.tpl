@@ -68,8 +68,8 @@
         }
 
         nav a {
-            padding-top: 5px;
-            padding-bottom: 5px;
+            padding-top: 3px;
+            padding-bottom: 3px;
             display: inline-block;
             border-bottom: 1px dotted var(--primary-color);
             width: 100%;
@@ -91,7 +91,7 @@
 
         span.nav-divider {
             display: inline-block;
-            height: 20px;
+            height: 10px;
             width: 100%;
         }
     </style>

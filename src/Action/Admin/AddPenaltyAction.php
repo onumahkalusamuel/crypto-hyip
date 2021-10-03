@@ -3,7 +3,6 @@
 namespace App\Action\Admin;
 
 use App\Domain\Deposits\Service\Deposits;
-use App\Domain\Plans\Service\Plans;
 use App\Domain\Referrals\Service\Referrals;
 use App\Domain\Settings\Service\Settings;
 use App\Domain\TrailLog\Service\TrailLog;

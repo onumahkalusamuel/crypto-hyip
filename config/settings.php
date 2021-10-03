@@ -68,7 +68,7 @@ $settings['smtp'] = [
     'email' => $_ENV['SMTP_EMAIL'],
     'password' => $_ENV['SMTP_PASSWORD'],
     'name' => $_ENV['SMTP_SENDER_NAME'],
-    'host' => gethostname()
+    'host' => $_ENV['SMTP_HOST']
 ];
 
 // Session

@@ -1,80 +1,59 @@
-{include file='admin/header.tpl' pageTitle='Expiring Deposits'}
+{include file='admin/header.tpl' pageTitle='Newsletter'}
 
 
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>
         <tr>
             <td width="100%" valign="top" height="100%">
-                <h3>Send a newsletter to users:</h3>
-                <div class="alert alert-warning"> <b>Demo version restriction!</b><br> You cannot send newsletters!
-                </div>
+                <h3>Send Newsletter to Users:</h3>
                 <script language="javascript">
-                    var u = Array(0, 17, 56, -39, 15, 15);
+                    function showHideUsernameField() {
+                        var check = document.getElementById('changeRecipient').value;
 
-                    function checkform() { if (document.formb.to.selectedIndex == 0) { if (document.formb.username
-                                .value == "") { alert(
-                            "Please enter a username!"); return false; } } else { return confirm(
-                                    "Are you sure you want to send the newsletter to " + u[document.formb.to
-                                        .selectedIndex] + " users?"); } return true; }
+                        if (check === 'user') {
+                            document.getElementById('userNameRow').style.display = "table-row";
+                        } else {
+                            document.getElementById('userNameRow').style.display = "none";
+                        }
+                    }
                 </script>
-                <script>
-                    function send_test() { open("", "test_email", "width=300, height=100");
-                        document.formb.target = "test_email";
-                        document.formb.action.value = "test_email";
-                        document.formb.submit();
-                        document.formb.target = "_self";
-                        document.formb.action.value = "newsletter"; }
-
-                    function send_mail() { open("", "send_email", "width=500, height=300");
-                        document.formb.target = "send_email";
-                        document.formb.submit(); }
-                </script>
-                <form method="post" onsubmit="return checkform();" name="formb"><input type="hidden" name="form_id"
-                        value="16312751659325"><input type="hidden" name="form_token"
-                        value="d5a242769254e6bda562b634d0efc9b7"> <input type="hidden" name="a" value="newsletter">
-                    <input type="hidden" name="action" value="newsletter">
+                <form method="post" action="{$route->urlFor('admin-newsletter')}">
+                    <input type="hidden" name="form_token" value="{$form_token}">
                     <table class="form">
                         <tbody>
                             <tr>
                                 <th>Being sent to:</th>
-                                <td> <select name="to" class="inpts">
+                                <td> <select id="changeRecipient" name="to" class="inpts"
+                                        onchange="showHideUsernameField()">
                                         <option value="user">One user (type a username below) </option>
                                         <option value="all">All users </option>
                                         <option value="active">All users which have made a deposit </option>
-                                        <option value="passive">All users which haven't made a deposit </option>
-                                        <option value="plan_1">All users which have made a deposit to 1 year 2.4% daily
+                                        <option value="inactive">All users which haven't made a deposit </option>
+                                        {foreach from=$plans item=plan}
+                                        <option value="plan_{$plan->ID}">
+                                            All users which have made a deposit to
+                                            {$plan->title|lower|capitalize}
                                         </option>
-                                        <option value="plan_2">All users which have made a deposit to 100 days 3.4%
-                                            daily</option>
+                                        {/foreach}
                                     </select> </td>
                             </tr>
-                            <tr>
+                            <tr id="userNameRow">
                                 <th>Username:</th>
-                                <td><input type="text" name="username" value="" class="inpts" size="30"></td>
+                                <td><input type="text" name="userName" value="" class="inpts" size="30">
+                                </td>
                             </tr>
                             <tr>
                                 <th>Subject:</th>
-                                <td><input type="text" name="subject" value="" class="inpts"></td>
+                                <td><input type="text" name="subject" value="" class="inpts" required /></td>
                             </tr>
                             <tr>
-                                <th>Use Presets?</th>
-                                <td> <select name="use_presets" class="inpts">
-                                        <option value="1">Yes</option>
-                                        <option value="0" selected="">No</option>
-                                    </select> </td>
-                            </tr>
-                            <tr>
-                                <th>Text Message:</th>
-                                <td><textarea name="text" class="inpts" rows="10"></textarea></td>
-                            </tr>
-                            <tr>
-                                <th>HTML Message:<br><input type="checkbox" name="use_html" value="1"> Use it?</th>
-                                <td> <textarea name="html" class="inpts " rows="10"></textarea> </td>
+                                <th>Message:<br></th>
+                                <td><textarea name="message" class="inpts" rows="10" required></textarea> </td>
                             </tr>
                             <tr>
                                 <th></th>
-                                <td><input type="submit" value="Send Newsletter" class="sbmt" onclick="send_mail()">
-                                    <input type="button" value="Send Test E-mail" class="sbmt" onclick="send_test()">
+                                <td>
+                                    <input type="submit" value="Send Newsletter" class="btn btn-success sbmt">
                                 </td>
                             </tr>
                         </tbody>
@@ -82,10 +61,15 @@
                 </form>
                 <div class="alert alert-warning"> Send a newsletter:<br> This form helps you to send a newsletter to one
                     or several users.<br> Select a user or a user group, type a subject and a message text. Click on the
-                    'send newsletter' button once! It may take a time for a huge list.<br><br> Personalization:<br> You
-                    can use the following variables to personalize the newsletter:<br> #name# - user's first and last
-name<br> #username# - user's login<br> #email# - user's e-mail address<br> #date_register# - user's
-                    registration date<br> </div>
+                    'send newsletter' button once! If you selected a user, the email will be sent immediately. But if it
+                    is a user group, it will be added to the email queue. All emails on queue will be sent in the
+                    background so you can continue what you are doing. 200 emails will be sent every 5 minutes; if you
+                    have a very long list, it will take a while to complete.<br>
+                    <br> Personalization:<br> You can use the following variables to personalize the newsletter:<br>
+                    #name# - user's full name<br> #username# - user's login<br> #email# - user's e-mail
+address<br> #date_register# - user's
+                    registration date<br>
+                </div>
             </td>
         </tr>
     </tbody>

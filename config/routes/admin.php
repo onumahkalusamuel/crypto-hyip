@@ -67,9 +67,9 @@ return function (App $app) {
         // block user
         $group->post('block-user[/]', \App\Action\Admin\BlockUserAction::class)->setName('admin-block-user');
 
-        // traillog
-        $group->post('traillog[/]', \App\Action\TrailLog\CreateAction::class);
-        $group->get('traillog[/]', \App\Action\TrailLog\ReadAction::class);
+        // newsletter
+        $group->get('newsletter[/]', [\App\Action\Admin\NewsletterAction::class, 'viewPage'])->setName('admin-newsletter');
+        $group->post('newsletter[/]', [\App\Action\Admin\NewsletterAction::class, 'addToQueue']);
 
         // settings
         $group->post(

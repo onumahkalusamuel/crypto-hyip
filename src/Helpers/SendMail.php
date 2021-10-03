@@ -42,7 +42,7 @@ class SendMail
             $mail->SMTPAuth = true;
             $mail->Password = $smtp['password'];
             $mail->Username = $smtp['email'];
-            $mail->Host = gethostname();
+            $mail->Host = $smtp['host'];
         }
 
         $mail->setFrom($smtp['email'], $smtp['name']);
@@ -545,7 +545,7 @@ class SendMail
         $data['message'] = "You have a pending deposit amount of $$amount from {$username}.";
 
         $this->mail->clearAttachments();
-        
+
         return $this->send($data);
     }
 }
