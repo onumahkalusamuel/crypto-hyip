@@ -55,8 +55,8 @@ final class DepositsAction
 
         // send to api (coming soon)
 
-        // get btc amount
-        $data['cryptoAmount'] = $this->cryptoHelper->usdToCrypto($data['amount'], $data['cryptoCurrency']);
+        // get actual amount
+        $data['cryptoAmount'] = $data['cryptoCurrency'] === "pm" ? $data['amount'] : $this->cryptoHelper->usdToCrypto($data['amount'], $data['cryptoCurrency']);
 
         if (empty($message) && empty($data['cryptoAmount'])) {
             $message = "One of our service providers seems to be busy at the moment. Please try again later.";
@@ -97,7 +97,7 @@ final class DepositsAction
 
             $data['depositAddress'] = $this->settings->$depositAddress;
 
-            if (empty($data['depositAddress'])) $message = "Unable to create payment link. Please try another Crypto Currency.";
+            if (empty($data['depositAddress'])) $message = "Unable to create payment link. Please try another payment method.";
 
             // Invoke the Domain with inputs and retain the result
             if (empty($message)) $depositId = $this->deposits->create(['data' => $data]);

@@ -2,10 +2,9 @@
 
 namespace App\Middleware;
 
-use App\Domain\Plans\Repository\PlansRepository;
 use App\Domain\Plans\Service\Plans;
+use App\Domain\Settings\Service\Settings;
 use App\Helpers\NewsLoader;
-use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -18,23 +17,23 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
 {
 
     private $app;
-
     private $smarty;
-
     private $session;
-
     private $plans;
+    private $settings;
 
     public function __construct(
         App $app,
         Smarty $smarty,
         Session $session,
-        Plans $plans
+        Plans $plans,
+        Settings $settings
     ) {
         $this->smarty = $smarty;
         $this->app = $app;
         $this->session = $session;
         $this->plans = $plans;
+        $this->settings = $settings;
     }
 
     public function process(
@@ -49,38 +48,8 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->smarty->assign('basePath', $this->app->getBasePath());
         $this->smarty->assign('route', $this->app->getRouteCollector()->getRouteParser());
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
-        $this->smarty->assign('getTimeAgo', function ($date = null) {
-
-            if (empty($date)) return "";
-
-            $time_difference = time() - strtotime($date);
-
-            if ($time_difference < 1) {
-                return 'less than a minute ago';
-            }
-            if ($time_difference > 172800) {
-                return date("d M, Y", strtotime($date));
-            }
-
-            $condition = array(
-                12 * 30 * 24 * 60 * 60 =>  'year',
-                30 * 24 * 60 * 60       =>  'month',
-                24 * 60 * 60            =>  'day',
-                60 * 60                 =>  'hour',
-                60                      =>  'minute',
-                1                       =>  'second'
-            );
-
-            foreach ($condition as $secs => $str) {
-                $d = $time_difference / $secs;
-
-                if ($d >= 1) {
-                    $t = round($d);
-                    return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
-                }
-            }
-        });
-
+        $this->smarty->assign('allCurrencies', ['btc', 'eth', 'doge', 'ltc', 'pm']);
+        $this->smarty->assign('activeCurrencies', explode(",", $this->settings->activeCurrencies));
         $this->smarty->registerPlugin('function', 'paginationLinks', [$this, 'paginationLinks']);
         $this->smarty->registerPlugin('function', 'getNews', [$this, 'getNews']);
         $this->smarty->registerPlugin('function', 'getInvestmentPlans', [$this, 'getInvestmentPlans']);
@@ -150,19 +119,19 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $channel = $params['channel'] ?? 'cointelegraph';
         $count = $params['count'] ?? 10;
         $news = new NewsLoader;
-        
+
         switch ($channel) {
             case 'cointelegraph': {
-                $latestNews = $news->coinTelegraphNews($count);
-                break;
-            }
+                    $latestNews = $news->coinTelegraphNews($count);
+                    break;
+                }
             case 'bitcoinnews': {
-                $latestNews = $news->coinTelegraphNews($count);
-                break;
-            }
+                    $latestNews = $news->coinTelegraphNews($count);
+                    break;
+                }
             default: {
-                $latestNews = [];
-            }
+                    $latestNews = [];
+                }
         }
 
         $template->assign($params['out'], $latestNews);

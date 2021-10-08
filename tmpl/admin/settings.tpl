@@ -55,20 +55,18 @@
                                 <th colspan="2">Other Settings:</th>
                             </tr>
                             <tr>
-                                <th>Show Google Translator:</th>
-                                <td> <select name="showGoogleTranslator" class="inpts">
-                                        <option {if $settings.showGoogleTranslator == 0}selected{/if} value="0">No
-                                        </option>
-                                        <option {if $settings.showGoogleTranslator == 1}selected{/if} value="1">Yes
-                                        </option>
-                                    </select> </td>
-                            </tr>
-                            <tr>
                                 <th>Active Currencies:</th>
-                                <td><input type="text" name="activeCurrencies" value="{$settings.activeCurrencies}"
-                                        class="inpts" size="30"></td>
+                                <td>
+                                    {foreach $allCurrencies as $currency}
+                                        <label>
+                                            <input value="{$currency}" type="checkbox" name="activeCurrencies[{$currency}]"
+                                                {if $currency|@in_array:$activeCurrencies} checked {/if} />
+                                            {$currency|upper}
+                                        </label>
+                                    {/foreach}
+                                </td>
                             </tr>
-                            {foreach $activeCurrencies as $currency}
+                            {foreach $allCurrencies as $currency}
                                 <tr>
                                     <th>{$currency|upper} Deposit Address:</th>
                                     <td>
@@ -98,9 +96,9 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div class="alert alert-warning"> Active Currencies: The available currencies are
-                                        <strong>btc, eth, doge and ltc.</strong> When entering these values, separate them with comma
-                                        only. <strong>and without spaces.</strong><br>
+                                    <div class="alert alert-warning"> Active Currencies: The currencies selected here
+                                        will be seen by the users when they want to make payment. Please make sure you
+                                        fill in their respective deposit addresses.<br>
                                     </div>
                                 </td>
                             </tr>

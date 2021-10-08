@@ -4,12 +4,9 @@ namespace App\Action\Admin;
 
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Plans\Service\Plans;
-use App\Domain\Referrals\Service\Referrals;
 use App\Domain\Settings\Service\Settings;
-use App\Domain\TrailLog\Service\TrailLog;
 use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
-use App\Helpers\CryptoHelper;
 use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Psr\Http\Message\ResponseInterface;
@@ -24,12 +21,8 @@ final class NewsletterAction
     private $plans;
     private $user;
     private $deposits;
-    private $traillog;
-    private $referrals;
-    private $cryptoHelper;
     private $session;
     private $view;
-    private $location;
     private $queuedJobsRepository;
     private $formToken = 'newsletter-xx';
 
@@ -38,9 +31,6 @@ final class NewsletterAction
         Plans $plans,
         User $user,
         Deposits $deposits,
-        TrailLog $traillog,
-        Referrals $referrals,
-        CryptoHelper $cryptoHelper,
         Session $session,
         View $view,
         Settings $settings,
@@ -50,16 +40,10 @@ final class NewsletterAction
         $this->plans = $plans;
         $this->user = $user;
         $this->deposits = $deposits;
-        $this->traillog = $traillog;
-        $this->referrals = $referrals;
-        $this->cryptoHelper = $cryptoHelper;
         $this->session = $session;
         $this->view = $view;
         $this->settings = $settings;
         $this->queuedJobsRepository = $queuedJobsRepository;
-        $location = dirname(__FILE__) . "/tmp/";
-        if (!is_dir($location)) mkdir($location);
-        $this->location = $location;
     }
 
     public function viewPage(
@@ -142,43 +126,41 @@ final class NewsletterAction
 
             $userIds = [];
 
+            $userIds = $allUsersIds = $depositUsersIds = $noDepositUsersIds = [];
+
+            // all users
+            $allUsers = $this->user->readAll([
+                'params' => [
+                    'where' => ['userType' => 'user']
+                ],
+                'select' => ['ID']
+            ]);
+            foreach ($allUsers as $u) $allUsersIds[] = $u->ID;
+
+            // users with deposit
+            $depositUsers = $this->deposits->readAll([
+                'select' => ['userID'],
+                'group_by' => 'userID',
+                'order_by' => 'userID'
+            ]);
+            foreach ($depositUsers as $u)
+                if (!in_array($u->userID, $depositUsersIds))
+                    $depositUsersIds[] = $u->userID;
+
+            // those without deposit
+            $noDepositUsersIds = array_diff($allUsersIds, $depositUsersIds);
+            $noDepositUsersIds = array_values($noDepositUsersIds);
+
             if ($data['to'] == "all") {
-                $users = $this->user->readAll([
-                    'params' => [
-                        'where' => ['userType' => 'user']
-                    ],
-                    'select' => ['ID']
-                ]);
-
-                foreach ($users as $u) $userIds[] = $u->ID;
+                $userIds = $allUsersIds;
             } elseif ($data['to'] == "active") {
-                // users that are active 
-
-                $users = $this->user->readAll([
-                    'params' => [
-                        'where' => ['userType' => 'user', 'isActive' => '1']
-                    ],
-                    'select' => ['ID']
-                ]);
-
-                foreach ($users as $u) $userIds[] = $u->ID;
+                $userIds = $depositUsersIds;
             } elseif ($data['to'] == "inactive") {
-                // users that are disabled
-
-                $users = $this->user->readAll([
-                    'params' => [
-                        'where' => ['userType' => 'user', 'isActive' => '0']
-                    ],
-                    'select' => ['ID']
-                ]);
-
-                foreach ($users as $u) $userIds[] = $u->ID;
+                $userIds = $noDepositUsersIds;
             } else {
                 // users that made payment for certain plans 
                 $planID = explode("_", $data['to'])[1];
-
                 $plan = $this->plans->readSingle(['ID' => $planID]);
-
                 if (!empty($plan->ID)) {
                     $users = $this->deposits->readAll([
                         'params' => [
@@ -190,7 +172,6 @@ final class NewsletterAction
                         'group_by' => 'userID',
                         'order_by' => 'userID'
                     ]);
-
                     foreach ($users as $u) $userIds[] = $u->userID;
                 }
             }

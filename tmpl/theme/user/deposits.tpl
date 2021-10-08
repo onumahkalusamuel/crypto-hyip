@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="item">
-                        <div class="title">Select Crypto Currency:</div>
+                        <div class="title">Payment Method:</div>
                         <div class="content">
                             <select id="cryptoCurrency" name="cryptoCurrency" class="form-control">
                                 {foreach $data.activeCurrencies as $currency}

@@ -6,7 +6,8 @@
             <tr>
                 <td>
                     <footer style="text-align: center; padding:10px 0px; margin:0;">
-                        Powered by <a href="mailto:onumahkalusamuel@gmail.com">Crypto-HYIP</a>. All
+                        Powered by <a target="_blank"
+                            href="https://digitalincomeportal.com/scripts/crypto-hyip-pro">Crypto-HYIP Pro</a>. All
                         Rights Reserved. </p>
                     </footer>
                 </td>

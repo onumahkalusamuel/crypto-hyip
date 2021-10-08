@@ -55,14 +55,14 @@ final class UpdateSettingsAction
         if (empty($message) && !password_verify($data['confirmPassword'], $user->password)) {
             $message = "Invalid password provided.";
         }
-        
+
         // check for wallet addresses and vailidate
         //BTC
         if (empty($message) && !empty($data['btcDepositAddress'])) {
             if (!$this->cryptoHelper->validate('btc', $data['btcDepositAddress'])) {
                 $message = "Invalid BTC Address entered.";
             } else {
-                $this->settings->btcDepositAddress = $data['btcDepositAddress'];   
+                $this->settings->btcDepositAddress = $data['btcDepositAddress'];
             }
         }
         //ETH
@@ -90,9 +90,19 @@ final class UpdateSettingsAction
             }
         }
 
+        // PM
+        if (empty($message) && !empty($data['pmDepositAddress'])) {
+            if (substr(strtoupper($data['pmDepositAddress']), 0, 1) !== "U") {
+                $message = "Invalid PM Address entered.";
+            } else {
+                $this->settings->pmDepositAddress = $data['pmDepositAddress'];
+            }
+        }
+
         if (empty($message)) {
             $this->settings->minWithdrawal = $data['minWithdrawal'];
             $this->settings->payReferral = $data['payReferral'];
+            $this->settings->activeCurrencies = implode(",", $data['activeCurrencies']);
 
             $this->sendMail->sendSettingsChangedMail();
         }

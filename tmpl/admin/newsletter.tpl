@@ -22,7 +22,7 @@
                     <table class="form">
                         <tbody>
                             <tr>
-                                <th>Being sent to:</th>
+                                <th>Receipient(s):</th>
                                 <td> <select id="changeRecipient" name="to" class="inpts"
                                         onchange="showHideUsernameField()">
                                         <option value="user">One user (type a username below) </option>

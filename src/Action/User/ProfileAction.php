@@ -78,12 +78,19 @@ class ProfileAction
             }
         }
 
+        // PM
+        if (empty($message) && !empty($data['pmAddress'])) {
+            if (substr(strtoupper($data['pmAddress']), 0, 1) !== "U") {
+                $message = "Invalid PM Address entered.";
+            }
+        }
+
         if (empty($message) && !empty($data['password']) && $data['password'] !== $data['confirmPassword']) {
             $message = "New password and Confirm Password do not match";
         }
 
         if (empty($message) && !empty($data['password'])) {
-            $data['password'] = password_hash($data['database'], PASSWORD_BCRYPT);
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
         if (empty($message)) {
@@ -93,7 +100,8 @@ class ProfileAction
                 'btcAddress' => $data['btcAddress'],
                 'ethAddress' => $data['ethAddress'] ?? null,
                 'dogeAddress' => $data['dogeAddress'] ?? null,
-                'ltcAddress' => $data['ltcAddress'] ?? null
+                'ltcAddress' => $data['ltcAddress'] ?? null,
+                'pmAddress' => $data['pmAddress'] ?? null
             ];
 
             if (!empty($data['password'])) {

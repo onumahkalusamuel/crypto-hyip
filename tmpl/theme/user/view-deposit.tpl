@@ -50,20 +50,27 @@
                     <div class="item">
                         <div class="title"></div>
                         <div class="content">
-                            <img src="{$paymentLink}" alt="QR CODE">
+                            {if $deposit->cryptoCurrency ne "pm"}
+                                <img src="{$paymentLink}" alt="QR CODE">
+                            {/if}
                             <div class="hlp">
                                 {if $deposit->depositStatus === "pending"}
-                                    <strong>Click on Address</strong>
-                                    OR
-                                    <strong>Scan QR-Code</strong>
-                                    to make payment. If you do not have a supported
-                                    wallet,
-                                    <strong>Copy the address</strong>
-                                    and complete payment from your wallet. Send exactly
-                                    <strong>{$deposit->cryptoAmount}</strong>
-                                    {$deposit->cryptoCurrency|upper} to
-                                    <a class="heading-line-bottom font-14"
-                                        href="{$protocol}:{$deposit->depositAddress}?amount={$deposit->cryptoAmount}&message={$deposit->transactionID}"><strong>{$deposit->depositAddress}</strong></a>
+                                    {if $deposit->cryptoCurrency === "pm"}
+                                        Make a payment of <strong>{$deposit->cryptoAmount} USD</strong> to
+                                        <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                    {else}
+                                        <strong>Click on Address</strong>
+                                        OR
+                                        <strong>Scan QR-Code</strong>
+                                        to make payment. If you do not have a supported
+                                        wallet,
+                                        <strong>Copy the address</strong>
+                                        and complete payment from your wallet. Send exactly
+                                        <strong>{$deposit->cryptoAmount}</strong>
+                                        {$deposit->cryptoCurrency|upper} to
+                                        <a class="heading-line-bottom font-14"
+                                            href="{$protocol}:{$deposit->depositAddress}?amount={$deposit->cryptoAmount}&message={$deposit->transactionID}"><strong>{$deposit->depositAddress}</strong></a>
+                                    {/if}
                                 {else}
                                     <p class="desc mb-10">Payment received and processed.</p>
                                 {/if}
@@ -106,13 +113,13 @@
                         <div class="content">${$deposit->amount|string_format:"%.2f"}</div>
                     </div>
                     <div class="item">
-                        <div class="title">Crypto Currency:</div>
+                        <div class="title">Payment Method:</div>
                         <div class="content">{$deposit->cryptoCurrency|upper}</div>
                     </div>
 
                     <div class="item">
-                        <div class="title">Crypto Amount:</div>
-                        <div class="content">{$deposit->cryptoAmount}</div>
+                        <div class="title">Payment Amount:</div>
+                        <div class="content">{if $deposit->cryptoCurrency eq "pm"}${/if}{$deposit->cryptoAmount}</div>
                     </div>
 
                     <div class="item">
