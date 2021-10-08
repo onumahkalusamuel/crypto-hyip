@@ -23,6 +23,7 @@ public/assets/css/*
 !public/assets/js/
 public/assets/js/*
 !public/assets/js/index.php
+!public/assets/js/script.js
 
 !public/assets/fonts/
 public/assets/fonts/*
