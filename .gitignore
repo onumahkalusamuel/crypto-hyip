@@ -33,6 +33,10 @@ public/assets/fonts/*
 public/assets/email/*
 !public/assets/email/index.php
 
+!public/assets/images/
+public/assets/images/*
+!public/assets/images/index.php
+
 tmp/*
 !tmp/index.php
 
