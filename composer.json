@@ -9,7 +9,6 @@
         "selective/basepath": "^2.0",
         "guzzlehttp/guzzle": "^7.3",
         "phpmailer/phpmailer": "^6.5",
-        "laminas/laminas-escaper": "^2.7",
         "symfony/http-foundation": "^5.3",
         "php-di/php-di": "^6.3",
         "smarty/smarty": "~3.1"

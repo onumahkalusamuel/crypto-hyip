@@ -2,13 +2,11 @@
 
 namespace App\Helpers;
 
-use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
 class ApiRequest
 {
-
     public $client;
 
     public function __construct()

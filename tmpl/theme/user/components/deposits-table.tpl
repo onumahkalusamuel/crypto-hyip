@@ -1,4 +1,4 @@
-<form action="" class="row container" method="get">
+<form action="" class="row container p-0 mb-4" method="get">
     <div class="form-group col-sm-4 col-md-3">
         <label for="depositStatus">Deposit Status:</label>
         <select id="depositStatus" name="depositStatus" class="form-control">
@@ -20,8 +20,8 @@
         <input class="form-control" type="date" id="to" name="to" value="{$smarty.get.to}" />
     </div>
     <div class="form-group col-sm-4 col-md-3">
-        <br class="hidden-xs hidden-sm" />
-        <button type="submit" class="btn btn-warning btn-block">Go</button>
+        <br class="d-flex d-md-inline" />
+        <button type="submit" class="btn btn-danger btn-block">Go</button>
     </div>
 </form>
 <style>
@@ -38,11 +38,11 @@
     }
 </style>
 
-<div class="container">
+<div class="container p-0">
     <div class="content-container">
         <div class="item">
             <div class="title content">Details</div>
-            <div class="title content text-center text-sm-left">Amount</div>
+            <div class="title content text-left text-lg-center">Amount</div>
             <div class="title content">Action</div>
         </div>
 
@@ -58,21 +58,21 @@
                         </small><br />
                         {if $trans->depositStatus !== "pending"}
                             <small>
-                                <strong>Start Date:</strong>
+                                <strong>Started:</strong>
                                 {$trans->depositApprovalDate}<br />
-                                <strong>End Date:</strong>
-                                {$trans->lastInterestDate}<br />
-                                <strong>ROI:</strong>
-                                ${$trans->interestBalance}
+                                {if $trans->lastInterestDate ne ""}
+                                    <strong>Expires:</strong>
+                                    {$trans->lastInterestDate}<br />
+                                {/if}
                             </small>
                         {/if}
                     </div>
-                    <div class="content text-center text-sm-left">${$trans->amount}<br />
+                    <div class="content text-left text-lg-center">${$trans->amount}<br class="d-none d-lg-inline" />
                         <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
                     </div>
                     <div class="content">
                         <a href="{$route->urlFor('user-view-deposit', ['id' => $trans->ID])}"
-                            class="btn btn-primary btn-sm btn-flat mb-5">VIEW</i></a><br />
+                            class="btn btn-primary btn-sm btn-flat">VIEW</i></a><br />
                     </div>
                 </div>
             {/foreach}

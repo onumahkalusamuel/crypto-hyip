@@ -24,11 +24,11 @@
     }
 </style>
 
-<div class="container">
+<div class="container p-0">
     <div class="content-container">
         <div class="item">
             <div class="title content">Details</div>
-            <div class="title content text-sm-left text-center">Amount</div>
+            <div class="title content text-left text-lg-center">Amount</div>
             <div class="title content">Date</div>
         </div>
 
@@ -42,8 +42,8 @@
                         <small class="badge {$trans->logType}">{$trans->logType}</small><br />
                         <small>{$trans->transactionDetails}</small>
                     </div>
-                    <div class="content text-sm-left text-center">
-                        ${$trans->amount}<br />
+                    <div class="content text-left text-lg-center">
+                        ${$trans->amount}<br class="d-none d-lg-inline" />
                         <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
                     </div>
                     <div class="content">

@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!-- Page Title -->
-    <title>{$pageTitle} - {$siteSettings['site_name']}</title>
+    <title>{$pageTitle} - {$siteInfo.name}</title>
 
     <!-- Favicon and Touch Icons -->
     <link href="ch-logo.png" rel="shortcut icon" type="image/png">

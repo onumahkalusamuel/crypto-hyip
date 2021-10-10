@@ -28,7 +28,7 @@ final class ViewAll
         // settings
         $data['settings'] = $this->settings->settings;
 
-	$this->view->assign('data', $data);
+        $this->view->assign('data', $data);
         $this->view->display('admin/settings.tpl');
 
         return $response;

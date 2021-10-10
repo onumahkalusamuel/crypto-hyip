@@ -1,357 +1,130 @@
-{include file="theme/public/header.tpl" active="home"}
-{literal}
-    <section id="slider" class="slider slide-overlay-black">
+{extends file="theme/public/layout.tpl"}
 
-        <div class="rev_slider_wrapper">
-            <div id="slider1" class="rev_slider" data-version="5.0">
-                <ul>
-
-                    <li data-transition="zoomout" data-slotamount="default" data-easein="Power4.easeInOut"
-                        data-easeout="Power4.easeInOut" data-masterspeed="2000">
-
-                        <img src="assets/images/sliders/slide-bg/1.jpg" alt="Slide Background Image" width="1920"
-                            height="1280">
-
-                        <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                            data-y="['middle','middle','middle','middle']" data-voffset="['-110','-100','-110','-110']"
-                            data-fontsize="['16','16','16','12']" data-lineheight="['25','25','25','25']"
-                            data-whitespace="nowrap" data-width="none" data-height="none"
-                            data-frames='[{"delay":750,"speed":1000,"frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                            data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                            <div class="slide--subheadline">Exchange Cryptocurrency At The Best Rate</div>
-                        </div>
-
-                        <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                            data-y="['middle','middle','middle','middle']" data-voffset="['-13','-13','-13','10']"
-                            data-fontsize="['60', '50', '40', '30']" data-lineheight="['60','60','60','60']"
-                            data-width="none" data-height="none"
-                            data-frames='[{"delay":1000,"speed":1500,"frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                            data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                            <div class="slide--headline">Start Trading The World's Most <br>Popular Cryptocurrencies!</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['90','90','90','100']"
-                        data-fontsize="['16', '16', '16', '12']" data-lineheight="['25','25','25','25']"
-                        data-width="none" data-height="none"
-                        data-frames='[{"delay":1250,"speed":1500,"frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--bio">Just Enjoy Your Best Rates While We Are Doing The Rest For You</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']"
-                        data-hoffset="['160','110','40','20']" data-y="['middle','middle','middle','middle']"
-                        data-voffset="['160','160','190','210']" data-width="none" data-height="none"
-                        data-whitespace="nowrap"
-                        data-frames='[{"delay":1500,"speed":1500,"frame":"0","from":"x:-50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-basealign="slide" data-responsive_offset="on"
-                        data-responsive="off">
-                        {/literal}
-                        <div class="slide-action">
-                            <a class="btn btn--primary btn--rounded mr-30"
-                                href="{$route->urlFor('page', ['page' => 'register'])}">Get Started</a>
-                            <a class="btn btn--video" href="{$route->urlFor('page', ['page' => 'faqs'])}"><i
-                                    class="fa fa-info"></i>FAQs</a>
-                        </div>
-                        {literal}
-                    </div>
-                </li>
-
-                <li data-transition="zoomin" data-slotamount="default" data-easein="Power4.easeInOut"
-                    data-easeout="Power4.easeInOut" data-masterspeed="2000">
-
-                    <img src="assets/images/sliders/slide-bg/2.jpg" alt="Slide Background Image" width="1920"
-                        height="1280">
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-110','-100','-110','-110']"
-                        data-fontsize="['16','16','16','12']" data-lineheight="['25','25','25','25']"
-                        data-whitespace="nowrap" data-width="none" data-height="none"
-                        data-frames='[{"delay":750,"speed":750,"frame":"0","from":"y:-50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--subheadline">Instant, Secure & Private</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-13','-13','-13','10']"
-                        data-fontsize="['60', '50', '40', '30']" data-lineheight="['60','60','60','60']"
-                        data-width="none" data-height="none" data-transform_idle="o:1;"
-                        data-frames='[{"delay":1000,"speed":1500,"frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--headline">Deposit & Invest in The Best <br>Cryptocurrency Interest Rates
-                        </div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['90','90','90','100']"
-                        data-fontsize="['16', '16', '16', '12']" data-lineheight="['60','60','60','60']"
-                        data-width="none" data-height="none"
-                        data-frames='[{"delay":1250,"speed":1500,"frame":"0","from":"x:-50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--bio">Invest Your Cryptocurrencies With High Returns!</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']"
-                        data-hoffset="['160','110','40','20']" data-y="['middle','middle','middle','middle']"
-                        data-voffset="['160','160','190','210']" data-width="none" data-height="none"
-                        data-whitespace="nowrap"
-                        data-frames='[{"delay":1500,"speed":1500,"frame":"0","from":"x:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"x:50px;opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-basealign="slide" data-responsive_offset="on"
-                        data-responsive="off">
-                        {/literal}
-                        <div class="slide-action">
-                            <a class="btn btn--white btn--bordered btn--rounded"
-                                href="{$route->urlFor('page', ['page' => 'register'])}">Get
-                                Started</a>
-                        </div>
-                        {literal}
-                    </div>
-                </li>
-
-                <li data-transition="slideoverleft" data-slotamount="default" data-easein="Power4.easeInOut"
-                    data-easeout="Power4.easeInOut" data-masterspeed="2000">
-
-                    <img src="assets/images/sliders/slide-bg/3.jpg" alt="Slide Background Image" width="1920"
-                        height="1280">
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-110','-100','-110','-110']"
-                        data-fontsize="['16','16','16','12']" data-lineheight="['25','25','25','25']"
-                        data-whitespace="nowrap" data-width="none" data-height="none"
-                        data-frames='[{"delay":1500,"speed":1500,"frame":"0","from":"x:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"x:50px;opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--subheadline">Instant, Secure & Private</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-13','-13','-13','10']"
-                        data-fontsize="['60', '50', '40', '30']" data-lineheight="['6','60','60','60']"
-                        data-width="none" data-height="none" data-transform_idle="o:1;"
-                        data-frames='[{"delay":1000,"speed":1500,"frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--headline">Let The Professional Traders <br>Build Your Cryptocurrency
-                            Portfolio</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']" data-hoffset="['70','50','50','20']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['90','90','90','100']"
-                        data-fontsize="['16', '16', '16', '12']" data-lineheight="['60','60','60','60']"
-                        data-width="none" data-height="none"
-                        data-frames='[{"delay":1250,"speed":1500,"frame":"0","from":"x:-50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-responsive_offset="on">
-                        <div class="slide--bio">We have the smartest traders for your investments!</div>
-                    </div>
-
-                    <div class="tp-caption" data-x="['left','left','left','left']"
-                        data-hoffset="['160','110','40','20']" data-y="['middle','middle','middle','middle']"
-                        data-voffset="['160','160','190','210']" data-width="none" data-height="none"
-                        data-whitespace="nowrap"
-                        data-frames='[{"delay":1500,"speed":1500,"frame":"0","from":"x:50px;opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"x:50px;opacity:0;","ease":"Power3.easeInOut"}]'
-                        data-splitin="none" data-splitout="none" data-basealign="slide" data-responsive_offset="on"
-                        data-responsive="off">
-                        {/literal}
-                        <div class="slide-action">
-                            <a class="btn btn--white btn--bordered btn--rounded"
-                                href="{$route->urlFor('page', ['page' => 'register'])}">Get
-                                Started</a>
-                        </div>
-                        {literal}
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-    </div>
-
-</section>
-{/literal}
-<section id="featured2" class="featured featured-2 featured-5 pt-90 pb-50">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-8">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-8">
-                        <div class="heading heading-1 mb-60">
-                            <h2 class="heading--title">We Are Trusted Across The Internet For Good Reasons.</h2>
-                        </div>
+{block name=body}
+    <!--====== BANNER PART START ======-->
+    <section class="banner_v1 bg_cover hide-overflow d-block" id="bgndVideo" style="background-image: url(assets/images/homepage-bg.jpg);">
+        <div class="banner_overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="banner_content text-center">
+                        <span>Fast-track your success</span>
+                        <h1>Tight spreads – the fast lane to maximising your profit.</h1>
+                        <h1>EVERYTHING YOU NEED TO PUT YOU IN CONTROL</h1>
                     </div>
                 </div>
-                <div class="row">
-
-                    <div class="col-xs-12 col-sm-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                        <div class="feature-card">
-                            <div class="feature-card-icon pt-10">
-                                <i class="icon-lock"></i>
-                            </div>
-                            <div class="feature-card-content">
-                                <h3 class="feature-card-title">Protection & Security</h3>
-                                <p class="feature-card-desc">Investments are protected against loss.
-                                    The system will automatically release investments on maturity.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
-                        <div class="feature-card">
-                            <div class="feature-card-icon">
-                                <i class="icon-search"></i>
-                            </div>
-                            <div class="feature-card-content">
-                                <h3 class="feature-card-title">Licensed Traders</h3>
-                                <p class="feature-card-desc">Our Professional Traders are well equiped and licensed. We
-                                    process all transactions to make sure you have maximum profits.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                        <div class="feature-card">
-                            <div class="feature-card-icon">
-                                <i class="icon-recycle"></i>
-                            </div>
-                            <div class="feature-card-content">
-                                <h3 class="feature-card-title">Unlimited Free Transfers</h3>
-                                <p class="feature-card-desc">Deposit or withdraw earnings at no extra charge.
-                                    We are committed to your profiting maximally.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
-                        <div class="feature-card">
-                            <div class="feature-card-icon">
-                                <i class="icon-layers"></i>
-                            </div>
-                            <div class="feature-card-content">
-                                <h3 class="feature-card-title">Multi Currency Accounts</h3>
-                                <p class="feature-card-desc">Support major cryptocurrencies: BTC, ETH,
-                                    LTC and DOGE. We are securing patnerships for other cryptocurrencies soon.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4">
-                <div class="bitcoin-calculator mb-30"></div>
-                <div class="clearfix"></div>
-                <div class="bitcoin-pricing mb-20"></div>
-                <p class="italic">* Price & chart conversion through BTC</p>
             </div>
         </div>
-    </div>
+    </section>
 
-</section>
-
-<section id="" class="featured featured-3  pb-5">
-    <div class="bg-section">
-        <img src="assets/images/background/4.jpg" alt="background">
-    </div>
-    <div class="container">
-        <div class="row">
-
-            <div class="col-xs-12 col-sm-4 col-md-4 wow fadeIn" data-wow-delay="100ms">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-briefcase"></i>
+    <section class="creative_strategic section_padding bg_cover" style="background-image: url('assets/images/2.jpg');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="cutclub_content_box">
+                        <h2>THE ONLINE INVESTMENT TOOL BUILT JUST FOR YOU.
+                        </h2>
                     </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Sign Up For Free</h3>
-                        <p class="feature-card-desc">Create a digital currency portfolio for free, where you can
-                            securely
-                            invest all your digital currency.</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="cutclub_content_box">
+                        <p>Optional Trading Binary (OTB) is committed to creating a fair, stable & secure digital currency
+                            investment platform. Our experts are available at any and all times to answer your queries and
+                            help you out with any questions or problems you may be having when it comes to investing.</p>
+                        <p>The one tool you need to track every detail of your portfolio, and your financial health.
+                            Accessing the platform through a personal account, you can follow your investments 24/7, every
+                            single day of the year. </p>
+                        <a href="{$route->urlFor('home')}" class="main-btn">More About Us</a>
                     </div>
                 </div>
             </div>
-
-
-            <div class="col-xs-12 col-sm-4 col-md-4 wow fadeIn" data-wow-delay="200ms">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-wallet"></i>
+            <div class="row pt-30 justify-content-center">
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="service_box mt-30">
+                        <div class="icon_box">
+                            <div class="icon">
+                                <img src="assets/images/icon/icon_9.png" alt="">
+                            </div>
+                            <div class="count">1</div>
+                        </div>
+                        <h4>Sign up</h4>
+                        <p>Create an account for free using your email address</p>
                     </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Invest Your Crpyto</h3>
-                        <p class="feature-card-desc">Let your money earn you more money as we trade with it on your
-                            behalf.
-                            You can invest as many times as possible.</p>
+                </div>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="service_box mt-30">
+                        <div class="icon_box">
+                            <div class="icon">
+                                <img src="assets/images/icon/icon_10.png" alt="">
+                            </div>
+                            <div class="count">2</div>
+                        </div>
+                        <h4>Open Deposit</h4>
+                        <p>We offer versatile investment plans to suit your financial benefits. Pick a plan and make
+                            deposit.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-7 col-sm-8">
+                    <div class="service_box mt-30">
+                        <div class="icon_box">
+                            <div class="icon">
+                                <img src="assets/images/icon/icon_11.png" alt="">
+                            </div>
+                            <div class="count">3</div>
+                        </div>
+                        <h4>Smart Earnings</h4>
+                        <p>Watch your earnings grow continuously on your dashboard</p>
                     </div>
                 </div>
             </div>
-
-
-            <div class="col-xs-12 col-sm-4 col-md-4 wow fadeIn" data-wow-delay="300ms">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-bargraph"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Trade Digital Currency</h3>
-                        <p class="feature-card-desc">Trade some Bitcoin, Ethereum, or any other Digital Currency to
-                            begin
-                            using the future of money.</p>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </div>
+    </section>
 
-</section>
-
-<section id="testimonial1" class="testimonial testimonial-1 pt-90">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 wow fadeInUp" data-wow-delay="100ms">
-                <div id="testimonial-wide" class="carousel carousel-navs" data-slide="1" data-slide-rs="1"
-                    data-autoplay="false" data-nav="true" data-dots="false" data-space="0" data-loop="true"
-                    data-speed="800">
-
-                    <div class="testimonial-panel">
-                        <div class="testimonial--icon"></div>
-                        <div class="testimonial--body">
-                            <p>“Highly recommended & a great experience. The process was simple and easy to understand.
-                                Investing was straight forward, supports the four major cryptocurrencies that I love
-                                using and the entire process
-                                was super smooth!”</p>
-                        </div>
-                        <div class="testimonial--meta">
-                            <div class="testimonial--meta-img">
-                                <img src="assets/images/testimonial/2.png" alt="Testimonial Author">
-                            </div>
-                            <h4>Mahmoud Baghagho</h4>
+    <section class="cutclub_story section_padding bg_image" style="background-image: url(assets/images/story_bg.png);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section_title-2 text-center">
+                        <h2></h2>
+                        <p></p>
+                        <i class="fa fa-times"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="single_stroy">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="cutclub_img_box">
+                            <img src="assets/images/story_1.jpg" class="img-fluid" alt="">
                         </div>
                     </div>
-
-                    <div class="testimonial-panel">
-                        <div class="testimonial--icon"></div>
-                        <div class="testimonial--body">
-                            <p>“The Digital Signal Trade autobot exceeded my expectations. My investments returned huge
-                                profits for me without me doing any extra work. This is a good place to invest: very
-                                simple and reliable!”</p>
-                        </div>
-                        <div class="testimonial--meta">
-                            <div class="testimonial--meta-img">
-                                <img src="assets/images/testimonial/1.png" alt="Testimonial Author">
-                            </div>
-                            <h4>Ayman Fikry</h4>
+                    <div class="col-lg-6">
+                        <div class="cutclub_content_box">
+                            <span></span>
+                            <h3>Wealth Management made easy with OTB Capital</h3>
+                            <p>Rather than trying to track your investments across various institutions, each with their own
+                                dealing processes, paperwork and charging structures, you and your refrrals can manage them
+                                all efficiently, securely and cost-effectively on the OTB Capital platform.</p>
+                            <a href="#" class="main-btn">Learn More</a>
                         </div>
                     </div>
-
-                    <div class="testimonial-panel">
-                        <div class="testimonial--icon"></div>
-                        <div class="testimonial--body">
-                            <p>“The feedback from the support staff has been awesome. I had my first investment up and
-                                running in less than no time because they talked me through every step of investing.
-                                I'll keep investing with Digital Signal Trade!”</p>
-                            </div>
-                            <div class="testimonial--meta">
-                                <div class="testimonial--meta-img">
-                                    <img src="assets/images/testimonial/3.png" alt="Testimonial Author">
-                                </div>
-                                <h4>Fouad Badawy</h4>
-                            </div>
+                </div>
+            </div>
+            <div class="single_stroy">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="cutclub_img_box">
+                            <img src="assets/images/story_2.jpg" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="cutclub_content_box">
+                            <span></span>
+                            <h3>What is a wealth platform?</h3>
+                            <p>At its heart, our platform is a secure online location where all your investments can be held
+                                and viewed in one place.
+                                With up-to-date valuations and a birds-eye of your whole portfolio, it’s easy for you and
+                                your Financial referrals to review and monitor your investments. </p>
                         </div>
                     </div>
                 </div>
@@ -359,14 +132,105 @@
         </div>
     </section>
 
-    {include file="theme/public/components/section-investment-plans.tpl"}
+    <section class="qoute_box bg_image" style="background-image: url(assets/images/1.jpg);background-size: cover;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="cutclub_content_box">
+                        <span>Affiliate Program</span>
+                        <h2>Earn 6% Referral Commission</h2>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="button_box">
+                        <a href="assets/images/otb.pdf" class="main-btn">View Certificate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    {include file="theme/public/components/section-consultation.tpl"}
+    <section class="cutclub_team team_v1 hide-overflow bg-white">
+        <div class="container-full">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section_title-2 text-center">
+                        <h2>OUR INVESTMENT PLANS</h2>
+                        <i class="fa fa-times"></i>
+                    </div>
+                </div>
+            </div>
+            <section class="cutclub_pricing pricing_v1 pricing-page">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        {getInvestmentPlans out=investment_plans}
+                        {foreach from=$investment_plans item=ivp key=key}
+                            <div class="col-lg-4 col-md-7 col-sm-9">
+                                <div class="pricing_box box_{($key + 1)} text-center">
+                                    <div class="plan_title">
+                                        <h4>{$ivp->title}</h4>
+                                    </div>
+                                    <div class="pricing_wrap">
+                                        <div class="pricing_head">
+                                            <h2><span>{$ivp->percentage}</span>%</h2>
+                                            <p>ROI Interest</p>
+                                        </div>
+                                        <div class="pricing_body">
+                                            <ul>
+                                                <li>Min Deposit :
+                                                    ${$ivp->minimum}</li>
+                                                <li>Max Deposit :
+                                                    {if $ivp->maximum == "0"}Unlimited{else}${$ivp->maximum}{/if}
+                                                </li>
+                                                <li>Withdrawal: Instantly</li>
+                                                <li>Duration: {$ivp->duration}
+                                                    {$ivp->durationType|capitalize}{if $ivp->duration gt '1'}s{/if}</li>
+                                                <li>Capital Return :
+                                                    {if $ivp->profitFrequency eq 'end'}
+                                                        End of Plan
+                                                    {else}
+                                                        {$ivp->profitFrequency|capitalize} Each Term
+                                                    {/if}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="button_box">
+                                            <a href="{$route->urlFor('page', ['page' => 'register'])}"
+                                                class="pricing_btn">Invest Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+            </section>
 
-    {include file="theme/public/components/section-clients.tpl"}
+            <!--====== CUTCLUB TEAM PART ENDS ======-->
 
-    {include file="theme/public/components/section-certified.tpl"}
+            <!--====== PROJECT 1 PART START ======-->
 
-    {include file="theme/public/components/section-latest-news.tpl"}
-
-    {include file="theme/public/footer.tpl"}
+            <div class="area-heading text-center mb-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="area-heading text-center">
+                                <h2 class="mb-3 area-title">cryptocurrency live price table</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div
+                                style="height:433px; background-color: #FFFFFF; overflow:hidden; box-sizing: border-box; border: 1px solid #56667F; border-radius: 4px; text-align: right; line-height:14px; font-size: 12px; box-sizing:content-box; font-feature-settings: normal; text-size-adjust: 100%; box-shadow: inset 0 -20px 0 0 #56667F; padding: 0px; margin: 0px; width: 99%;">
+                                <div style="height:413px;">
+                                    {include file="theme/public/components/coinlib-widget.tpl"}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{/block}

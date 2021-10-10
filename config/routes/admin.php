@@ -16,7 +16,8 @@ return function (App $app) {
         $group->get('users[/]', \App\Action\Admin\User\ViewAll::class)->setName('admin-users');
         $group->get('users/{id}[/]', \App\Action\Admin\User\SingleView::class)->setName('admin-view-user');
         $group->get('users/user-funds/{id}[/]', \App\Action\Admin\User\UserFundsView::class)->setName('admin-view-user-funds');
-        $group->post('users/{id}[/]', \App\Action\Admin\User\UpdateAction::class)->setName('admin-view-user');
+        $group->post('users/{id}[/]', \App\Action\Admin\User\UpdateAction::class);
+        $group->get('users/{id}/delete[/]', \App\Action\Admin\User\DeleteAction::class)->setName('admin-delete-user');
 
         // referrals
         $group->get('referrals[/]', \App\Action\Admin\Referrals\ViewAll::class)->setName('admin-referrals');

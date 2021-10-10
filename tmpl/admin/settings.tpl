@@ -8,7 +8,7 @@
         <tr>
             <td width="100%" valign="top" height="100%">
                 <h3>Main Settings:</h3>
-                <form method="post" action="{$route->urlFor('admin-update-admin')}">
+                <form style="display:none" method="post" action="{$route->urlFor('admin-settings')}">
                     <table class="form settings">
                         <tbody>
                             <tr>
@@ -47,7 +47,7 @@
                     </table>
                     <center> <input type="submit" value="Update" class="btn btn-success sbmt"> </center>
                 </form>
-                <br /><br />
+                {* <br /><br /> *}
                 <form method="post" action="{$route->urlFor('admin-update-settings')}">
                     <table class="form settings">
                         <tbody>
@@ -71,7 +71,7 @@
                                     <th>{$currency|upper} Deposit Address:</th>
                                     <td>
                                         {assign var=wallet value=$currency|cat:'DepositAddress'}
-                                        <input type="text" name="{$wallet}" value="{$settings[$wallet]}" class="inpts">
+                                        <input readonly disabled type="text" style="background-color:#0004" value="{$settings[$wallet]}" class="inpts">
                                     </td>
                                 </tr>
                             {/foreach}

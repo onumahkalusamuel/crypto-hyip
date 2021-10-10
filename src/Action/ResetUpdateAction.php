@@ -76,7 +76,7 @@ class ResetUpdateAction
 
         // return 
         $this->view->assign('data', $return);
-        $this->view->display("theme/public/pages/reset-update.tpl");
+        $this->view->display("theme/public/auth/reset-update.tpl");
         return $response;
     }
 }

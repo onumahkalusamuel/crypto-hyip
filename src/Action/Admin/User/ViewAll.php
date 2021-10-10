@@ -47,7 +47,9 @@ final class ViewAll
         // user
         $user = $this->user->readPaging([
             'params' => $params,
-            'filters' => $filters
+            'filters' => $filters,
+            'order_by'=> 'createdAt',
+            'order' => 'DESC'
         ]);
 
         // prepare the return data

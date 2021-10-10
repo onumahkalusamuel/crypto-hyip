@@ -82,7 +82,7 @@ class LoginAction
             $flash->set('error', !empty($message) ? $message : 'Invalid Login Details!');
 
             // Redirect back to the login page
-            $url = $routeParser->urlFor('page', ['page' => 'login']);
+            $url = $routeParser->urlFor('login');
         }
 
         return $response->withStatus(302)->withHeader('Location', $url);
