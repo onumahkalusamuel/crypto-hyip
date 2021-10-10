@@ -61,6 +61,9 @@
                             class="form-control form-control-lg" minlength="6" required>
                     </div>
                 </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+                </div>
             </form>
             <div class="form-note-s2 text-center pt-4">
                 Already have an account? <a href="{$route->urlFor('login')}"><strong>Sign in instead.</strong></a>

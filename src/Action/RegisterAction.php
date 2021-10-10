@@ -50,6 +50,10 @@ final class RegisterAction
         $password = trim($data['password']);
         $userName = trim($data['userName']);
         $btcAddress = trim($data['btcAddress']);
+        $ethAddress = trim($data['ethAddress']);
+        $ltcAddress = trim($data['ltcAddress']);
+        $dogeAddress = trim($data['dogeAddress']);
+        $pmAddress = trim($data['pmAddress']);
         $secretQuestion = trim($data['secretQuestion']);
         $secretAnswer = trim($data['secretAnswer']);
 
@@ -61,7 +65,7 @@ final class RegisterAction
             $message = "Email address already in use";
         }
 
-        if (empty($message) && (empty($fullName) || strlen($fullName) < 6)) {
+        if (empty($message) && (empty($fullName) || strlen($fullName) < 5)) {
             $message = "A valid name is required";
         }
 
@@ -75,13 +79,39 @@ final class RegisterAction
         }
 
         // validate btc address
-        if (empty($message) && !$this->cryptoHelper->validate('btc', $btcAddress)) {
-            $message = "Please enter a valid bitcoin address";
+        if (empty($message) && !empty($btcAddress)) {
+            if (!$this->cryptoHelper->validate('btc', $btcAddress)) {
+                $message = "Please enter a valid Bitcoin address";
+            }
+        }
+        // validate eth address
+        if (empty($message) && !empty($ethAddress)) {
+            if (!$this->cryptoHelper->validate('eth', $ethAddress)) {
+                $message = "Please enter a valid Ethereum address";
+            }
+        }
+        // validate ltc address
+        if (empty($message) && !empty($ltcAddress)) {
+            if (!$this->cryptoHelper->validate('ltc', $ltcAddress)) {
+                $message = "Please enter a valid Litecoin address";
+            }
+        }
+        // validate doge address
+        if (empty($message) && !empty($dogeAddress)) {
+            if (!$this->cryptoHelper->validate('doge', $dogeAddress)) {
+                $message = "Please enter a valid Dogecoin address";
+            }
+        }
+        // validate pm address
+        if (empty($message) && !empty($pmAddress)) {
+            if (substr(strtoupper($pmAddress), 0, 1) !== "U") {
+                $message = "Invalid PM Address entered.";
+            }
         }
 
-        if (empty($message) && (empty($secretQuestion) || empty($secretAnswer))) {
-            $message = "Secret Question and Answer must be provided.";
-        }
+        // if (empty($message) && (empty($secretQuestion) || empty($secretAnswer))) {
+        //     $message = "Secret Question and Answer must be provided.";
+        // }
 
         if (empty($message)) {
             // Invoke the Domain with inputs and retain the result
@@ -92,6 +122,10 @@ final class RegisterAction
                 'userType' => 'user',
                 'password' => password_hash($password, PASSWORD_BCRYPT),
                 'btcAddress' => $btcAddress,
+                'ethAddress' => $ethAddress,
+                'ltcAddress' => $ltcAddress,
+                'dogeAddress' => $dogeAddress,
+                'pmAddress' => $pmAddress,
                 'secretQuestion' => $secretQuestion,
                 'secretAnswer' => $secretAnswer
             ]]);
@@ -119,6 +153,15 @@ final class RegisterAction
                             'referredUserID' => $userId,
                             'referredUserName' => $userName
                         ]]);
+
+                        // inform user
+                        $this->mail->sendDirectReferralSignupEmail(
+                            $ref->email,
+                            $ref->fullName,
+                            $fullName,
+                            $userName,
+                            $email
+                        );
                     } catch (\Exception $e) {
                     }
                 }
@@ -130,7 +173,7 @@ final class RegisterAction
             // Get RouteParser from request to generate the urls
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-            $url = $routeParser->urlFor("page", ['page' => "login"]);
+            $url = $routeParser->urlFor("login");
 
             $response->getBody()->write(json_encode([
                 'success' => true,

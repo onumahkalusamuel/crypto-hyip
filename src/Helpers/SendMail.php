@@ -12,10 +12,8 @@ class SendMail
     private $settings;
     private $siteName;
     private $siteUrl;
-    private  $contactPhone;
     private  $contactName;
     private  $contactEmail;
-    private  $contactAddress;
     private $emailBanner;
 
     public function __construct(ContainerInterface $container)
@@ -26,11 +24,9 @@ class SendMail
         $smtp = $this->settings['smtp'];
 
         $this->contactName = $smtp['name'];
-        $this->siteName = $display['site_name'];
-        $this->contactPhone = $display['contact_phone'];
-        $this->contactAddress = $display['contact_address'];
-        $this->contactEmail = $display['contact_email'];
-        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+        $this->contactEmail = $smtp['email'];
+        $this->siteName = $display['name'];
+        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
         $this->emailBanner = $this->settings['assets_dir'] . '/email/email-banner.jpg';
 
         $mail = new PHPMailer(true);
@@ -128,11 +124,11 @@ class SendMail
         <img src='cid:banner'/><br/><br/>
         <h2>REGISTRATION SUCCESSFUL</h2><br/>
         Hello <strong>$name</strong>,<br/><br/>
-        Thank you for registration on our site.<br/>
+        Thank you for registering on our site.<br/>
         <strong>Your login information:</strong><br/><br/>
         <strong>Login:</strong> $username <br/>
         <strong>Password:</strong> <em>the password you chose </em><br/><br/>
-        You can login here: <a href='{$this->siteUrl}/'>{$this->siteName}</a><br/><br/>
+        You can login here: <a href='{$this->siteUrl}/login'>{$this->siteName}</a><br/><br/>
         Contact us immediately if you did not authorize this registration.<br/><br/>
         
         <br/><br/>

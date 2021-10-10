@@ -13,7 +13,7 @@ yakpro-po crons/ -o ./tmp/crons/
 yakpro-po public/index.php -o public/index1.php
 
 cp -rf ./* ../obfuscated/
-cp .env ../obfuscated/.env
+cp .env.example ../obfuscated/.env
 cp .htaccess ../obfuscated/.htaccess
 
 rm -rf tmp/src/

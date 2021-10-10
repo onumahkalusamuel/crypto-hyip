@@ -40,6 +40,8 @@
                                             Dogecoin</option>
                                         <option {if $smarty.get.cryptoCurrency == "ltc"}selected{/if} value="ltc">
                                             Litecoin</option>
+                                        <option {if $smarty.get.cryptoCurrency == "pm"}selected{/if} value="pm">
+                                            Perfect Money</option>
                                     </select>
                                 </td>
                                 <td style="text-align:right;">
@@ -76,7 +78,7 @@
                                     <small>{$item->createdAt}</small>
                                 </td>
                                 <td nowrap="" align="right" class="strong">
-                                    <b>${$item->amount|string_format:"%.2f"}</b>
+                                    <b>${$item->referralBonus|string_format:"%.2f"}</b>
                                 </td>
                             </tr>
                         {/foreach}
