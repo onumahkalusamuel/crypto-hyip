@@ -3,6 +3,7 @@
 namespace App\Action\Admin\User;
 
 use App\Domain\User\Service\User;
+use App\Domain\Referrals\Service\Referrals;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Smarty as View;
@@ -11,13 +12,16 @@ final class ViewAll
 {
     protected $user;
     protected $view;
+    protected $referrals;
 
     public function __construct(
         User $user,
-        View $view
+        View $view,
+        Referrals $referrals
     ) {
         $this->user = $user;
         $this->view = $view;
+        $this->referrals = $referrals;
     }
 
     public function __invoke(
@@ -45,18 +49,24 @@ final class ViewAll
         $filters['rpp'] = isset($_GET['rpp']) ? (int) $_GET['rpp'] : 20;
 
         // user
-        $user = $this->user->readPaging([
+        $users = $this->user->readPaging([
             'params' => $params,
             'filters' => $filters,
-            'order_by'=> 'createdAt',
+            'order_by' => 'createdAt',
             'order' => 'DESC'
         ]);
 
+        foreach ($users['data'] as &$user) {
+            // find upline
+            $user->upliner = "";
+            $ref = $this->referrals->find(['params' => ['referredUserID' => $user->ID]]);
+            if (!empty($ref->referralUserName)) $user->upliner = $ref->referralUserName;
+        }
         // prepare the return data
         $data = [
-            'users' => $user
+            'users' => $users
         ];
-        
+
         $this->view->assign('data', $data);
         $this->view->display('admin/users.tpl');
 

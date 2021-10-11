@@ -98,10 +98,10 @@ class ProfileAction
                 'fullName' => $data['fullName'],
                 'email' => $data['email'],
                 'btcAddress' => $data['btcAddress'],
-                'ethAddress' => $data['ethAddress'] ?? null,
-                'dogeAddress' => $data['dogeAddress'] ?? null,
-                'ltcAddress' => $data['ltcAddress'] ?? null,
-                'pmAddress' => $data['pmAddress'] ?? null
+                'ethAddress' => $data['ethAddress'],
+                'dogeAddress' => $data['dogeAddress'],
+                'ltcAddress' => $data['ltcAddress'],
+                'pmAddress' => $data['pmAddress']
             ];
 
             if (!empty($data['password'])) {

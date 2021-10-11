@@ -61,12 +61,11 @@
                                             <tr>
                                                 <td>Since: {$user->createdAt}</td>
                                             </tr>
-                                            <tr>
-                                                {* <td>Upline: <a href="?a=user_refs&amp;id=2">demo</a></td> *}
-                                            </tr>
-                                            <tr>
-                                                <td> </td>
-                                            </tr>
+                                            {if $user->upliner ne ""}
+                                                <tr>
+                                                    <td style="color:blue">Upline: <i>{$user->upliner}</i></td>
+                                                </tr>
+                                            {/if}
                                         </tbody>
                                     </table>
                                 </td>
@@ -90,8 +89,9 @@
                                         class="sbmt btn-sm btn-success" style="margin-bottom:2px;">edit</a><br>
                                     <a href="{$route->urlFor('admin-view-user-funds', ['id' => $user->ID])}"
                                         class="sbmt btn-sm btn-info" style="margin-bottom:2px;">funds</a><br>
-                                        <a href="{$route->urlFor('admin-delete-user', ['id' => $user->ID])}"
-                                        onclick="return confirm('Delete this user? This action cannot be undone.');" class="sbmt btn-sm btn-danger" style="margin-bottom:2px;">delete</a>
+                                    <a href="{$route->urlFor('admin-delete-user', ['id' => $user->ID])}"
+                                        onclick="return confirm('Delete this user? This action cannot be undone.');"
+                                        class="sbmt btn-sm btn-danger" style="margin-bottom:2px;">delete</a>
                                 </td>
                             </tr>
                             <tr>

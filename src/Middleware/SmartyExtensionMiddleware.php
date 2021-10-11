@@ -75,7 +75,7 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         if (empty($total_rows) || empty($total_retrieved)) return;
         $get = $_GET;
 
-        $records_per_page = (int)($get['rpp'] ?? $total_retrieved);
+        $records_per_page = !empty($get['rpp']) ? $get['rpp'] : 20;
 
         if ($records_per_page == 0) return;
         $first_page = 1;
@@ -84,7 +84,7 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $return['current_page'] = $current_page;
 
         $last_page = ceil((int)$total_rows / (int)$records_per_page);
-        $return['last_page'];
+        $return['last_page'] = $last_page;
         // page links
         // $first_page_link;
         $get['page'] = $first_page;

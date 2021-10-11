@@ -75,7 +75,10 @@ final class RegisterAction
 
         if (empty($message) && empty($userName)) {
             $userName = $this->generateUserName($fullName);
-            if ($this->userNameInUse($userName)) $message = "Username is already in use. Try another one.";
+        }
+
+        if (empty($message) && $this->userNameInUse($userName)) {
+            $message = "Username is already in use. Try another one.";
         }
 
         // validate btc address

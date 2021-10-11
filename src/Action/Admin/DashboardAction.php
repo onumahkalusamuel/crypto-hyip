@@ -48,7 +48,7 @@ final class DashboardAction
 
         // users
         $users = $this->user->readAll([
-            'params' => ['userType' => 'user'],
+            'params' => ['where' => ['userType' => 'user']],
             'select' => ['isActive'],
             'select_raw' => ['COUNT(*) as total'],
             'group_by' => 'isActive',

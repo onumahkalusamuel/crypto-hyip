@@ -37,7 +37,7 @@ final class ProfileView
         // users
         $user = $this->user->readSingle([
             'ID' => $ID,
-            'select' => ['ID', 'fullName', 'userName', 'email', 'btcAddress', 'ethAddress', 'dogeAddress', 'ltcAddress']
+            'select' => ['ID', 'fullName', 'userName', 'email', 'btcAddress', 'ethAddress', 'dogeAddress', 'ltcAddress','pmAddress']
         ]);
 
         $data['profile'] = $user;

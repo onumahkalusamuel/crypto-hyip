@@ -46,6 +46,7 @@
     {if $sysSettings.headerCode ne ""}
         {$sysSettings.headerCode}
     {/if}
+
 </head>
 
 <body>
@@ -313,15 +314,11 @@
     <!--====== Magnific Popup js ======-->
     <script src="assets/js/jquery.magnific-popup.min.js"></script>
 
-    <!--====== YTPlayer js ======-->
-    <script src="assets/js/jquery.mb.YTPlayer.min.js"></script>
-
     <!--====== Ajax Contact js ======-->
     <script src="assets/js/ajax-contact.js"></script>
 
     <!--====== Main js ======-->
     <script src="assets/js/main.js"></script>
-
     {if $sysSettings.footerCode ne ""}
     {$sysSettings.footerCode}
     {/if}

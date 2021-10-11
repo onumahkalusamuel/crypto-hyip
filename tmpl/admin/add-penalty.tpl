@@ -6,7 +6,7 @@
             <td width="100%" valign="top" height="100%">
                 <h3>Add Penalty:</h3>
     
-                <form method="post" action="{$route->urlFor('admin-add-bonus',  ['user_id'=> $user->ID])}">
+                <form method="post" action="{$route->urlFor('admin-add-penalty',  ['user_id'=> $user->ID])}">
                 <input type="hidden" name="ID" value="{$user->ID}"/>
                     <table class="form settings">
                         <tbody>
