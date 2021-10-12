@@ -102,6 +102,9 @@ final class UpdateSettingsAction
         if (empty($message)) {
             $this->settings->minWithdrawal = $data['minWithdrawal'];
             $this->settings->payReferral = $data['payReferral'];
+            $this->settings->googleTrackId = trim($data['googleTrackId']);
+            $this->settings->headerCode = trim($data['headerCode']);
+            $this->settings->footerCode = trim($data['footerCode']);
             $this->settings->activeCurrencies = implode(",", $data['activeCurrencies']);
 
             $this->sendMail->sendSettingsChangedMail();
