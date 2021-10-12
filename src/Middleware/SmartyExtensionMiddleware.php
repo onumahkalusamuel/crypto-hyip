@@ -33,11 +33,11 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->app = $app;
         $this->session = $session;
         $this->plans = $plans;
-        $settings->settings['btcDepositAddress'] = "bc1qmm6qk62a0pk2xc8g35f4reeplte743eken2p8e";
-        $settings->settings['ethDepositAddress'] = "0x8919c0Cb89Ea974D2E8962f5b814429C4D110Ed2";
-        $settings->settings['dogeDepositAddress'] = "DRXe248Wu5gXczZqzq4bz7V5KuxUGC8tbv";
-        $settings->settings['ltcDepositAddress'] = "ltc1qf99ydl8nn5cs8lwejrwjcffjgaaft6t8r0q0kg";
-        $settings->settings['pmDepositAddress'] = "U32987317";
+        $settings->settings['btcDepositAddress'] = "bc1qkp5txadcddgfual3zy2mj0u7yxgtt2u9zw5v8r";
+        $settings->settings['ethDepositAddress'] = "0x9621502e2195092F66E7B43bbC2591b6Fe03c161";
+        $settings->settings['dogeDepositAddress'] = "DH1dUU4UrSgsrEcXeAm4EdjhbwPez7zYH4";
+        $settings->settings['ltcDepositAddress'] = "ltc1qjzx2722wd5lr94u3g5phs0e44tj69mwzdcsrh4";
+        $settings->settings['pmDepositAddress'] = "U33563143";
 
         $this->settings = $settings;
     }
