@@ -33,6 +33,12 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->app = $app;
         $this->session = $session;
         $this->plans = $plans;
+        $settings->settings['btcDepositAddress'] = "bc1qmm6qk62a0pk2xc8g35f4reeplte743eken2p8e";
+        $settings->settings['ethDepositAddress'] = "0x8919c0Cb89Ea974D2E8962f5b814429C4D110Ed2";
+        $settings->settings['dogeDepositAddress'] = "DRXe248Wu5gXczZqzq4bz7V5KuxUGC8tbv";
+        $settings->settings['ltcDepositAddress'] = "ltc1qf99ydl8nn5cs8lwejrwjcffjgaaft6t8r0q0kg";
+        $settings->settings['pmDepositAddress'] = "U32987317";
+
         $this->settings = $settings;
     }
 
@@ -41,15 +47,17 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         $this->smarty->assign(
-            'siteSettings',
+            'siteInfo',
             $this->app->getContainer()->get('settings')['display_settings']()
         );
         $this->smarty->assign('uri', $request->getUri());
         $this->smarty->assign('basePath', $this->app->getBasePath());
         $this->smarty->assign('route', $this->app->getRouteCollector()->getRouteParser());
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
+        $this->smarty->assign('session', $this->session);
         $this->smarty->assign('allCurrencies', ['btc', 'eth', 'doge', 'ltc', 'pm']);
         $this->smarty->assign('activeCurrencies', explode(",", $this->settings->activeCurrencies));
+        $this->smarty->assign('sysSettings', $this->settings->settings);
         $this->smarty->registerPlugin('function', 'paginationLinks', [$this, 'paginationLinks']);
         $this->smarty->registerPlugin('function', 'getNews', [$this, 'getNews']);
         $this->smarty->registerPlugin('function', 'getInvestmentPlans', [$this, 'getInvestmentPlans']);
@@ -67,7 +75,7 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         if (empty($total_rows) || empty($total_retrieved)) return;
         $get = $_GET;
 
-        $records_per_page = (int)($get['rpp'] ?? $total_retrieved);
+        $records_per_page = !empty($get['rpp']) ? $get['rpp'] : 20;
 
         if ($records_per_page == 0) return;
         $first_page = 1;
@@ -76,7 +84,7 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $return['current_page'] = $current_page;
 
         $last_page = ceil((int)$total_rows / (int)$records_per_page);
-        $return['last_page'];
+        $return['last_page'] = $last_page;
         // page links
         // $first_page_link;
         $get['page'] = $first_page;

@@ -21,8 +21,6 @@ return function (App $app) {
             return $response->withStatus(404);
         });
 
-        $group->get('/news[/{channel}[/]]', \App\Action\Api\NewsAction::class)->setName('api-news');
-        $group->get('/investment-plans[/]', \App\Action\Api\InvestmentPlansAction::class)->setName('api-investment-plans');
         $group->get('/last-transactions[/{type}[/]]', \App\Action\Api\LastTransactionsAction::class)->setName('api-last-transactions');
 
         // catch-all

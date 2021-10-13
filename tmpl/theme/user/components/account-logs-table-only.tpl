@@ -24,39 +24,48 @@
     }
 </style>
 
-<div class="container">
-    <div class="content-container">
-        <div class="item">
-            <div class="title content">Details</div>
-            <div class="title content text-sm-left text-center">Amount</div>
-            <div class="title content">Date</div>
-        </div>
-
-        {if !empty($transactions)}
-            {foreach from=$transactions  key=index item=trans}
-                <div class="item">
-                    <div class="content text-uppercase">
-                        <strong>
-                            {$trans->userName}
-                        </strong>&nbsp;
-                        <small class="badge {$trans->logType}">{$trans->logType}</small><br />
-                        <small>{$trans->transactionDetails}</small>
-                    </div>
-                    <div class="content text-sm-left text-center">
-                        ${$trans->amount}<br />
-                        <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
-                    </div>
-                    <div class="content">
-                        <small> {$trans->createdAt}</small>
-                    </div>
-                </div>
-            {/foreach}
-        {else}
-            <div class="item">
-                <div class="content">
-                    No transactions found.
-                </div>
-            </div>
-        {/if}
-    </div>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Details</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {if !empty($transactions)}
+                {foreach from=$transactions item=$trans}
+                    <tr>
+                        <td>
+                            <strong>
+                                {$trans->userName}
+                            </strong>&nbsp;
+                            <small class="badge
+                                {if $trans->logType === "penalty"}badge-danger{/if}
+                                {if $trans->logType === "bonus"}badge-info{/if}
+                                {if $trans->logType === "deposit"}badge-success{/if}
+                                {if $trans->logType === "withdrawal"}badge-secondary{/if}
+                                {if $trans->logType === "referral"}badge-badge-warning{/if}
+                                {if $trans->logType === "earning"}badge-success{/if}
+                            ">{$trans->logType}</small><br />
+                            <small>{$trans->transactionDetails}</small>
+                        </td>
+                        <td>
+                            ${$trans->amount}<br class="d-none d-lg-inline" />
+                            <img style="width: unset; height:unset; border-radius:unset"
+                                src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
+                        </td>
+                        <td>
+                            <small> {$trans->createdAt}</small>
+                        </td>
+                    </tr>
+                {/foreach}
+            {else}
+                <tr>
+                    <td colspan="3">No data found.</td>
+                </tr>
+            {/if}
+        </tbody>
+    </table>
 </div>

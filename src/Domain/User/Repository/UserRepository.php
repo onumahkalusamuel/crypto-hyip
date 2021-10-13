@@ -33,6 +33,8 @@ class UserRepository extends Repository
         'dogeBalance',
         'ltcAddress',
         'ltcBalance',
+        'pmAddress',
+        'pmBalance',
         'token',
         'secretQuestion',
         'secretAnswer',

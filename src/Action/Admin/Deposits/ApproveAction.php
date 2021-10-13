@@ -89,7 +89,7 @@ final class ApproveAction
                     ]
                 ]);
 
-                // add record to traillog
+                // // add record to traillog
                 $this->trailLog->create([
                     'data' => [
                         'userID' => $dep->userID,
@@ -104,8 +104,8 @@ final class ApproveAction
 
 
                 // verify if can pay referral commission
+                if ($this->settings->payReferral == 1) {
 
-                if (!empty($this->settings->payReferral)) {
                     // check for referral commission
                     $ref = $this->referrals->find([
                         'params' => [
@@ -134,6 +134,7 @@ final class ApproveAction
                             $referer = $this->user->readSingle(['ID' => $ref->referralUserID]);
 
                             if (!empty($referer->ID)) {
+                                // send direct referral email
                                 $this->mail->sendDirectReferralCommissionEmail(
                                     $referer->email,
                                     $referer->fullName,
@@ -142,20 +143,27 @@ final class ApproveAction
                                     $referer->userName,
                                     $dep->cryptoCurrency
                                 );
+
+                                // add it to balance
+                                $balance = $dep->cryptoCurrency . "Balance";
+                                $this->user->update([
+                                    'ID' => $referer->ID,
+                                    'data' => [$balance = $referer->$balance + $referralBonus]
+                                ]);
+
+                                // log
+                                $logData = [
+                                    'userID' => $referer->ID,
+                                    'userName' => $referer->userName,
+                                    'logType' => 'referral',
+                                    'transactionDetails' => "Received Referral Commission of \${$referralBonus} - {$referralPercentage}%",
+                                    'transactionID' => $ref->ID,
+                                    'amount' => $referralBonus,
+                                    'cryptoCurrency' => $dep->cryptoCurrency
+                                ];
+
+                                $this->trailLog->create(['data' => $logData]);
                             }
-
-                            // log
-                            $logData = [
-                                'userID' => $referer->ID,
-                                'userName' => $referer->userName,
-                                'logType' => 'referral',
-                                'transactionDetails' => "Received Referral Commission of \${$referralBonus} - {$referralPercentage}%",
-                                'transactionID' => $ref->ID,
-                                'amount' => $referralBonus,
-                                'cryptoCurrency' => $dep->cryptoCurrency
-                            ];
-
-                            $this->trailLog->create(['data' => $logData]);
                         }
                     }
                 }
@@ -172,7 +180,7 @@ final class ApproveAction
         // Clear all flash messages
         $flash = $this->session->getFlashBag();
         $flash->clear();
-
+        
         // Get RouteParser from request to generate the urls
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 

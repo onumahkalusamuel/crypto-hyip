@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Smarty;
@@ -28,7 +29,8 @@ class PageView
         try {
             $this->view->display("theme/public/pages/{$page}.tpl");
         } catch (\Exception $e) {
-            $this->view->display("404.tpl");
+            throw new Exception($e);
+            // $this->view->display("500.tpl");
         }
         return $response;
     }

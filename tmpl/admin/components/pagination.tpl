@@ -5,8 +5,8 @@
     <strong>Records Retrieved: {$total_retrieved}</strong>
     <ul class="pagination">
         <li class="page-item">
-            <a href="{$links.first_page_link}"
-                class="prev page-link {if $links.first_page_link === $links.current_page_link}disabled{/if}">&lt;&lt;</a>
+            <a {if $links.first_page_link !== $links.current_page_link} href="{$links.first_page_link}" {/if}
+                class="prev page-link">&lt;&lt;</a>
         </li>
 
         {if $links.prev1_page_link}
@@ -41,8 +41,8 @@
                 </a>
             </li>
         {/if}
-        <li class="page-item"><a href="{$links.last_page_link}"
-                class="next page-link {if $links.last_page_link === $links.current_page_link}disabled{/if}">&gt;&gt;</a>
+        <li class="page-item"><a {if $links.last_page_link !== $links.current_page_link} href="{$links.last_page_link}"
+                {/if} class="next page-link">&gt;&gt;</a>
         </li>
     </ul>
 {else}

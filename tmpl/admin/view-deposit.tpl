@@ -86,7 +86,7 @@
 
                         <tr>
                             <th>Principal Withdraw</th>
-                            <td>On maturity or deposit release</td>
+                            <td>On maturity</td>
                         </tr>
 
                         <tr>

@@ -1,200 +1,269 @@
-{include file="theme/public/header.tpl" pageTitle="About Us" active="about_us"}
+{extends file="theme/public/layout.tpl"}
+{block name=title}About Us{/block}
+{block name=body}
 
-<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
-    <div class="bg-section">
-        <img src="assets/images/page-titles/17.jpg" alt="Background" />
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="title title-6 text-center">
-                    <div class="title--heading">
-                        <h1>About Us</h1>
+
+    <div class="banner-area" id="banner-area" style="background-image:url(assets/images/banner/banner5.jpg);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="banner-heading">
+                        <h1 class="banner-title">About us</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{$route->urlFor('home')}">Home</a></li>
+                            <li>About us</li>
+                        </ol>
                     </div>
-                    <div class="clearfix"></div>
-                    <ol class="breadcrumb">
-                        <li><a href="{$route->urlFor('home')}">Home</a></li>
-                        <li class="active">About Us</li>
-                    </ol>
                 </div>
+                <!-- Col end-->
             </div>
+            <!-- Row end-->
         </div>
+        <!-- Container end-->
     </div>
-</section>
+    <!-- Banner area end-->
 
-<section id="infoCards" class="info-cards">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="info-card">
-                    <div class="info-card-step">01.</div>
-                    <div class="info-card-content">
-                        <h4 class="info-card-subtitle">We are helpers</h4>
-                        <h3 class="info-card-title">Funds management</h3>
-                        <p class="info-card-desc">We take the time to manage your money. It helps you stay on top of
-                            your bills and save lots of money each year.</p>
+
+    <section class="ts-about-intro" id="ts-about-intro">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <span style="background:blue !important; margin-top:-50px; display:block">
+
+                        <script type="text/javascript">
+                            baseUrl = "https://widgets.cryptocompare.com/";
+                            var scripts = document.getElementsByTagName("script");
+                            var embedder = scripts[scripts.length - 1];
+                            var cccTheme = {
+                                "General": {
+                                    "background": "#2C4C76 !important",
+                                    "priceText": "#fff"
+                                },
+                                "Currency": {
+                                    "color": "#fff"
+                                },
+                                "Trend": {
+                                    "colorDown": "#2C4C76"
+                                }
+                            };
+                            (function() {
+                                var appName = encodeURIComponent(window.location.hostname);
+                                if (appName == "") {
+                                    appName = "local";
+                                }
+                                var s = document.createElement("script");
+                                s.type = "text/javascript";
+                                s.async = true;
+                                var theUrl = baseUrl +
+                                    'serve/v1/coin/chartscroller?fsyms=BTC,ETH,XMR,LTC,DASH&tsyms=USD,EUR,CNY,GBP';
+                                s.src = theUrl + (theUrl.indexOf("?") >= 0 ? "&" : "?") + "app=" + appName;
+                                embedder.parentNode.appendChild(s);
+                            })();
+                        </script>
+
+
+
+
+                    </span>
+                    <h2 class="column-title title-small"><span>
+                        </span>{$siteInfo.name}</h2>
+
+                    <p>Remodel Your Living!!! {$siteInfo.name} is the World Leading Crypto Forex Trading Platform. We have
+                        affiliation with blockchain Trading pool and other major companies like Coinbase and Coinmama. We
+                        are using new technology and artificial intelligence to build a better Financial System. Our
+                        Platform have powered over 100M transactions and empowered Investors in 140 countries across the
+                        globe to invest wisely and get their return on investment without costly intermediaries or charges.
+                        We also offer tools for developers and real time transaction data for users to analyze the
+                        burgeoning digital economy.
+                        Join over 28,000 users from all over the world to enjoy our world class service. COMMITMENT TO
+                        QUALITY, EXPERTISE AND CONTINUITY IN A FAST-PACED MARKET!!!.</p>
+                    <div class="gap-15"></div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="ts-feature-box">
+                                <div class="ts-feature-info">
+                                    <img src="assets/images/pages/color_icon1.png" alt="">
+                                    <h3 class="ts-feature-title">Best Finance Brand</h3>
+                                    <p>Best Crypto Products & Solutions</p>
+
+                                </div>
+                            </div>
+                            <!-- feature box-1 end-->
+                        </div>
+                        <!-- col-1 end-->
+                        <div class="col-lg-6">
+                            <div class="ts-feature-box">
+                                <div class="ts-feature-info">
+                                    <img src="assets/images/pages/color_icon2.png" alt="">
+                                    <h3 class="ts-feature-title">ISO Certified</h3>
+                                    <p>ISO certification ensures that an organization runs its business using international
+                                        standards for products, services and processes. </p>
+                                </div>
+                            </div>
+                            <!-- feature box-2 end-->
+                        </div>
+                        <!-- col-2 end-->
                     </div>
+                    <!-- container row end-->
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="info-card">
-                    <div class="info-card-step">02.</div>
-                    <div class="info-card-content">
-                        <h4 class="info-card-subtitle">Quick & smart</h4>
-                        <h3 class="info-card-title">Tools and calculators</h3>
-                        <p class="info-card-desc">Use our Investment calculator (available in account area) to see how
-                            much you are to get for each plan you invest in.</p>
-                    </div>
+                <!-- Col end-->
+                <div class="col-lg-6">
+                    <img class="img-fluid" src="assets/images/icg1.png" alt="">
                 </div>
+                <!-- Col end-->
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="info-card">
-                    <div class="info-card-step">03.</div>
-                    <div class="info-card-content">
-                        <h4 class="info-card-subtitle">Friendly support</h4>
-                        <h3 class="info-card-title">Agile support system</h3>
-                        <p class="info-card-desc">Our support staff are always available to respond to your requests.
-                            You can also drop us messages, we'll get back to you.</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Main row end-->
         </div>
+    </section>
 
-    </div>
+    <section class="bg-overlay ts-chart">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12">
+                    <h2 class="column-title title-white"><span>REFERRAL BENEFITS</h2>
+                    <p class="intro-desc">As a way of compensating investors who introduce friends and family into the
+                        company, {$siteInfo.name} offers a generous 10% of the new investor initial deposit.
 
-</section>
+                        The commission is paid into the investors portfolio immediately the new investor's deposit is
+                    confirmed.
 
-{include file="theme/public/components/section-certified.tpl"}
+                    This is our little way of saying THANK YOU FOR TRUSTING US!!.</p>
 
-<section id="featured2" class="featured featured-2 pb-50">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon pt-10">
-                        <i class="icon-lock"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Protection & Security</h3>
-                        <p class="feature-card-desc">Investments are protected against loss.
-                            The system will automatically release investments on maturity.</p>
-                    </div>
-                </div>
             </div>
+            <!-- col end-->
 
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-search"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Licensed Traders</h3>
-                        <p class="feature-card-desc">Our Professional Traders are well equiped and licensed. We
-                            process all transactions to make sure you have maximum profits.</p>
-                    </div>
-                </div>
-            </div>
+            <div class="col-lg-7 col-md-12">
+                <script type="text/javascript">
+                    baseUrl = "https://widgets.cryptocompare.com/";
+                    var scripts = document.getElementsByTagName("script");
+                    var embedder = scripts[scripts.length - 1];
+                    (function() {
+                        var appName = encodeURIComponent(window.location.hostname);
+                        if (appName == "") {
+                            appName = "local";
+                        }
+                        var s = document.createElement("script");
+                        s.type = "text/javascript";
+                        s.async = true;
+                        var theUrl = baseUrl + 'serve/v1/coin/histo_week?fsym=BTC&tsym=USD';
+                            s.src = theUrl + (theUrl.indexOf("?") >= 0 ? "&" : "?") + "app=" + appName;
+                            embedder.parentNode.appendChild(s);
+                        })();
+                    </script>
 
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-puzzle"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Recurring Buys</h3>
-                        <p class="feature-card-desc">Invest in cryptocurrencies slowly over time by investing at your
-                            own pace: weekly or monthly. Your profits will roll in as expected.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-recycle"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Unlimited Free Transfers</h3>
-                        <p class="feature-card-desc">Deposit or withdraw earnings at no extra charge.
-                            We are committed to your profiting maximally.
-                        </p>
-                    </div>
                 </div>
+                <!-- Col end-->
             </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-layers"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Multi Currency Accounts</h3>
-                        <p class="feature-card-desc">Support major cryptocurrencies: BTC, ETH,
-                            LTC and DOGE. We are securing patnerships for other cryptocurrencies soon.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="icon-documents"></i>
-                    </div>
-                    <div class="feature-card-content">
-                        <h3 class="feature-card-title">Detailed Reporting</h3>
-                        <p class="feature-card-desc">Get updates on every single transaction. Transparency is one reason
-                            why we are loved. No hidden or surprise charges.</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Content row end-->
         </div>
+        <!-- Container end-->
+    </section>
+    <!-- Section chart end-->
 
-    </div>
-
-</section>
-
-{include file="theme/public/components/section-consultation.tpl"}
-
-<section id="clients1" class="clients clients-1 bg-gray">
-    <div class="container">
-        <div class="row row-clients">
-
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/1.png" alt="client">
+    <section class="ts-team">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <h2 class="section-title"><span>Our People</span>Best Team</h2>
+                </div>
             </div>
+            <!-- Title row end-->
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <div class="ts-team-wrapper">
+                        <div class="team-img-wrapper">
+                            <img class="img-fluid" alt="" src="assets/images/team/team1.jpg">
+                        </div>
+                        <div class="ts-team-content">
+                            <h3 class="team-name">Denise Brewer</h3>
+                            <p class="team-designation">Marketing</p>
+                        </div>
+                        <!-- Team content end-->
+
+                        <!-- social-icons-->
+                    </div>
+                    <!-- Team wrapper 1 end-->
+                </div>
+                <!-- Col end-->
+                <div class="col-lg-3 col-md-12">
+                    <div class="ts-team-wrapper">
+                        <div class="team-img-wrapper">
+                            <img class="img-fluid" alt="" src="assets/images/team/team2.jpg">
+                        </div>
+                        <div class="ts-team-content">
+                            <h3 class="team-name">Patrick Ryan</h3>
+                            <p class="team-designation">Legal & Compliance
+                                r</p>
+                        </div>
+                        <!-- Team content end-->
+
+                    </div>
+                    <!-- Team wrapper 1 end-->
+                </div>
+                <!-- Col end-->
+                <div class="col-lg-3 col-md-12">
+                    <div class="ts-team-wrapper">
+                        <div class="team-img-wrapper">
+                            <img class="img-fluid" alt="" src="assets/images/team/team3.jpg">
+                        </div>
+                        <div class="ts-team-content">
+                            <h3 class="team-name">Craig Robinson</h3>
+                            <p class="team-designation">Broker</p>
+                        </div>
+
+                        <!-- social-icons-->
+                    </div>
+                    <!-- Team wrapper 1 end-->
+                </div>
+                <!-- Col end-->
+                <div class="col-lg-3 col-md-12">
+                    <div class="ts-team-wrapper">
+                        <div class="team-img-wrapper">
+                            <img class="img-fluid" alt="" src="assets/images/team/team4.jpg">
+                        </div>
+                        <div class="ts-team-content">
+                            <h3 class="team-name">Andrew Robinson</h3>
+                            <p class="team-designation">Broker</p>
+                        </div>
+                        <!-- Team content end-->
+                        <div class="team-social-icons"><a target="_blank" href="#"><i class="fa fa-facebook"></i></a><a
+                                target="_blank" href="#"><i class="fa fa-twitter"></i></a>
+                            <a target="_blank" href="#"><i class="fa fa-google-plus"></i></a><a target="_blank" href="#"><i
+                                    class="fa fa-linkedin"></i></a>
+                        </div>
+                        <!-- social-icons-->
+                    </div>
+                    <!-- Team wrapper 1 end-->
+                </div>
+                <!-- Col end-->
+
+                <div class="col-lg-6 qutoe-form-inner-left">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!4v1631354955003!6m8!1m7!1sVAaiSAGL2C6lmQKN1pyF7w!2m2!1d38.67938172540038!2d-90.37441944939471!3f155.28547314814654!4f2.968975602603308!5f0.7820865974627469"
+                        width="100%" height="600" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+                </div>
 
 
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/2.png" alt="client">
             </div>
-
-
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/3.png" alt="client">
-            </div>
-
-
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/4.png" alt="client">
-            </div>
-
-
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/5.png" alt="client">
-            </div>
-
-
-            <div class="col-xs-12 col-sm-6 col-md-2 client">
-                <img class="center-block" src="assets/images/clients/6.png" alt="client">
-            </div>
-
+            <!-- Content row end-->
         </div>
+        <!-- Container end-->
+    </section>
+    <!-- Section Team end-->
+    <section class="bg-overlay ts-chart">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12">
+                    <img src="assets/images/investorm-certificate.png" width="100%">
+                </div>
 
-    </div>
+            </div>
+            <!-- Content row end-->
+        </div>
+        <!-- Container end-->
+    </section>
+    <!-- Section chart end-->
 
-</section>
-
-{include file="theme/public/components/section-latest-news.tpl"}
-
-{include file="theme/public/footer.tpl"}
+{/block}

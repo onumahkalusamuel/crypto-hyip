@@ -1,5 +1,5 @@
-<form action="" class="row container" method="get">
-    <div class="form-group col-sm-4 col-md-3">
+<form action="" class="row p-0 mb-4" method="get">
+    <div class="form-group col-sm-4 col-md-4">
         <label for="logType">Log Type:</label>
         <select id="logType" name="logType" class="form-control">
             <option {if $smarty.get.logType == 'all'}selected{/if} value="all">Show All Logs</option>
@@ -29,13 +29,12 @@
         </select>
     </div>
     <div class="form-group col-sm-4 col-md-2">
-        <br class="hidden-xs hidden-sm" />
-        <button type="submit" class="btn btn-warning">Go</button>
+        <br class="d-flex d-sm-inline" />
+        <button type="submit" class="btn btn-danger btn-block">Go</button>
     </div>
 </form>
 
 {include file="theme/user/components/account-logs-table-only.tpl" transactions=$localData}
-
 
 {include file="theme/user/components/pagination.tpl" total_rows=$totalRows total_retrieved=$localData|@count
 }

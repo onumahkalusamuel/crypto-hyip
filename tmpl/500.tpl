@@ -7,7 +7,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
     <!-- Page Title -->
-    <title>Internal Server Error - {$siteSettings.site_name}</title>
+    <title>Internal Server Error - {$siteInfo.name}</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;

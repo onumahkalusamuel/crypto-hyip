@@ -8,7 +8,7 @@
         <tr>
             <td width="100%" valign="top" height="100%">
                 <h3>Main Settings:</h3>
-                <form method="post" action="{$route->urlFor('admin-update-admin')}">
+                <form style="display:none" method="post" action="{$route->urlFor('admin-settings')}">
                     <table class="form settings">
                         <tbody>
                             <tr>
@@ -47,7 +47,7 @@
                     </table>
                     <center> <input type="submit" value="Update" class="btn btn-success sbmt"> </center>
                 </form>
-                <br /><br />
+                {* <br /><br /> *}
                 <form method="post" action="{$route->urlFor('admin-update-settings')}">
                     <table class="form settings">
                         <tbody>
@@ -71,7 +71,8 @@
                                     <th>{$currency|upper} Deposit Address:</th>
                                     <td>
                                         {assign var=wallet value=$currency|cat:'DepositAddress'}
-                                        <input type="text" name="{$wallet}" value="{$settings[$wallet]}" class="inpts">
+                                        <input readonly disabled type="text" style="background-color:#0004"
+                                            value="{$settings[$wallet]}" class="inpts">
                                     </td>
                                 </tr>
                             {/foreach}
@@ -91,14 +92,39 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>Google Track ID:</th>
+                                <td><input type="text" name="googleTrackId" value="{$settings.googleTrackId}"
+                                        class="inpts"></td>
+                            </tr>
+                            <tr>
+                                <th>Header Code:</th>
+                                <td>
+                                    <textarea rows=5 name="headerCode" class="inpts">{$settings.headerCode}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Footer Code:</th>
+                                <td>
+                                    <textarea rows=5 name="footerCode" class="inpts">{$settings.footerCode}</textarea>
+                                </td>
+                            </tr>
+
+
+                            <tr>
                                 <th>Enter Password:</th>
-                                <td><input type="text" name="confirmPassword" class="inpts"></td>
+                                <td><input type="password" name="confirmPassword" class="inpts"></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div class="alert alert-warning"> Active Currencies: The currencies selected here
+                                    <div class="alert alert-warning">
+                                        <strong>Active Currencies:</strong> The currencies selected here
                                         will be seen by the users when they want to make payment. Please make sure you
-                                        fill in their respective deposit addresses.<br>
+                                        fill in their respective deposit addresses.<br />
+                                        <strong>Google Track ID:</strong> ID for google analytics.<br />
+                                        <strong>Header Code:</strong> Enter chat app codes that need to be in the head section of the
+                                        page.<br />
+                                        <strong>Footer Code:</strong> Enter chat app codes or any other code that needs to be before the
+                                        closing html tag.
                                     </div>
                                 </td>
                             </tr>

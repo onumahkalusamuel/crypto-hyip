@@ -290,11 +290,14 @@ class Repository
     public function delete(array $props): bool
     {
         [
-            'ID' => $ID
+            'ID' => $ID,
+            'params' => $params
         ] = $props + $this->CHILD_DEFAULTS + self::DEFAULTS;
 
-        $__ = $this->connection->table($this->table)
-            ->where(['ID' => $ID]);
+        $__ = $this->connection->table($this->table);
+
+        if (!empty($params)) $__->where($params);
+        if (!empty($ID))    $__->where(['ID' => $ID]);
 
         return $__->delete();
     }

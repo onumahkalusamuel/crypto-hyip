@@ -1,81 +1,59 @@
-{include file='theme/user/header.tpl' pageTitle='Withdrawals' active="withdrawals"}
+{assign var="active" value="withdrawals"}
+{extends file="theme/user/layout.tpl"}
+{block name=title}Withdrawal{/block}
 
 {assign var=withdrawal value=$data.withdrawal}
+{block name="body"}
 
-<section id="page-title" class="page-title bg-overlay bg-overlay-dark bg-parallax">
-    <div class="bg-section">
-        <img src="assets/images/page-titles/18.jpg" alt="Background" />
-    </div>
-    <div class="container">
+    <div class="content-wrapper">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="title title-6 text-center" style="padding:150px 0 50px">
-                    <div class="title--heading">
-                        <h1 style="font-size:4em">Withdrawal</h1>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                        <h3 class="font-weight-bold">Withdrawal #{$withdrawal->ID}</h3>
                     </div>
-                    <div class="clearfix"></div>
-                    <ol class="breadcrumb">
-                        <li><a href="{$route->urlFor('user-dashboard')}">Dashboard</a></li>
-                        <li class="active">Withdrawal</li>
-                    </ol>
+                </div>
+            </div>
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Withdrawal details</h4>
+                        <p class="card-description">
+                            Here are the details of this withdrawal.
+                        </p>
+                        <div>
+                            <div class="form-group">
+                                <label>Withdrawal Request Date</label>
+                                <input class="form-control" readonly value="{$withdrawal->createdAt}" />
+                            </div>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input class="form-control" readonly value="{$withdrawal->userName}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Method</label>
+                                <input class="form-control" readonly value="{$withdrawal->cryptoCurrency|upper}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Withdrawal Address</label>
+                                <input class="form-control" readonly value="{$withdrawal->withdrawalAddress}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Amount Requested</label>
+                                <input class="form-control" readonly value="{$withdrawal->amount}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Withdrawal Status</label>
+                                <input class="form-control" readonly value="{$withdrawal->withdrawalStatus}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Message from Admin</label>
+                                <input class="form-control" readonly value="{$withdrawal->messageFromAdmin}" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-
-<section>
-    <div class="container">
-        <div class="row mb-60">
-            <h3 class="section-title">Withdrawal #{$withdrawal->ID}</h3>
-            <div class="container">
-                <div class="content-container">
-                    <div class="item">
-                        <div class="title">Withdrawal Request Date:</div>
-                        <div class="content">{$withdrawal->createdAt}</div>
-                    </div>
-                    <div class="item">
-                        <div class="title">Username:</div>
-                        <div class="content">{$withdrawal->userName}</div>
-                    </div>
-                    <div class="item">
-                        <div class="title">Crypto Currency:</div>
-                        <div class="content">{$withdrawal->cryptoCurrency}&nbsp;
-                            <img src="currencies/{$withdrawal->cryptoCurrency}.gif"
-                                alt="{$withdrawal->cryptoCurrency|upper}" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="title">Withdrawal Address:</div>
-                        <div class="content">{$withdrawal->withdrawalAddress}</div>
-                    </div>
-
-                    <div class="item">
-                        <div class="title">Amount Requested:</div>
-                        <div class="content">
-                            {$withdrawal->amount}
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="title">Withdrawal Status:</div>
-                        <div class="content">
-                            <small class="badge text-uppercase {$withdrawal->withdrawalStatus}">
-                                {$withdrawal->withdrawalStatus}
-                            </small>
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="title">Message From Admin:</div>
-                        <div class="content">
-                            {$withdrawal->messageFromAdmin}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-{include file='theme/user/footer.tpl'}
+{/block}

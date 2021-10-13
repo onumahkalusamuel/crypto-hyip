@@ -12,10 +12,8 @@ class SendMail
     private $settings;
     private $siteName;
     private $siteUrl;
-    private  $contactPhone;
     private  $contactName;
     private  $contactEmail;
-    private  $contactAddress;
     private $emailBanner;
 
     public function __construct(ContainerInterface $container)
@@ -26,11 +24,9 @@ class SendMail
         $smtp = $this->settings['smtp'];
 
         $this->contactName = $smtp['name'];
-        $this->siteName = $display['site_name'];
-        $this->contactPhone = $display['contact_phone'];
-        $this->contactAddress = $display['contact_address'];
-        $this->contactEmail = $display['contact_email'];
-        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+        $this->contactEmail = $smtp['email'];
+        $this->siteName = $display['name'];
+        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
         $this->emailBanner = $this->settings['assets_dir'] . '/email/email-banner.jpg';
 
         $mail = new PHPMailer(true);
@@ -128,11 +124,11 @@ class SendMail
         <img src='cid:banner'/><br/><br/>
         <h2>REGISTRATION SUCCESSFUL</h2><br/>
         Hello <strong>$name</strong>,<br/><br/>
-        Thank you for registration on our site.<br/>
+        Thank you for registering on our site.<br/>
         <strong>Your login information:</strong><br/><br/>
         <strong>Login:</strong> $username <br/>
         <strong>Password:</strong> <em>the password you chose </em><br/><br/>
-        You can login here: <a href='{$this->siteUrl}/'>{$this->siteName}</a><br/><br/>
+        You can login here: <a href='{$this->siteUrl}/login'>{$this->siteName}</a><br/><br/>
         Contact us immediately if you did not authorize this registration.<br/><br/>
         
         <br/><br/>
@@ -197,24 +193,33 @@ class SendMail
 
     public function sendWithdrawalSentEmail($email, $cryptoCurrency, $amount, $name, $username, $account, $batch)
     {
+        $transactionID = "#TNX" . strtoupper(substr($batch, 10, 8));
         $data['email'] = $email;
         $data['name'] = $name;
         $data['subject'] = "Withdrawal Sent - {$this->siteName}";
         $data['message'] = "
         <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/><br/>
-        <h2>WITHDRAWAL SUCCESSFUL</h2><br/>
-            Hello $name,<br/><br/>
-            Your withdrawal has been sent to your account successfully.<br/><br/>
-            Amount: $$amount<br/><br/>
-            Currency: " . strtoupper($cryptoCurrency) . "<br/><br/>
-            Account: $account<br/><br/>
-            Transaction batch: $batch.
-            <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>";
+            <img src='cid:banner'/><br/><br/>
+            <div style='text-align:left'>
+                Hello $name,<br/><br/>
+                <strong>Congratulations!</strong> <br/>
+                Your withdrawal request ($transactionID) has been successfully processed and a total of 
+                <strong>$$amount (in " . strtoupper($cryptoCurrency) . ")</strong> has been withdrawn from your account. Your funds transferred into your account 
+                as below.<br/><br/>
+                Payment Deposited:
+                <strong>$account</strong> (" . ($cryptoCurrency == 'pm' ? 'Perfect Money' : 'Crypto') . " Wallet). <br/><br/>
+                Withdrawal Reference: $batch<br/><br/>
+                If you have not received funds into your account yet, please feel free to contact us.<br/><br/><br/>
+
+                Best regards,
+                Team of OTB Capital.
+
+                <br/><br/>
+
+                &copy; " . date('Y', time()) . " {$this->siteName}
+                <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
+            </div>
+        </div>";
 
         $this->send($data);
 

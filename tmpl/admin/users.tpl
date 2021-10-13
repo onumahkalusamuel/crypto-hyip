@@ -61,40 +61,26 @@
                                             <tr>
                                                 <td>Since: {$user->createdAt}</td>
                                             </tr>
-                                            <tr>
-                                                {* <td>Upline: <a href="?a=user_refs&amp;id=2">demo</a></td> *}
-                                            </tr>
-                                            <tr>
-                                                <td> </td>
-                                            </tr>
+                                            {if $user->upliner ne ""}
+                                                <tr>
+                                                    <td style="color:blue">Upline: <i>{$user->upliner}</i></td>
+                                                </tr>
+                                            {/if}
                                         </tbody>
                                     </table>
                                 </td>
                                 <td>
                                     <table class="list sub" width="100%">
                                         <tbody>
-                                            <tr>
-                                                <td style="width:50%">BTC:</td>
-                                                <td>
-                                                    <b style="color:gray">${$user->btcBalance|string_format:"%.2f"}</b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>ETH:</td>
-                                                <td>
-                                                    <b style="color:gray">${$user->ethBalance|string_format:"%.2f"}</b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>DOGE:</td>
-                                                <td> <b style="color:gray">${$user->dogeBalance|string_format:"%.2f"}</b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>LTC:</td>
-                                                <td> <b style="color:gray">${$user->ltcBalance|string_format:"%.2f"}</b>
-                                                </td>
-                                            </tr>
+                                            {foreach from=$activeCurrencies item=currency}
+                                                <tr>
+                                                    <td style="width:50%">{$currency|upper}:</td>
+                                                    <td>
+                                                        {assign var=balance value=$currency|cat:'Balance'}
+                                                        <b style="color:gray">${$user->$balance|string_format:"%.2f"}</b>
+                                                    </td>
+                                                </tr>
+                                            {/foreach}
                                         </tbody>
                                     </table>
                                 </td>
@@ -102,7 +88,10 @@
                                     <a href="{$route->urlFor('admin-view-user', ['id' => $user->ID])}"
                                         class="sbmt btn-sm btn-success" style="margin-bottom:2px;">edit</a><br>
                                     <a href="{$route->urlFor('admin-view-user-funds', ['id' => $user->ID])}"
-                                        class="sbmt btn-sm btn-info" style="margin-bottom:2px;">funds</a>
+                                        class="sbmt btn-sm btn-info" style="margin-bottom:2px;">funds</a><br>
+                                    <a href="{$route->urlFor('admin-delete-user', ['id' => $user->ID])}"
+                                        onclick="return confirm('Delete this user? This action cannot be undone.');"
+                                        class="sbmt btn-sm btn-danger" style="margin-bottom:2px;">delete</a>
                                 </td>
                             </tr>
                             <tr>

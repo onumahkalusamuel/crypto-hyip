@@ -84,10 +84,8 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div class="alert alert-warning"> Active Currencies: The available currencies are
-                                        <strong>btc, eth, doge and ltc.</strong> When entering these values, separate
-                                        them with comma
-                                        only. <strong>and without spaces.</strong><br>
+                                    <div class="alert alert-warning"> Add Bonus: Enter the details of the bonus. A code
+                                        will be sent to admin email to confirm transaction.<br>
                                     </div>
                                 </td>
                             </tr>

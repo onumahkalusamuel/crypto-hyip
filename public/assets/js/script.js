@@ -4,7 +4,7 @@ function ajaxPost(elementId = 'form') {
 
     // create overlay
     var overlay = document.createElement('div');
-    overlay.innerHTML = '<div style="display:table;width:100%;height:100vh;position:fixed;top:0;left:0;text-align:center;background-color:#fff5;z-index:1000"><div style="display:table-cell;vertical-align:middle;padding-bottom:100px"><span style="color:white;background-color:#333;padding:10px;">please wait...</span></div></div>';
+    overlay.innerHTML = '<div style="display:table;width:100%;height:100vh;position:fixed;top:0;left:0;text-align:center;background-color:#fff5;z-index:1000"><div style="display:table-cell;vertical-align:middle;padding-bottom:100px"><span style="color:white;background-color:#0064cf;padding:15px;">please wait...</span></div></div>';
 
     document.body.appendChild(overlay);
 
