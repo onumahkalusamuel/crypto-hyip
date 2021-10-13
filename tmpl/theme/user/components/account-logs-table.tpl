@@ -1,5 +1,5 @@
-<form action="" class="row container p-0 mb-4" method="get">
-    <div class="form-group col-sm-4 col-md-3">
+<form action="" class="row p-0 mb-4" method="get">
+    <div class="form-group col-sm-4 col-md-4">
         <label for="logType">Log Type:</label>
         <select id="logType" name="logType" class="form-control">
             <option {if $smarty.get.logType == 'all'}selected{/if} value="all">Show All Logs</option>

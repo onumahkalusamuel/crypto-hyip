@@ -1,94 +1,258 @@
 {extends file="theme/public/layout.tpl"}
 {block name=title}FAQs{/block}
 {block name=body}
-    <section class="page-title-area bg_cover hide-overflow" style="background-image: url(assets/images/page-title-bg.jpg);">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="page-title-content text-center">
-                        <h3 class="title">FAQs</h3>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{$route->urlFor('home')}">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">FAQs</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="what-we-do-area bg_cover pb-120 hide-overflow"
-        style="background-image: url(assets/images/what-we-do-bg.jpg);">
+
+    <div class="banner-area" id="banner-area" style="background-image:url(assets/images/banner/banner5.jpg);">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="section-title text-center">
-                        <h3 class="title">FAQ's</h3>
-                    <p>believe in creativity &ndash; pushing through the challenge</p>
-                    <img src="assets/images/title-cross.png" alt="" />
+                <div class="col">
+                    <div class="banner-heading">
+                        <h1 class="banner-title">FAQs</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{$route->urlFor('home')}">Home</a></li>
+                            <li>FAQs</li>
+                        </ol>
+                    </div>
                 </div>
+                <!-- Col end-->
             </div>
+            <!-- Row end-->
         </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-12 col-md-12">
-                <div class="what-we-do-item text-center mt-30"><img src="assets/images/do-1.png" alt="" />
-                    <h3 class="title">Frequently Asked Questions</h3>
-                    <p style="text-align: justify;"><strong>How can I invest with {$siteInfo.name} ?</strong><br />To
-                        make
-                        a investment you must first become a member of {$siteInfo.name}. Once you are signed up, you
-                        can
-                        make your first deposit. All deposits must be made through the Members Area. You can login using
-                        the member username and password you receive when signup. <br /><br /><strong>I wish to invest
-                            with {$siteInfo.name} but I don't have an any ecurrency account. What should I
-                                do?</strong><br />You can open a free PM account here: <a
-                                style="display: inline !important;"
-                                href="http://www.perfectmoney.is/">www.perfectmoney.is</a><br /><br /><strong>How do I open
-                                my {$siteInfo.name} Account?</strong><br />It's quite easy and convenient. Follow this <a
-                            style="display: inline !important;"
-                            href="{$route->urlFor('page', ['page' => 'register'])}">link</a>, fill in the
-                        registration form and then press "Register". <br /><br /><strong>Which e-currencies do you
-                            accept?</strong><br />We accept e-currencies. <br /><br /><strong>How can I withdraw
-                            funds?</strong><br />Login to your account using your username and password and check the
-                        Withdraw section. <br /><br /><strong>How long does it take for my deposit to be added to my
-                            account?</strong><br />Your account will be updated as fast, as you deposit.
-                        <br /><br /><strong>How can I change my e-mail address or password?</strong><br />Log into your
-                        {$siteInfo.name} account and click on the "Account Information". You can change your e-mail
-                        address
-                        and password there. <br /><br /><strong>What if I can't log into my account because I forgot my
-                                password?</strong><br />Click <a style="display: inline !important;"
-                                href="{$route->urlFor('page', ['page' => 'reset-password'])}">forgot password</a> link, type
-                            your username or
-                            e-mail and you'll receive your account information. <br /><br /><strong>Does a daily profit paid
-                            directly to my currency account?</strong><br />No, profits are gathered on your
-                        {$siteInfo.name} account and you can withdraw them anytime. <br /><br /><strong>How do you
-                            calculate the interest on my account?</strong><br />Depending on each plan. Interest on your
-                        {$siteInfo.name} account is acquired Daily, Weekly, Bi-Weekly, Monthly and Yearly and
-                        credited to
-                        your available balance at the end of each day. <br /><br /><strong>Can I do a direct deposit
-                            from my account balance?</strong><br />Yes! To make a deposit from your {$siteInfo.name}
-                        account balance. Simply login into your members account and click on Make Deposit ans select the
-                        Deposit from Account Balance Radio button. <br /><br /><strong>Can I make an additional deposit
-                            to {$siteInfo.name} account once it has been opened?</strong><br />Yes, you can but all
-                        transactions are handled separately. <br /><br /><strong>After I make a withdrawal request, when
-                            will the funds be available on my ecurrency account?</strong><br />Funds are usually
-                        available instantly. <br /><br /><strong>How can I change my password?</strong><br />You can
-                        change your password directly from your members area by editing it in your personal profile.
-                        <br /><br /><strong>How can I check my account balances?</strong><br />You can access the
-                        account information 24 hours, seven days a week over the Internet. <br /><br /><strong>May I
-                            open several accounts in your program?</strong><br />No. If we find that one member has more
-                        than one account, the entire funds will be frozen. <br /><br /><strong>How can I make a
-                            spend?</strong><br />To make a spend you must first become a member of {$siteInfo.name} .
-                        Once
-                        you are signed up, you can make your first spend. All spends must be made through the Member
-                        Area. You can login using the member username and password you received when signup.
-                        <br /><br /><strong>Who manages the funds?</strong><br />These funds are managed by a team of
-                        {$siteInfo.name} investment experts. <br /><br />
-                        </p>
+        <!-- Container end-->
+    </div>
+    <!-- Banner area end-->
+
+    <section class="section_2">
+        <div class="container">
+            <div class="section-heading">
+                <h4>Have Any Questions?</h4>
+                <div class="section-heading-line-left"></div>
+            </div>
+            <div class="row mt-40">
+                <div class="col-md-6 col-sm-6 col-12">
+                    <div class="pr-30-md">
+                        <div class="panel-group mt-10" id="accordion2" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc1">
+                                    <h4 class="panel-title accordion-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#ac_col1"
+                                            aria-expanded="true" aria-controls="ac_col1">What is {$siteInfo.name}? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="acc1">
+                                    <div class="panel-body accordion-body">
+                                        {$siteInfo.name} is founded by a team of professional Forex &amp; Crypto traders who
+                                        know exactly what it takes to earn the most from capital market. Our company
+                                        provides a full investment service focused on the Forex and cryptocurrency trading
+                                        market. Each trader in our company has more than 7 years of trading experience and
+                                        successful trading records, as we know that is the exact point that support our
+                                        company stability and profitability.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc2">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col2" aria-expanded="false" aria-controls="ac_col2"> Is {$siteInfo.name}
+                                            officially registered?</a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc2">
+                                    <div class="panel-body accordion-body">
+                                        Yes. {$siteInfo.name} is a legally registered investment company incorporated and
+                                        headquartered in London, England. <a href="assets/images/investorm-certificate.png" target="_blank">Click
+                                            Here to view our registration.</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc3">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col3" aria-expanded="false" aria-controls="ac_col3"> Who can create an
+                                            account with {$siteInfo.name}? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc3">
+                                    <div class="panel-body accordion-body">
+                                        Any individual or legitimate entity can avail our services. However, you need to be
+                                        of legal age in your jurisdiction in order to create an account with us.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc4">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col4" aria-expanded="false" aria-controls="ac_col4"> How do I create
+                                            my account with {$siteInfo.name}? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc4">
+                                    <div class="panel-body accordion-body">
+                                        Registration process is very easy and will take a few moments to complete. Simply
+                                        click "Register" button on the top right of our website and fill in all the required
+                                        fields.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc5">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col5" aria-expanded="false" aria-controls="ac_col5"> Can I have more
+                                            than one account with you?</a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc5">
+                                    <div class="panel-body accordion-body">
+                                        Yes, you can.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc6">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col6" aria-expanded="false" aria-controls="ac_col6">What do I need to
+                                            start trading or investing with {$siteInfo.name}? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc6">
+                                    <div class="panel-body accordion-body">
+                                        First of all, you need to register a new account, make a deposit of at least $20
+                                        through the popular payment systems before proceeding with option trading or
+                                        investment.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc7">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col7" aria-expanded="false" aria-controls="ac_col7"> How many times
+                                            can a user make deposits into their account? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc7">
+                                    <div class="panel-body accordion-body">
+                                        A user can make deposits in his or her account as and when they want. There is no
+                                        limitation on the number of deposits that a user can make into their account.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-12">
+                    <div class="pr-30-md">
+                        <div class="panel-group mt-10" id="accordion2" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc8">
+                                    <h4 class="panel-title accordion-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#ac_col8"
+                                            aria-expanded="true" aria-controls="ac_col8"> What payment methods can I use to
+                                            make a deposit? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col8" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="acc8">
+                                    <div class="panel-body accordion-body">
+                                        Currently we accept Bitcoin, Ethereum and BitcoinCash.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc9">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col9" aria-expanded="false" aria-controls="ac_col9"> What is the
+                                            Minimum / Maximum amount allowed to deposit? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc9">
+                                    <div class="panel-body accordion-body">
+                                        As for investment and contract plans, the minimum and maximum investment capital is
+                                        specified on each plan.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc10">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col10" aria-expanded="false" aria-controls="ac_col10"> Can I make
+                                            reinvestments? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc10">
+                                    <div class="panel-body accordion-body">
+                                        Yes, you can reinvest.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc11">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col11" aria-expanded="false" aria-controls="ac_col11"> Do I get my
+                                            investment principal back? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc11">
+                                    <div class="panel-body accordion-body">
+                                        Yes, on expiration of the activated portfolio, the capital will be returned to your
+                                        trading account.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc12">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col112" aria-expanded="false" aria-controls="ac_col112"> What is the
+                                            minimum amount for withdrawal? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col112" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc12">
+                                    <div class="panel-body accordion-body">
+                                        The minimum withdrawal amount is $20.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc13">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col13" aria-expanded="false" aria-controls="ac_col13"> Are there any
+                                            fees to withdraw my funds? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col13" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc13">
+                                    <div class="panel-body accordion-body">
+                                        There are no any hidden fees to withdraw your funds.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-grey accordion">
+                                <div class="panel-heading accordion-heading" role="tab" id="acc14">
+                                    <h4 class="panel-title accordion-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2"
+                                            href="#ac_col14" aria-expanded="false" aria-controls="ac_col14"> Do you have an
+                                            affiliate program? </a>
+                                    </h4>
+                                </div>
+                                <div id="ac_col14" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acc14">
+                                    <div class="panel-body accordion-body">
+                                        Yes, you will get 5% referral commission on your referrals.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
-
 {/block}

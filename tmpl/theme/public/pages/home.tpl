@@ -11,12 +11,12 @@
         <!-- Indicators end-->
         <!-- Carousel inner-->
         <div class="carousel-inner">
-            <div class="carousel-item active" style="background-image:url(images/earn1.jpg);">
+            <div class="carousel-item active" style="background-image:url(assets/images/earn1.jpg);">
                 <div class="container">
                     <div class="slider-content text-left">
                         <div class="col-md-12">
                             <h2 class="slide-title title-light">Your future is created by you</h2>
-                            <h3 class="slide-sub-title">Welcome to Icg-financial</h3>
+                            <h3 class="slide-sub-title">Welcome to {$siteInfo.name}</h3>
                             <p class="slider-description lead">We deliver excellence to every client, every time.
                                 We value our relationship, and ensure we are exceeding expectations.</p>
                             <p>
@@ -33,14 +33,14 @@
                 <!-- Container end-->
             </div>
             <!-- Carousel item 1 end-->
-            <div class="carousel-item" style="background-image:url(images/earn2.jpg);">
+            <div class="carousel-item" style="background-image:url(assets/images/earn2.jpg);">
                 <div class="container">
                     <div class="slider-content text-center">
                         <div class="col-md-12">
                             <h3 class="slide-sub-title">We provide solutions to<br>Earn Passively</h3>
                             <p>
                                 <a class="slider btn btn-primary"
-                                    href="{$route->urlFor('page', ['page' => 'our-services'])}">Our Services</a>
+                                    href="{$route->urlFor('page', ['page' => 'faqs'])}">FAQs</a>
                                 <a class="slider btn btn-border" href="{$route->urlFor('login')}">Login</a>
                             </p>
                         </div>
@@ -51,12 +51,12 @@
                 <!-- Container end-->
             </div>
             <!-- Carousel item 1 end-->
-            <div class="carousel-item" style="background-image:url(images/slider/bg1.jpg);">
+            <div class="carousel-item" style="background-image:url(assets/images/slider/bg1.jpg);">
                 <div class="container">
                     <div class="slider-content text-right">
                         <div class="col-md-12">
                             <h2 class="slide-title title-light">Your future is created by you</h2>
-                            <h3 class="slide-sub-title">Welcome to Icg-financial</h3>
+                            <h3 class="slide-sub-title">Welcome to {$siteInfo.name}</h3>
                             <p class="slider-description lead">We deliver excellence to every client, every time.
                                 We value our relationship, and ensure we are exceeding expectations.</p>
                             <p>
@@ -89,7 +89,7 @@
     <section class="ts-about-intro" id="ts-about-intro">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <span style="background:blue !important; margin-top:-50px; display:block">
 
                         <script type="text/javascript">
@@ -170,11 +170,6 @@
                     </div>
                     <!-- container row end-->
                 </div>
-                <!-- Col end-->
-                <div class="col-lg-6">
-                    <img class="img-fluid" src="assets/images/icg1.png" alt="">
-                </div>
-                <!-- Col end-->
             </div>
             <!-- Main row end-->
         </div>
@@ -219,7 +214,7 @@
                                 <div class="row">
                                     <div class="col-lg-4 align-self-center">
                                         <div class="bg-contain-verticle"
-                                            style="background-image:url(images/tabs/tab-shape.png);">
+                                            style="background-image:url(assets/images/tabs/tab-shape.png);">
                                             <img class="img-center img-fluid" src="assets/images/tabs/img1.png" alt="">
                                         </div>
                                     </div>
@@ -261,7 +256,7 @@
                                         <!-- Col end-->
                                         <div class="col-lg-4 align-self-center">
                                             <div class="bg-contain-verticle align-self-center"
-                                                style="background-image:url(images/tabs/tab-shape.png);">
+                                                style="background-image:url(assets/images/tabs/tab-shape.png);">
                                                 <img class="img-center img-fluid" src="assets/images/tabs/img2.png" alt="">
                                             </div>
                                         </div>
@@ -347,11 +342,8 @@
 
                     {getInvestmentPlans out=investment_plans}
                     {foreach from=$investment_plans item=ivp key=key}
-                        <div class="col-lg-4">
+                        <div class="col-lg-4 mb-2">
                             <div class="plan featured text-center">
-                                <div class="price-icon-wrapper">
-                                    <i class=""></i>
-                                </div>
                                 <h2 class="plan-name">{$ivp->title}</h2>
                                 <h3 class="plan-price">
                                     <sup class="currency">$</sup>
@@ -379,10 +371,6 @@
             </div>
             <!-- Container End -->
         </div>
-
-        <div class="ts-price-box solid-bg">
-
-        </div>
     </section>
     <!-- main Container End -->
 
@@ -390,7 +378,7 @@
     <section class="bg-overlay ts-chart">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5 col-md-12">
+                <div class="col-lg-8 col-md-12">
                     <h2 class="column-title title-white"><span>REFERRAL BENEFITS</h2>
                     <p class="intro-desc">As a way of compensating investors who introduce friends and family into
                         the company, {$siteInfo.name} offers a generous 6% of the new investor initial deposit.
@@ -589,13 +577,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 col-md-12">
-                <img src="assets/images/ICG.jpg" width="100%">
+                <img src="assets/images/investorm-certificate.jpg" width="100%">
             </div>
-
-            <div class="col-lg-5 col-md-12">
-                <img src="assets/images/icgcert.png" width="100%">
-            </div>
-
         </div>
         <!-- Content row end-->
     </div>

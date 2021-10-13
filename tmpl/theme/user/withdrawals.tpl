@@ -2,55 +2,60 @@
 {extends file="theme/user/layout.tpl"}
 {block name=title}Withdrawals{/block}
 {block name=body}
-    <div class="nk-block">
-        <div class="container">
-            <div class="row mb-5">
-                <h4>Make Withdrawal</h4>
-                <form id="new_withdrawal" class="container p-0" action="{$route->urlFor('user-withdrawals')}" method="post"
-                    onsubmit="return ajaxPost('new_withdrawal')">
-                    <div class="content-container">
-                        <div class="item">
-                            <div class="title">Minimum Withdrawal Amount:</div>
-                            <div class="content"><strong>${$data.min_withdrawal}</strong>.<br />
-                                <small><em>You must have the minimum withdrawal amount for withdrawal to be active.</em></small>
-                            </div>
-                        </div>
 
-                        <div class="item">
-                            <div class="title">Select Wallet Currency:</div>
-                            <div class="content">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                        <h3 class="font-weight-bold">Withdrawals</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Place a withdrawal request.</h4>
+                        <p class="card-description">
+                            Fill out the form below to place a new withdrawal request. Mininum withrawal amount is
+                            <strong>${$data.min_withdrawal}</strong> Only balances that are up to the minimum will be
+                            available from the dropdown below.
+                        </p>
+                        <form id="new_withdrawal" class="forms-sample" action="{$route->urlFor('user-withdrawals')}"
+                            method="post" onsubmit="return ajaxPost('new_withdrawal')">
+                            <div class="form-group">
+                                <label for="planID">Select Wallet</label>
                                 <select id="cryptoCurrency" name="cryptoCurrency" class="form-control" required>
                                     {foreach $data.wallets as $wa}
-                                        <option
-                                            {if $wa.balance lt $data.min_withdrawal || $wa.addressIsSet ne 'true'}disabled{/if}
-                                            value="{$wa.ID}">
+                                        <option {if $wa.balance lt $data.min_withdrawal || $wa.addressIsSet ne 'true'}disabled
+                                            {/if} value="{$wa.ID}">
                                             {$wa.title} (${$wa.balance})
                                         </option>
                                     {/foreach}
                                 </select>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="title">Withdrawal Amount</div>
-                            <div class="content">
+                            <div class="form-group">
+                                <label for="amount">Withdrawal Amount</label>
                                 <input class="form-control" id="amount" type="number" name="amount"
                                     min="{$data.min_withdrawal}" required />
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="title"></div>
-                            <div class="content">
-                                <button type="submit" class="btn btn-primary">Make Withdrawal</button>
-                            </div>
-                        </div>
+                            <button type="submit" class="btn btn-primary mr-2">Make Withdrawal</button>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-
-            <div class="row mb-5">
-                <h4>Withdrawal History</h4>
-                {include file="theme/user/components/withdrawals-table.tpl" localData=$data.withdrawals.data totalRows=$data.withdrawals.total_rows}
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Withdrawals history</h4>
+                        <p class="card-description">
+                            Below is a list of your withdrawals so far.
+                        </p>
+                        {include file="theme/user/components/withdrawals-table.tpl" localData=$data.withdrawals.data totalRows=$data.withdrawals.total_rows}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 {/block}

@@ -1,11 +1,32 @@
-{extends file="theme/public/auth/layout.tpl"}
+{extends file="theme/public/layout.tpl"}
 {block name=title}Register{/block}
 {block name=body}
-    <div class="card card-bordered">
-        <div class="card-inner card-inner-lg">
+
+    <div class="banner-area" id="banner-area" style="background-image:url(assets/images/banner/banner5.jpg);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="banner-heading">
+                        <h1 class="banner-title">Register</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{$route->urlFor('home')}">Home</a></li>
+                            <li>Register</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Col end-->
+            </div>
+            <!-- Row end-->
+        </div>
+        <!-- Container end-->
+    </div>
+    <!-- Banner area end-->
+
+    <div class="card card-bordered container col-md-6 col-lg-4 mb-5">
+        <div class="card-inner card-inner-lg mb-5">
             <div class="nk-block-head">
                 <div class="nk-block-head-content">
-                    <h4 class="nk-block-title">Create an Account</h4>
+                    <h4 class="nk-block-title mt-5">Create an Account</h4>
                     <div class="nk-block-des mt-2">
                         <p>Sign up with your email and get started with your free account.</p>
                     </div>

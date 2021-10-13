@@ -8,16 +8,10 @@
 $settings = [];
 
 // The name of the website
-$settings['name'] = 'OTB Capital';
+$settings['name'] = 'Investorm';
 
 // contact email
-$settings['email'] = 'info@otb-capital.ltd';
-
-// contact phone number. to be shown whereever contact is needed
-// $settings['phone'] = '+x xxx xxxx';
-
-// whatsapp number of site
-// $settings['whatsapp'] = '+x xxx xxxx';
+$settings['email'] = 'admin@investorm.ltd';
 
 // the address of company
 $settings['address'] = '130 Old Street, London England, EC1V 9BD.';

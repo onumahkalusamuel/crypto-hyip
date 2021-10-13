@@ -2,11 +2,11 @@
 
 {if $total_rows}
     <div class="container mt-3 mb-3 text-center">
-        <div class="col-xs-12" style="font-size: 1.2em;">
-            <strong>Total Records: {$total_rows}</strong> ---
+        <div class="col-xs-12" style="font-size: 1.1em; line-height:2">
+            <strong>Total Records: {$total_rows}</strong> <br/>
             <strong>Records Retrieved: {$total_retrieved}</strong>
         </div>
-        <div class="col-xs-12 mt-2 d-flex justify-content-center">
+        <div class="col-xs-12 mt-4 d-flex justify-content-center">
             <ul class="pagination">
                 <li class="page-item">
                     <a {if $links.first_page_link !== $links.current_page_link} href="{$links.first_page_link}" {/if}

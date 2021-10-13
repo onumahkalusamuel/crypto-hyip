@@ -22,44 +22,53 @@
     </div>
 </form>
 
-<div class="container p-0">
-    <div class="content-container">
-        <div class="item">
-            <div class="title content">Details</div>
-            <div class="title content text-left text-lg-center">Amount</div>
-            <div class="title content">Action</div>
-        </div>
-
-        {if !empty($localData) }    
-            {foreach from=$localData key=index item=trans}
-                <div class="item">
-                    <div class="content text-uppercase">
-                        <strong>
-                            {$trans->userName}
-                        </strong>&nbsp;
-                        <small class="badge {$trans->withdrawalStatus}">{$trans->withdrawalStatus}</small>
-                    </div>
-                    <div class="content text-left text-lg-center">
-                        ${$trans->amount}<br class="d-none d-lg-inline" />
-                        <img src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
-                    </div>
-                    <div class="content">
-                        <a href="{$route->urlFor('user-view-withdrawal', ['id' => $trans->ID])}"
-                            class="btn btn-primary">VIEW</i></a><br />
-                        {if $trans->withdrawalStatus === "pending"}
-                            <a href="{$route->urlFor('user-delete-withdrawal', ['id'=> $trans->ID])}" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to cancel this withdrawal request?')">CANCEL</i></a>
-                        {/if}
-                    </div>
-                </div>
-            {/foreach}
-        {else}
-            <div class="item">
-                <div class="content">
-                    No data found.
-                </div>
-            </div>
-        {/if}
-    </div>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Details</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {if !empty($localData)}
+                {foreach from=$localData key=$index item=$trans}
+                    <tr>
+                        <td>
+                            <strong>
+                                {$trans->userName}
+                            </strong>&nbsp;
+                            <small class="badge 
+                                {if $trans->withdrawalStatus === "pending"}badge-warning{/if}
+                                {if $trans->withdrawalStatus === "approved"}badge-success{/if}
+                                {if $trans->withdrawalStatus === "declined"}badge-danger{/if}
+                            ">{$trans->withdrawalStatus}</small>
+                        </td>
+                        <td>
+                            ${$trans->amount|string_format:"%.2f"}<br class="d-none d-lg-inline" />
+                            <img style="width: unset; height:unset; border-radius:unset"
+                                src="currencies/{$trans->cryptoCurrency}.gif" alt="{$trans->cryptoCurrency|upper}" />
+                        </td>
+                        <td class="text-danger">
+                            <a href="{$route->urlFor('user-view-withdrawal', ['id' => $trans->ID])}" title="View full details"
+                                class="btn btn-primary btn-sm mb-1"><i class="icon-eye"></i></a>
+                            {if $trans->withdrawalStatus === "pending"}
+                                <a href="{$route->urlFor('user-delete-withdrawal', ['id'=> $trans->ID])}"
+                                    class="btn btn-danger btn-sm mb-1" title="Delete record"
+                                    onclick="return confirm('Are you sure you want to cancel this withdrawal request?')"><i
+                                        class="icon-trash"></i></a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
+            {else}
+                <tr>
+                    <td colspan="3">No data found.</td>
+                </tr>
+            {/if}
+        </tbody>
+    </table>
 </div>
+
 {include file="theme/user/components/pagination.tpl" total_rows=$totalRows total_retrieved=$localData|@count}

@@ -1,23 +1,26 @@
 {extends file="theme/public/layout.tpl"}
 {block name=title}Contact Us{/block}
 {block name=body}
-    <section class="page-title-area bg_cover hide-overflow" style="background-image: url(assets/images/page-title-bg.jpg);">
+
+    <div class="banner-area" id="banner-area" style="background-image:url(assets/images/banner/banner5.jpg);">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="page-title-content text-center">
-                        <h3 class="title">Contact Us</h3>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{$route->urlFor('home')}">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
-                            </ol>
-                        </nav>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="banner-heading">
+                        <h1 class="banner-title">Contact Us</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{$route->urlFor('home')}">Home</a></li>
+                            <li>Contact Us</li>
+                        </ol>
                     </div>
                 </div>
+                <!-- Col end-->
             </div>
+            <!-- Row end-->
         </div>
-    </section>
+        <!-- Container end-->
+    </div>
+    <!-- Banner area end-->
 
 
     <section class="what-we-do-area bg_cover pb-120 hide-overflow"

@@ -18,45 +18,44 @@
 </form>
 
 
-<div class="container p-0">
-    <div class="content-container">
-        <div class="item">
-            <div class="title content">Details</div>
-            <div class="title content text-left text-lg-center">Earned</div>
-            <div class="title content">Action</div>
-        </div>
-
-        {if !empty($localData)}
-            {foreach from=$localData key=index item=trans}
-                <div class="item">
-                    <div class="content">
-                        <strong>
-                            {$trans->referredUserName}
-                        </strong><br />
-                        <small>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Details</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {if !empty($localData)}
+                {foreach from=$localData item=$trans}
+                    <tr>
+                        <td style="line-height:1.5">
+                            <strong>
+                                {$trans->referredUserName}
+                            </strong><br />
                             <strong>Referred by:</strong>
                             {$trans->referralUserName}<br />
                             <strong>Date:</strong>
                             {$trans->createdAt}<br />
-                        </small>
-                    </div>
-                    <div class="content text-left text-lg-center">
-                        ${$trans->referralBonus}<br />
-                    </div>
-                    <div class="content">
-                        <a href="{$route->urlFor('user-view-referral', ['id' => $trans->ID])}"
-                            class="btn btn-primary">VIEW</i></a><br />
-                    </div>
-                </div>
-            {/foreach}
-        {else}
-            <div class="item">
-                <div class="content">
-                    No data found.
-                </div>
-            </div>
-        {/if}
-    </div>
+                        </td>
+                        <td>
+                            ${$trans->referralBonus|string_format:"%.2f"}<br />
+                        </td>
+                        <td>
+                            <a href="{$route->urlFor('user-view-referral', ['id' => $trans->ID])}" title="View full details"
+                                class="btn btn-primary btn-sm"><i class="icon-eye"></i></a><br />
+                        </td>
+                    </tr>
+                {/foreach}
+            {else}
+                <tr>
+                    <td colspan="3">No data found.</td>
+                </tr>
+            {/if}
+        </tbody>
+    </table>
 </div>
 
 {include file="theme/user/components/pagination.tpl" total_rows=$totalRows total_retrieved=$localData|@count}

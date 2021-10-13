@@ -5,7 +5,6 @@
 <head>
     <meta charset="utf-8">
     <base href="{$basePath}/" />
-    <title>Home </title>
     <meta name="author" content="Crypto HYIP Pro">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -20,7 +19,7 @@
     <!-- Animation-->
     <link rel="stylesheet" href="assets/css/animate.css">
     <!-- Morris Css -->
-    <link rel="stylesheet" href="assets/css/morris.css">
+    {* <link rel="stylesheet" href="assets/css/morris.css"> *}
     <!-- FontAwesome-->
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <!-- Icon font-->
@@ -35,7 +34,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Responsive styles-->
     <link rel="stylesheet" href="assets/css/responsive.css">
-    <link rel="stylesheet" type="text/css" href="sop.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/sop.css">
 
     <!-- google translate -->
     <style type="text/css">
@@ -127,7 +126,7 @@
                             <div class="navbar-brand navbar-header">
                                 <div class="logo">
                                     <a href="{$route->urlFor('home')}">
-                                        <img src="assets/images/logo.png" alt="">
+                                        <img src="assets/images/logo-large-dark.png" alt="">
                                     </a>
                                 </div>
                                 <!-- logo end-->
@@ -139,10 +138,9 @@
                                     class="navbar-toggler-icon"><i class="icon icon-menu"></i></span></button>
                             <!-- End of Navbar toggler-->
                             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item active">
+                                <ul class="navbar-nav" style="padding-right: unset!important;">
+                                    <li class="nav-item">
                                         <a class="nav-link" href="{$route->urlFor('home')}">Home</a>
-
                                     </li>
                                     <!-- li end-->
                                     <li class="nav-item">
@@ -151,47 +149,26 @@
                                     </li>
                                     <!-- li end-->
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="{$route->urlFor('page', ['page' => 'our-services'])}">Our
-                                            Services</a>
-                                    </li>
-                                    <!-- li end-->
-                                    <li class="nav-item">
                                         <a class="nav-link" href="{$route->urlFor('page', ['page' => 'faqs'])}">FaQs</a>
-
-                                    </li>
-                                    <!-- li end-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$route->urlFor('page', ['page' => 'news'])}">
-                                            News
-                                        </a>
-
                                     </li>
                                     <!-- li end-->
                                     <li class="nav-item">
                                         <a class="nav-link" href="{$route->urlFor('login')}">
                                             Login
                                         </a>
-
                                     </li>
-                                    <li class="nav-item dropdown">
+                                    <li class="nav-item">
                                         <a class="nav-link" href="{$route->urlFor('register')}">
                                             Register
                                         </a>
                                     </li>
-                                    <li class="nav-item" id="google_translate_element"></li>
+                                    <li class="nav-item" style="display:table">
+                                        <div style="display:table-cell; vertical-align:middle" class="nav-link" id="google_translate_element"></div> 
+                                    </li>
                                 </ul>
                                 <!--Nav ul end-->
                             </div>
                         </nav>
-                        <!-- Collapse end-->
-                        <div class="nav-search"><span id="search"><i class="icon icon-search"></i></span></div>
-                        <!-- Search end-->
-                        <div class="search-block" style="display: none;">
-                            <input class="form-control" type="text" placeholder="Search"><span
-                                class="search-close">×</span>
-                        </div>
-                        <!-- Site search end-->
                     </div>
                     <!-- Site nav inner end-->
                 </div>
@@ -235,10 +212,10 @@
                         <div class="col-lg-4 col-md-12 footer-widget footer-about">
                             <div class="footer-logo">
                                 <a href="{$route->urlFor('home')}">
-                                    <img style="background:#fff" src="assets/images/logo.png" alt="">
+                                    <img src="assets/images/logo-large-light.png" alt="">
                                 </a>
                             </div>
-                            <p>We are a awward winning multinational company. We believe in quality and standard
+                            <p>We are an award winning multinational company. We believe in quality and standard
                                 worldwide.</p>
 
                             <!-- Footer social end-->
@@ -250,30 +227,29 @@
                                 <li><a href="{$route->urlFor('page', ['page'=> 'about-us'])}">About Us</a></li>
                                 <li><a href="{$route->urlFor('login')}">Login</a></li>
                                 <li><a href="{$route->urlFor('register')}">Register</a></li>
-                                <li><a href="{$route->urlFor('page', ['page'=> 'faqs'])}">FaQs</a></li>
-                                <li><a href="{$route->urlFor('page', ['page'=> 'terms'])}">Terms and service</a></li>
-                                <li>
-                                    <h3 class="widget-title">QUICK LINKS BUY BITCOIN</h3>
-                                    <ul>
-                                        <li><a href="https://coinmama.com/" target="_blank">Coin Mama</a></li>
-                                        <li><a href="https/paybis.html" target="_blank">PayBis</a></li>
-                                        <li><a href="https://coinbase.com/" target="_blank">Coin Base</a></li>
-                                        <li><a href="https://luno.com/" target="_blank">Luno</a></li>
-                                        <li><a href="https://xcoin.com/" target="_blank">Xcoin</a></li>
-                                        <li><a href="https://kraken.com/" target="_blank">kraken</a></li>
-                                        <li><a href="https://binance.com/" target="_blank">Binance</a></li>
-                                        <li><a href="https://bit2me.com/" target="_blank">Bit2me</a></li>
-                                        <li><a href="https://indodax.com/" target="_blank">Indodax</a></li>
-                                        <li><a href="https/coinhako.html" target="_blank">Coinhako</a></li>
-                                        <li><a href="https://wazirx.com/" target="_blank">Wazirx</a></li>
-                                        <li><a href="https://zebpay.com/" target="_blank">Zebpay</a></li>
-
-                                    </ul>
-                                </li>
+                                <li><a href="{$route->urlFor('page', ['page'=> 'faqs'])}">FAQs</a></li>
+                                <li><a href="{$route->urlFor('page', ['page'=> 'terms'])}">Terms of service</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-12 footer-widget">
+                            <h3 class="widget-title">QUICK LINKS BUY BITCOIN</h3>
+                            <ul class="list-dash">
+                                <li><a href="https://coinmama.com/" target="_blank">Coin Mama</a></li>
+                                <li><a href="https/paybis.html" target="_blank">PayBis</a></li>
+                                <li><a href="https://coinbase.com/" target="_blank">Coin Base</a></li>
+                                <li><a href="https://luno.com/" target="_blank">Luno</a></li>
+                                <li><a href="https://xcoin.com/" target="_blank">Xcoin</a></li>
+                                <li><a href="https://kraken.com/" target="_blank">kraken</a></li>
+                                <li><a href="https://binance.com/" target="_blank">Binance</a></li>
+                                <li><a href="https://bit2me.com/" target="_blank">Bit2me</a></li>
+                                <li><a href="https://indodax.com/" target="_blank">Indodax</a></li>
+                                <li><a href="https/coinhako.html" target="_blank">Coinhako</a></li>
+                                <li><a href="https://wazirx.com/" target="_blank">Wazirx</a></li>
+                                <li><a href="https://zebpay.com/" target="_blank">Zebpay</a></li>
 
                             </ul>
                         </div>
-                        <div class="col-lg-4 col-md-12W footer-widget">
+                        <div class="col-12 footer-widget">
                             <div class="newsletter-introtext"><small>The information on this website does not convey an
                                     offer of any type and is not intended to be, and should not be construed as, an
                                     offer to sell, or the solicitation of an offer to buy, any securities, commodities,
@@ -295,14 +271,14 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="copyright-info">
-                                    <span>Copyright © 2017 {$siteInfo.name}. All RightsReserved.</span>
+                                    <span>Copyright © 2017 {$siteInfo.name}. All Rights Reserved.</span>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">
                                 <div class="footer-menu">
                                     <ul class="nav unstyled">
                                         <li><a href="{$route->urlFor('page', ['page' => 'about-us'])}">About</a></li>
-                                        <li><a href="{$route->urlFor('page', ['page' => 'privacy-policy'])}">Privacy
+                                        <li><a href="{$route->urlFor('page', ['page' => 'terms'])}">Privacy
                                                 Policy</a></li>
                                         <li><a href="{$route->urlFor('page', ['page' => 'terms'])}">Legals</a></li>
                                         <li><a href="{$route->urlFor('page', ['page' => 'contact-us'])}">Contact</a>
@@ -347,48 +323,13 @@
         <script type="text/javascript" src="assets/js/jquery.colorbox.js"></script>
         <!-- Smoothscroll-->
         <script type="text/javascript" src="assets/js/smoothscroll.js"></script>
-        <!-- For Chart-->
-        <script src="assets/js/raphael/2.1.2/raphael-min.js"></script>
-        <script type="text/javascript" src="assets/js/morris.js"></script>
-
         <script src="assets/js/spop.js"></script>
-
-        <script type="text/javascript">
-            Morris.Area({
-                element: 'graph',
-                behaveLikeLine: true,
-                lineColors: ['#e36217', '#2154cf', '#4da74d', '#afd8f8', '#edc240', '#cb4b4b', '#9440ed'],
-                data: [{
-                        x: '2012',
-                        y: 9,
-                        z: 7
-                    },
-                    {
-                        x: '2013',
-                        y: 6,
-                        z: 8
-                    },
-                    {
-                        x: '2014',
-                        y: 6,
-                        z: 5
-                    },
-                    {
-                        x: '2015',
-                        y: 8,
-                        z: 10
-                    }
-                ],
-                xkey: 'x',
-                ykeys: ['y', 'z'],
-                labels: ['Y', 'Z']
-            });
-        </script>
         <!-- Template custom-->
 
         <script src="assets/js/spop.js"></script>
 
         <script type="text/javascript" src="assets/js/custom.js"></script>
+        <script type="text/javascript" src="assets/js/script.js"></script>
 
         <script type="text/javascript">
             var country_list = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla",

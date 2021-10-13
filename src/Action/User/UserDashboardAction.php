@@ -90,7 +90,7 @@ final class UserDashboardAction
             'order_by' => 'status'
         ]);
 
-        $data['pending_withdrawal'] = (float) $d[0]->amount;
+        $data['pending_withdrawal'] = (float) $w[0]->amount;
 
         // referrals
         $referrals = $this->referrals->readAll([
