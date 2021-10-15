@@ -34,10 +34,11 @@
     <span class="nav-divider"></span>
 
     <a class="first" href="{$route->urlFor('admin-newsletter')}">Send Newsletter</a>
-
+    
     <span class="nav-divider"></span>
-
+    
     <a class="first" href="{$route->urlFor('admin-settings')}">Settings</a>
+    <a href="{$route->urlFor('admin-email-templates')}">Email Templates</a>
     {* <a href="{$route->urlFor('admin-settings')}">Auto-Withdrawals Settings</a> *}
     {* <a href="{$route->urlFor('admin-settings')}">Referral Settings</a> *}
     {* <a href="{$route->urlFor('admin-settings')}">Email Templates</a> *}
@@ -47,14 +48,6 @@
     {* <a href="{$route->urlFor('admin-settings')}">Info Box Settings</a> *}
 
     <span class="nav-divider"></span>
-
-    {* <a class="first" href="#">IPs Check</a> *}
-    {* <a href="#">Custom Pages</a> *}
-    {* <a href="#">News</a> *}
-    {* <a href="#">User Notices</a> *}
-    {* <a href="#">Maintenance Page</a> *}
-    {* <a href="#">Tell A Friend</a> *}
-    {* <span class="nav-divider"></span> *}
 
     <a class="first" href="{$route->urlFor('logout')}" onclick="return logoutUser()">Logout</a>
 

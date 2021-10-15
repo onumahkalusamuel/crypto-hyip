@@ -35,7 +35,7 @@ return function (App $app) {
         $group->get('deposits/{id}/delete[/]', \App\Action\Admin\Deposits\DeleteAction::class)->setName('admin-delete-deposit');
         $group->get('deposits/{id}/release[/]', \App\Action\Admin\Deposits\ReleaseAction::class)->setName('admin-release-deposit');
         $group->get('deposits/{id}/approve[/]', \App\Action\Admin\Deposits\ApproveAction::class)->setName('admin-approve-deposit');
-        
+
         // transactions
         $group->get('transactions[/]', \App\Action\Admin\TrailLog\ViewAll::class)->setName('admin-transactions');
         $group->get('transactions/{id}[/]', \App\Action\Admin\TrailLog\SingleView::class)->setName('admin-view-transactions');
@@ -49,28 +49,28 @@ return function (App $app) {
         // settings
         $group->get('settings[/]', \App\Action\Admin\Settings\ViewAll::class)->setName('admin-settings');
 
-
-        $group->post('approvewithdrawal[/[{id}[/]]]', \App\Action\Withdrawals\ApproveAction::class);
-        $group->post('declinewithdrawal[/[{id}[/]]]', \App\Action\Withdrawals\DeclineAction::class);
-        $group->get('approvedwithdrawals[/[{user_id}[/]]]', \App\Action\Withdrawals\ApprovedWithdrawalsAction::class);
-        $group->get('pendingwithdrawals[/[{user_id}[/]]]', \App\Action\Withdrawals\PendingWithdrawalsAction::class);
-
         // bonus
         $group->get('add-bonus/{user_id}[/]', [\App\Action\Admin\AddBonusAction::class, 'viewPage'])->setName('admin-add-bonus-view');
         $group->post('add-bonus/{user_id}[/]', [\App\Action\Admin\AddBonusAction::class, 'initTransaction'])->setName('admin-add-bonus');
         $group->get('add-bonus-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddBonusAction::class, 'confirmTransaction'])->setName('admin-add-bonus-confirm');
-        
+
         // penalty
         $group->get('add-penalty/{user_id}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'viewPage'])->setName('admin-add-penalty-view');
         $group->post('add-penalty/{user_id}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'initTransaction'])->setName('admin-add-penalty');
         $group->get('add-penalty-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'confirmTransaction'])->setName('admin-add-penalty-confirm');
-        
+
         // block user
         $group->post('block-user[/]', \App\Action\Admin\BlockUserAction::class)->setName('admin-block-user');
 
         // newsletter
         $group->get('newsletter[/]', [\App\Action\Admin\NewsletterAction::class, 'viewPage'])->setName('admin-newsletter');
         $group->post('newsletter[/]', [\App\Action\Admin\NewsletterAction::class, 'addToQueue']);
+
+        // newsletter
+        $group->get('email-templates[/]', [\App\Action\Admin\EmailTemplates\Templates::class, 'viewPage'])->setName('admin-email-templates');
+        $group->post('email-templates[/]', [\App\Action\Admin\EmailTemplates\Templates::class, 'updateHeaderFooter']);
+        $group->get('email-templates/{id}[/]', [\App\Action\Admin\EmailTemplates\Templates::class, 'viewTemplate'])->setName('admin-email-template');
+        $group->post('email-templates/{id}[/]', [\App\Action\Admin\EmailTemplates\Templates::class, 'updateTemplate']);
 
         // settings
         $group->post(

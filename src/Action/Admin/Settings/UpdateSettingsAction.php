@@ -106,6 +106,8 @@ final class UpdateSettingsAction
             $this->settings->headerCode = trim($data['headerCode']);
             $this->settings->footerCode = trim($data['footerCode']);
             $this->settings->activeCurrencies = implode(",", $data['activeCurrencies']);
+            $this->settings->generalEmailHeader =$data['generalEmailHeader'];
+            $this->settings->generalEmailFooter =$data['generalEmailFooter'];
 
             $this->sendMail->sendSettingsChangedMail();
         }
