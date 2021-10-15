@@ -2,7 +2,6 @@
 
 namespace App\Action\Admin\EmailTemplates;
 
-use App\Domain\Deposits\Service\Deposits;
 use App\Domain\EmailTemplates\Service\EmailTemplates;
 use App\Domain\Settings\Service\Settings;
 use Slim\Routing\RouteContext;
@@ -16,15 +15,18 @@ final class Templates
     private $emailTemplates;
     private $settings;
     private $view;
+    private $session;
 
     public function __construct(
         EmailTemplates $emailTemplates,
         Settings $settings,
-        View $view
+        View $view,
+        Session $session
     ) {
         $this->emailTemplates = $emailTemplates;
         $this->settings = $settings;
         $this->view = $view;
+        $this->session = $session;
     }
 
     public function viewPage(
@@ -107,7 +109,7 @@ final class Templates
             $flash->set('success', "Template updated successfully.");
         }
 
-        $url = $routeParser->urlFor('admin-email-template');
+        $url = $routeParser->urlFor('admin-email-template', ['id' => $ID]);
 
         return $response->withStatus(302)->withHeader('Location', $url);
     }

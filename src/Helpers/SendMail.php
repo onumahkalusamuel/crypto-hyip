@@ -5,6 +5,8 @@ namespace App\Helpers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Psr\Container\ContainerInterface;
+use App\Domain\EmailTemplates\Service\EmailTemplates;
+use App\Domain\Settings\Service\Settings;
 
 class SendMail
 {
@@ -12,13 +14,20 @@ class SendMail
     private $settings;
     private $siteName;
     private $siteUrl;
-    private  $contactName;
-    private  $contactEmail;
+    private $contactName;
+    private $contactEmail;
     private $emailBanner;
+    private $emailTemplates;
+    private $siteSettings;
 
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        EmailTemplates $emailTemplates,
+        Settings $siteSettings
+    ) {
 
+        $this->siteSettings = $siteSettings->settings;
+        $this->emailTemplates = $emailTemplates;
         $this->settings = $container->get('settings');
         $display = $this->settings['display_settings']();
         $smtp = $this->settings['smtp'];
@@ -27,7 +36,6 @@ class SendMail
         $this->contactEmail = $smtp['email'];
         $this->siteName = $display['name'];
         $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-        $this->emailBanner = $this->settings['assets_dir'] . '/email/email-banner.jpg';
 
         $mail = new PHPMailer(true);
 
@@ -43,10 +51,6 @@ class SendMail
 
         $mail->setFrom($smtp['email'], $smtp['name']);
         $mail->addReplyTo($smtp['email'], $this->smtp['name']);
-
-        if (is_file($this->emailBanner)) {
-            $mail->AddEmbeddedImage($this->emailBanner, 'banner');
-        }
 
         // Content
         $mail->isHTML(true);
@@ -88,56 +92,55 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendPasswordResetEmail($email, $name, $token)
+    private function sendTemplatedMail($templateId, $email, $name, $replacements = array())
     {
+        $template = $this->emailTemplates->readSingle(['ID' => $templateId]);
+
+        if (empty($template->ID)) return false;
+
         $data['email'] = $email;
         $data['name'] = $name;
-        $data['subject'] = "Password Reset Email - " . $this->siteName;
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/><br/>" .
-            "<h2>PASSWORD RESET</h2><br/>" .
-            "Hello $name, <br/><br/>
-            We received a password reset request from you.<br/> <br/>
-        If you are the one, please kindly click on the link below to reset your password.<br/><br/>
-        <strong><a href='{$this->siteUrl}/reset/{$token}/{$email}'>RESET PASSWORD NOW</a></strong><br/>
-        <br>
-        If you are unable to click on the link, please kindly copy the following to your browser.<br/><br/>
-        <h4>{$this->siteUrl}/reset/{$token}/{$email}</h4>
-        <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a><br>
-            </div>
-        ";
+
+        $message = "";
+
+        if ($template->useGeneralHeader) $message .= $this->settings->emailGeneralHeader;
+        $message .= $template->content;
+        if ($template->useGeneralFooter) $message .= $this->settings->emailGeneralFooter;
+
+        $search = ['#site_url#', '#site_name#', '#site_email#', '#this_year#'];
+        $replace = [$this->siteUrl, $this->siteName, $this->contactEmail, date('Y')];
+
+        foreach ($replacements as $key => $value) {
+            $search[] = $key;
+            $replace[] = $value;
+        }
+
+        $message = str_replace($search, $replace, $message);
+
+        $data['subject'] = $template->subject . " - " . $this->siteName;
+        $data['message'] = $message;
 
         return $this->send($data);
     }
 
+    public function sendPasswordResetEmail($email, $name, $token)
+    {
+        return $this->sendTemplatedMail(
+            2,
+            $email,
+            $name,
+            ['#name#' => $name, '#email#' => $email, '#token#' => $token]
+        );
+    }
+
     public function sendRegistrationEmail($email, $name, $username)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Registration Info - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/><br/>
-        <h2>REGISTRATION SUCCESSFUL</h2><br/>
-        Hello <strong>$name</strong>,<br/><br/>
-        Thank you for registering on our site.<br/>
-        <strong>Your login information:</strong><br/><br/>
-        <strong>Login:</strong> $username <br/>
-        <strong>Password:</strong> <em>the password you chose </em><br/><br/>
-        You can login here: <a href='{$this->siteUrl}/login'>{$this->siteName}</a><br/><br/>
-        Contact us immediately if you did not authorize this registration.<br/><br/>
-        
-        <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a><br>
-            </div>";
-
-        $this->send($data);
+        $this->sendTemplatedMail(
+            1,
+            $email,
+            $name,
+            ['#name#' => $name, '#email#' => $email, '#username#' => $username]
+        );
 
         return $this->sendRegistrationEmailToAdmin($name, $username);
     }
@@ -159,32 +162,23 @@ class SendMail
 
     public function sendWithdrawalRequestEmail($email, $cryptoCurrency, $amount, $name, $username)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Withdrawal Request - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/></br>
-        <h2>WITHDRAWAL REQUEST</h2><br/>
-            Hello $name,<br/><br/>
-            You have requested to withdraw $$amount worth of " . strtoupper($cryptoCurrency) . ". Please be patient while it is being processed.<br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>";
-
-        $this->send($data);
+        $this->sendTemplatedMail(
+            3,
+            $email,
+            $name,
+            ['#name#' => $name, '#email#' => $email, '#crypto_currency#' => $cryptoCurrency, '#username#' => $username]
+        );
 
         return $this->sendWithdrawalRequestEmailToAdmin($cryptoCurrency, $amount, $username);
     }
 
-    private function sendWithdrawalRequestEmailToAdmin($cryptoCurency, $amount, $username)
+    private function sendWithdrawalRequestEmailToAdmin($cryptoCurrency, $amount, $username)
     {
         $IP = $_SERVER['REMOTE_ADDR'];
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
         $data['subject'] = "Withdrawal Request has been sent";
-        $data['message'] = "User $username requested to withdraw $$amount worth of " . strtoupper($cryptoCurency) . " from IP $IP.";
+        $data['message'] = "User $username requested to withdraw $$amount worth of " . strtoupper($cryptoCurrency) . " from IP $IP.";
 
         $this->mail->clearAttachments();
 
@@ -193,35 +187,20 @@ class SendMail
 
     public function sendWithdrawalSentEmail($email, $cryptoCurrency, $amount, $name, $username, $account, $batch)
     {
-        $transactionID = "#TNX" . strtoupper(substr($batch, 10, 8));
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Withdrawal Sent - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-            <img src='cid:banner'/><br/><br/>
-            <div style='text-align:left'>
-                Hello $name,<br/><br/>
-                <strong>Congratulations!</strong> <br/>
-                Your withdrawal request ($transactionID) has been successfully processed and a total of 
-                <strong>$$amount (in " . strtoupper($cryptoCurrency) . ")</strong> has been withdrawn from your account. Your funds transferred into your account 
-                as below.<br/><br/>
-                Payment Deposited:
-                <strong>$account</strong> (" . ($cryptoCurrency == 'pm' ? 'Perfect Money' : 'Crypto') . " Wallet). <br/><br/>
-                Withdrawal Reference: $batch<br/><br/>
-                If you have not received funds into your account yet, please feel free to contact us.<br/><br/><br/>
-
-                Best regards,
-                Team of OTB Capital.
-
-                <br/><br/>
-
-                &copy; " . date('Y', time()) . " {$this->siteName}
-                <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>
-        </div>";
-
-        $this->send($data);
+        $this->sendTemplatedMail(
+            4,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#username#' => $username,
+                '#batch#' => $batch,
+                '#crypto_currency#' => $cryptoCurrency,
+                '#amount#' => $amount,
+                '#transaction_id#' => "#TNX" . strtoupper(substr($batch, 10, 8))
+            ]
+        );
 
         return $this->sendWithdrawalSentEmailToAdmin($username, $amount, $account, $batch, $cryptoCurrency);
     }
@@ -240,24 +219,18 @@ class SendMail
 
     public function sendWithdrawalDeclinedEmail($email, $name, $username, $message)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Withdrawal Declined - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/> <br/><br/>
-        <h2> WITHDRAWAL DECLINED</h2><br/>
-            Hello $name,<br/><br/>
-            Your request for withdrawal has been declined with the following reasons:<br /><br/>
-            <em> $message</em>.<br/><br/>
-            Thank you.
-            <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>";
 
-        $this->send($data);
+        $this->sendTemplatedMail(
+            5,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#username#' => $username,
+                '#message#' => $message
+            ]
+        );
 
         return $this->sendWithdrawalDeclinedEmailToAdmin($username, $message);
     }
@@ -276,48 +249,37 @@ class SendMail
 
     public function sendDirectReferralSignupEmail($email, $name, $ref_name, $ref_username, $ref_email)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Direct Referral Signup - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/>
-        <h2>REFERRAL SIGNUP</h2><br/>
-            Hello $name,<br/><br/>
-            You have a new direct referral signup on {$this->siteName}<br />
-            <strong>Username:</strong> $ref_username <br/>
-            <strong>Name:</strong> $ref_name <br/>
-            <strong>E-mail:</strong> $ref_email<br/><br/>
-            Thank you. <br/><br/>
-     
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>
-            ";
 
-        return $this->send($data);
+        return $this->sendTemplatedMail(
+            6,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#ref_name#' => $ref_name,
+                '#ref_username#' => $ref_username,
+                '#ref_email#' => $ref_email
+            ]
+        );
     }
 
     public function sendDirectReferralCommissionEmail($email, $name, $amount, $ref_username, $username, $cryptoCurrency)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Direct Referral Commission - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/>
-     	<h2>REFERRAL COMMISSION</h2>
-            Hello $name,<br/><br/>
-            You have received a referral commission of \${$amount} ($cryptoCurrency) from {$ref_username}'s deposit. <br/>
-            Thank you. <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>
-            ";
 
-        $this->send($data);
+        $this->sendTemplatedMail(
+            7,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#username#' => $username,
+                '#ref_username#' => $ref_username,
+                '#crypto_currency#' => $cryptoCurrency,
+                '#amount#' => $amount
+            ]
+        );
 
         return $this->sendDirectReferralCommissionEmailToAdmin($username, $amount, $ref_username, $cryptoCurrency);
     }
@@ -337,24 +299,18 @@ class SendMail
 
     public function sendDepositReleaseEmail($email, $name, $username, $amount)
     {
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Deposit Released - {$this->siteName}";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/>
-        <h2>DEPOSIT RELEASED</h2>" .
-            "Hello $name,<br/><br/>
-            Your investment deposit of \${$amount} has been released into your available balance. You can now place a withdrawal request on it.<br/>
-            Thank you. 
-            <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            </div>
-            ";
 
-        $this->send($data);
+        $this->sendTemplatedMail(
+            8,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#username#' => $username,
+                '#amount#' => $amount
+            ]
+        );
 
         return $this->sendDepositReleaseEmailToAdmin($amount, $username);
     }
@@ -375,7 +331,7 @@ class SendMail
     {
 
         $IP = $_SERVER['REMOTE_ADDR'];
-        $time = date("Y-M-d, H i s", time());
+        $time = date("Y-M-d, H i s");
 
         $data['email'] = $this->contactEmail;
         $data['name'] = $this->contactName;
@@ -408,25 +364,17 @@ class SendMail
 
     public function sendBonusAddedMail($email, $name, $amount, $cryptoCurrency)
     {
-
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Bonus Added to Account";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/><br>
-        <h2> BONUS RECEIVED </h2><br/>
-            Hello $name,<br/><br/>
-            Congratulations, you just received a bonus of $$amount ($cryptoCurrency).<br/><br/>
-            Thank you.
-            <br/><br/>
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            <br/>
-            </div>";
-
-        return $this->send($data);
+        return $this->sendTemplatedMail(
+            9,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#crypto_currency#' => $cryptoCurrency,
+                '#amount#' => $amount
+            ]
+        );
     }
 
     public function sendBonusAddedMailToAdmin($userName, $name, $amount, $cryptoCurrency)
@@ -462,28 +410,18 @@ class SendMail
     public function sendPenaltySubtractedMail($email, $name, $amount, $cryptoCurrency, $reason)
     {
 
-        $data['email'] = $email;
-        $data['name'] = $name;
-        $data['subject'] = "Penalty subtracted from account";
-        $data['message'] = "
-        <div style='text-align:center;color:#6d6e70'>
-        <img src='cid:banner'/><br/><br>
-        <h2>PENALTY</h2><br>
-            Hello $name,<br/><br/>
-            Sorry, a penalty of $$amount ($cryptoCurrency) has been subtracted from your account.<br/>
-            Reason: $reason.<br/><br/>
-            Thank you. <br/><br/>
-
-            If you face any challenges, please contact us at <a href='mailto:{$this->contactEmail}'>{$this->contactEmail}</a><br/><br/>
-            &copy; " . date('Y', time()) . " {$this->siteName}
-            <a href='{$this->siteUrl}'>{$this->siteUrl}</a>
-            <br/>
-            </div>
-            ";
-
-        $this->mail->clearAttachments();
-
-        return $this->send($data);
+        return $this->sendTemplatedMail(
+            10,
+            $email,
+            $name,
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#crypto_currency#' => $cryptoCurrency,
+                '#amount#' => $amount,
+                '#reason#' => $reason
+            ]
+        );
     }
 
     public function sendPenaltySubtractedMailToAdmin($userName, $name, $amount, $cryptoCurrency, $reason)

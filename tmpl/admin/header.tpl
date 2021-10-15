@@ -96,6 +96,11 @@
         }
     </style>
 
+    <script type="text/javascript" src="assets/nicEdit.js"></script>
+    <script type="text/javascript">
+        bkLib.onDomLoaded(function() { nicEditors.allTextAreas({ fullPanel: true }) });
+    </script>
+
 </head>
 
 <body class="">

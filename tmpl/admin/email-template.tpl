@@ -18,20 +18,20 @@
                                         size="100"></td>
                             </tr>
                             <tr>
-                                <th>Use Global Header?</th>
-                                <td> <select name="useGlobalHeader" class="inpts">
-                                        <option value="1" {if $template->useGlobalHeader == "1"}selected{/if}>Yes
+                                <th>Use General Header?</th>
+                                <td> <select name="useGeneralHeader" class="inpts">
+                                        <option value="1" {if $template->useGeneralHeader == "1"}selected{/if}>Yes
                                         </option>
-                                        <option value="0" {if $template->useGlobalHeader == "0"}selected{/if}>No
+                                        <option value="0" {if $template->useGeneralHeader == "0"}selected{/if}>No
                                         </option>
                                     </select> </td>
                             </tr>
                             <tr>
-                                <th>Use Global Footer?</th>
-                                <td> <select name="useGlobalFooter" class="inpts">
-                                        <option value="1" {if $template->useGlobalFooter == "1"}selected{/if}>Yes
+                                <th>Use General Footer?</th>
+                                <td> <select name="useGeneralFooter" class="inpts">
+                                        <option value="1" {if $template->useGeneralFooter == "1"}selected{/if}>Yes
                                         </option>
-                                        <option value="0" {if $template->useGlobalFooter == "0"}selected{/if}>No
+                                        <option value="0" {if $template->useGeneralFooter == "0"}selected{/if}>No
                                         </option>
                                     </select> </td>
                             </tr>
@@ -44,7 +44,6 @@
                                 <th></th>
                                 <td>
                                     <input type="submit" value="Update" class="btn-sm btn-success sbmt">
-                                    <input type="button" value="Send Test E-mail" class="sbmt" onclick="send_test()">
                                     <a class="sbmt btn-sm btn-danger"
                                         href="{$route->urlFor('admin-email-templates')}">Cancel</a>
                                 </td>
