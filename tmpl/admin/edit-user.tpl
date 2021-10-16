@@ -2,6 +2,11 @@
 {assign var=user value=$data.user}
 {assign var=activeCurrencies value=$data.activeCurrencies}
 
+<script type="text/javascript" src="assets/nicEdit.js"></script>
+<script type="text/javascript">
+    bkLib.onDomLoaded(function() { nicEditors.allTextAreas({ fullPanel: true }) });
+</script>
+
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>
         <tr>

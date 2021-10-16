@@ -3,6 +3,11 @@
 {assign var=settings value=$data.settings}
 {assign var=activeCurrencies value=","|explode:$settings.activeCurrencies}
 
+<script type="text/javascript" src="assets/nicEdit.js"></script>
+<script type="text/javascript">
+    bkLib.onDomLoaded(function() { nicEditors.allTextAreas({ fullPanel: true }) });
+</script>
+
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>
         <tr>
@@ -26,13 +31,15 @@
                             <tr>
                                 <th>General Email Header:</th>
                                 <td>
-                                    <textarea name="generalEmailHeader" class="inpts" cols="100" rows="20">{$generalEmailHeader}</textarea>
+                                    <textarea name="generalEmailHeader" class="inpts" cols="100"
+                                        rows="20">{$generalEmailHeader}</textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th>General Email Footer:</th>
                                 <td>
-                                    <textarea name="generalEmailFooter" class="inpts" cols="100" rows="20">{$generalEmailFooter}</textarea>
+                                    <textarea name="generalEmailFooter" class="inpts" cols="100"
+                                        rows="20">{$generalEmailFooter}</textarea>
                                 </td>
                             </tr>
                             <tr>
