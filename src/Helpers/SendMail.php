@@ -166,7 +166,13 @@ class SendMail
             3,
             $email,
             $name,
-            ['#name#' => $name, '#email#' => $email, '#crypto_currency#' => $cryptoCurrency, '#username#' => $username]
+            [
+                '#name#' => $name,
+                '#email#' => $email,
+                '#crypto_currency#' => $cryptoCurrency,
+                '#amount#' => $amount,
+                '#username#' => $username
+            ]
         );
 
         return $this->sendWithdrawalRequestEmailToAdmin($cryptoCurrency, $amount, $username);
