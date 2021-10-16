@@ -103,9 +103,9 @@ class SendMail
 
         $message = "";
 
-        if ($template->useGeneralHeader) $message .= $this->settings->generalEmailHeader;
+        if ($template->useGeneralHeader) $message .= $this->siteSettings->generalEmailHeader;
         $message .= $template->content;
-        if ($template->useGeneralFooter) $message .= $this->settings->generalEmailFooter;
+        if ($template->useGeneralFooter) $message .= $this->siteSettings->generalEmailFooter;
 
         $search = ['#site_url#', '#site_name#', '#site_email#', '#this_year#'];
         $replace = [$this->siteUrl, $this->siteName, $this->contactEmail, date('Y')];
