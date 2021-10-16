@@ -6,6 +6,7 @@ use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 
 final class ResetPasswordAction
 {
@@ -46,6 +47,15 @@ final class ResetPasswordAction
 
             $resetToken = substr(sha1(uniqid()), 7, 15);
 
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+            $resetLink = $routeParser->fullUrlFor(
+                $request->getUri(),
+                'password-reset-link',
+                [],
+                ['token' => $resetToken, 'email' => $email]
+            );
+
             // save to database 
             $update = $this->user->update(['ID' => $user->ID, 'data' => ['token' => $resetToken]]);
 
@@ -54,7 +64,7 @@ final class ResetPasswordAction
             }
 
             if (empty($message)) {
-                $this->sendMail->sendPasswordResetEmail($user->email, $user->fullName, $resetToken);
+                $this->sendMail->sendPasswordResetEmail($user->email, $user->fullName, $resetLink);
 
                 $response->getBody()->write(json_encode([
                     'success' => true,

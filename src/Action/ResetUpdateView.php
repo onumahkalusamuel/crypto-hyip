@@ -28,14 +28,13 @@ class ResetUpdateView
 
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ): ResponseInterface {
 
         $data = [];
 
-        $token = $args['token'];
-        $email = $args['email'];
+        $token = $_GET['token'];
+        $email = $_GET['email'];
 
         // attempt login by email
         $user = $this->user->find([

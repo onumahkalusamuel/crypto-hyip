@@ -123,13 +123,13 @@ class SendMail
         return $this->send($data);
     }
 
-    public function sendPasswordResetEmail($email, $name, $token)
+    public function sendPasswordResetEmail($email, $name, $resetLink)
     {
         return $this->sendTemplatedMail(
             2,
             $email,
             $name,
-            ['#name#' => $name, '#email#' => $email, '#token#' => $token]
+            ['#name#' => $name, '#email#' => $email, '#reset_link#' => $resetLink]
         );
     }
 

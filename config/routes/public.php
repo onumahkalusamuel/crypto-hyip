@@ -31,8 +31,8 @@ return function (App $app) {
             return $response;
         })->setName('reset-password');
 
-        $group->get('reset/{token}/{email}[/]', \App\Action\ResetUpdateView::class);
-        $group->post('reset/{token}/{email}[/]', \App\Action\ResetUpdateAction::class);
+        $group->get('reset[/]', \App\Action\ResetUpdateView::class)->setName('password-reset-link');
+        $group->post('reset[/]', \App\Action\ResetUpdateAction::class);
 
         $group->post('login[/]', \App\Action\LoginAction::class);
 
@@ -42,6 +42,9 @@ return function (App $app) {
 
         $group->post('contact-us[/]', \App\Action\ContactUsAction::class)->setName('contact-us-form');
 
+        // bonus confirm and penalty confirm links. brought the out to avoid asking for authentication at all times
+        $group->get('admin/add-bonus-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddBonusAction::class, 'confirmTransaction'])->setName('admin-add-bonus-confirm');
+        $group->get('admin/add-penalty-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'confirmTransaction'])->setName('admin-add-penalty-confirm');
         //catch-all page
         $group->get('page/{page}', \App\Action\PageView::class)->setName('page');
     });

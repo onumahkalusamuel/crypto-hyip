@@ -28,8 +28,7 @@ class ResetUpdateAction
 
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ): ResponseInterface {
 
         $return['success'] = false;
@@ -38,8 +37,10 @@ class ResetUpdateAction
         $data = (array) $request->getParsedBody();
 
         $newPassword = $data['newPassword'];
-        $token = $args['token'];
-        $email = $args['email'];
+        
+        $token = $_GET['token'];
+        $email = $_GET['email'];
+
         $csrf = $this->session->get('csrf');
         $tokenConfirm = $this->session->get('token');
         $emailConfirm = $this->session->get('email');

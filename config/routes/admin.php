@@ -52,12 +52,10 @@ return function (App $app) {
         // bonus
         $group->get('add-bonus/{user_id}[/]', [\App\Action\Admin\AddBonusAction::class, 'viewPage'])->setName('admin-add-bonus-view');
         $group->post('add-bonus/{user_id}[/]', [\App\Action\Admin\AddBonusAction::class, 'initTransaction'])->setName('admin-add-bonus');
-        $group->get('add-bonus-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddBonusAction::class, 'confirmTransaction'])->setName('admin-add-bonus-confirm');
 
         // penalty
         $group->get('add-penalty/{user_id}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'viewPage'])->setName('admin-add-penalty-view');
         $group->post('add-penalty/{user_id}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'initTransaction'])->setName('admin-add-penalty');
-        $group->get('add-penalty-confirm/{confirmation_code}[/]', [\App\Action\Admin\AddPenaltyAction::class, 'confirmTransaction'])->setName('admin-add-penalty-confirm');
 
         // block user
         $group->post('block-user[/]', \App\Action\Admin\BlockUserAction::class)->setName('admin-block-user');
