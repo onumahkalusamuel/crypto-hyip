@@ -26,7 +26,7 @@ class SendMail
         Settings $siteSettings
     ) {
 
-        $this->siteSettings = $siteSettings->settings;
+        $this->siteSettings = $siteSettings;
         $this->emailTemplates = $emailTemplates;
         $this->settings = $container->get('settings');
         $display = $this->settings['display_settings']();
@@ -103,9 +103,9 @@ class SendMail
 
         $message = "";
 
-        if ($template->useGeneralHeader) $message .= $this->settings->emailGeneralHeader;
+        if ($template->useGeneralHeader) $message .= $this->settings->generalEmailHeader;
         $message .= $template->content;
-        if ($template->useGeneralFooter) $message .= $this->settings->emailGeneralFooter;
+        if ($template->useGeneralFooter) $message .= $this->settings->generalEmailFooter;
 
         $search = ['#site_url#', '#site_name#', '#site_email#', '#this_year#'];
         $replace = [$this->siteUrl, $this->siteName, $this->contactEmail, date('Y')];
@@ -196,6 +196,7 @@ class SendMail
                 '#email#' => $email,
                 '#username#' => $username,
                 '#batch#' => $batch,
+                '#account#' => $account,
                 '#crypto_currency#' => $cryptoCurrency,
                 '#amount#' => $amount,
                 '#transaction_id#' => "#TNX" . strtoupper(substr($batch, 10, 8))
