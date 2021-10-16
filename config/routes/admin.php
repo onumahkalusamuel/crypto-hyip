@@ -27,6 +27,7 @@ return function (App $app) {
         $group->get('withdrawals[/]', \App\Action\Admin\Withdrawals\ViewAll::class)->setName('admin-withdrawals');
         $group->get('withdrawals/{id}[/]', \App\Action\Admin\Withdrawals\SingleView::class)->setName('admin-view-withdrawal');
         $group->get('withdrawals/{id}/delete[/]', \App\Action\Admin\Withdrawals\DeleteAction::class)->setName('admin-delete-withdrawal');
+        $group->get('withdrawals/{id}/decline[/]', \App\Action\Admin\Withdrawals\DeclineAction::class)->setName('admin-decline-withdrawal');
         $group->get('withdrawals/{id}/approve[/]', \App\Action\Admin\Withdrawals\ApproveAction::class)->setName('admin-approve-withdrawal');
 
         // deposits 

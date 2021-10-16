@@ -100,6 +100,9 @@
                                         <a href="{$route->urlFor('admin-approve-withdrawal', ['id'=> $item->ID])}"
                                             class="sbmt btn-sm btn-info" style="margin-bottom:2px;"
                                             onclick="return confirmAction('Are you sure you want to approve this withdrawal? You acknowledge that you have paid this user the requested amount. Continue?')">approve</a><br />
+                                        <a data-href="{$route->urlFor('admin-decline-withdrawal', ['id'=> $item->ID])}"
+                                            class="sbmt btn-sm btn-warning" style="margin-bottom:2px; background:yellow"
+                                            onclick="return confirmDecline()">decline</a><br />
                                         <a href="{$route->urlFor('admin-delete-withdrawal', ['id'=> $item->ID])}"
                                             class="sbmt btn-sm btn-danger" style="margin-bottom:2px;"
                                             onclick="return deleteRecord()">delete</a>
@@ -114,5 +117,19 @@
         </tr>
     </tbody>
 </table>
+<script>
+    function confirmDecline() {
+
+        var prompt = window.prompt("Enter reason for decline.");
+
+        if (!prompt) { alert("You must enter a reason to decline a withdrawal."); return false; }
+
+        var url = event.target.getAttribute('data-href') + "?message=" + window.encodeURI(prompt);
+
+        window.location.href = url;
+
+        return false;
+    }
+</script>
 
 {include file='admin/footer.tpl'}

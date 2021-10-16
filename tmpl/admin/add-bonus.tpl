@@ -84,7 +84,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div class="alert alert-warning"> Add Bonus: Enter the details of the bonus. A code
+                                    <div class="alert alert-warning"> Add Bonus: Enter the details of the bonus. A link
                                         will be sent to admin email to confirm transaction.<br>
                                     </div>
                                 </td>

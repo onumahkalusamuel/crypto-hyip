@@ -105,6 +105,11 @@
                                             class="sbmt btn-sm btn-danger" style="margin-bottom:2px;"
                                             onclick="return deleteRecord()">delete</a>
                                     {/if}
+                                    {if $item->depositStatus == "approved"}
+                                        <a href="{$route->urlFor('admin-release-deposit', ['id'=> $item->ID])}"
+                                            class="sbmt btn-sm btn-info" style="margin-bottom:2px;"
+                                            onclick="return confirmAction('Are you sure you want to release this deposit? The user will no longer receive further interest for this deposit. Continue?')">release</a><br />
+                                    {/if}
                                 </td>
                             </tr>
                         {/foreach}
