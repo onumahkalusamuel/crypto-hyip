@@ -50,7 +50,7 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->smarty->assign('route', $this->app->getRouteCollector()->getRouteParser());
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
         $this->smarty->assign('session', $this->session);
-        $this->smarty->assign('allCurrencies', ['btc', 'eth', 'doge', 'ltc', 'pm']);
+        $this->smarty->assign('allCurrencies', ['btc', 'bch', 'bnb', 'doge', 'eth', 'ltc', 'pm', 'trx']);
         $this->smarty->assign('activeCurrencies', explode(",", $this->settings->activeCurrencies));
         $this->smarty->assign('sysSettings', $this->settings->settings);
         $this->smarty->registerPlugin('function', 'paginationLinks', [$this, 'paginationLinks']);

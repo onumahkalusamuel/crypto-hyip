@@ -65,6 +65,22 @@ final class UpdateSettingsAction
                 $this->settings->btcDepositAddress = $data['btcDepositAddress'];
             }
         }
+        //bch
+        if (empty($message) && !empty($data['bchDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('bch', $data['bchDepositAddress'])) {
+                $message = "Invalid BCH Address entered.";
+            } else {
+                $this->settings->bchDepositAddress = $data['bchDepositAddress'];
+            }
+        }
+        //bnb
+        if (empty($message) && !empty($data['bnbDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('bnb', $data['bnbDepositAddress'])) {
+                $message = "Invalid BNB Address entered.";
+            } else {
+                $this->settings->bnbDepositAddress = $data['bnbDepositAddress'];
+            }
+        }
         //ETH
         if (empty($message) && !empty($data['ethDepositAddress'])) {
             if (!$this->cryptoHelper->validate('eth', $data['ethDepositAddress'])) {
@@ -89,7 +105,15 @@ final class UpdateSettingsAction
                 $this->settings->ltcDepositAddress = $data['ltcDepositAddress'];
             }
         }
-
+        //trx
+        if (empty($message) && !empty($data['trxDepositAddress'])) {
+            if (!$this->cryptoHelper->validate('trx', $data['trxDepositAddress'])) {
+                $message = "Invalid TRX Address entered.";
+            } else {
+                $this->settings->trxDepositAddress = $data['trxDepositAddress'];
+            }
+        }
+    
         // PM
         if (empty($message) && !empty($data['pmDepositAddress'])) {
             if (substr(strtoupper($data['pmDepositAddress']), 0, 1) !== "U") {
@@ -106,9 +130,6 @@ final class UpdateSettingsAction
             $this->settings->headerCode = trim($data['headerCode']);
             $this->settings->footerCode = trim($data['footerCode']);
             $this->settings->activeCurrencies = implode(",", $data['activeCurrencies']);
-            $this->settings->generalEmailHeader =$data['generalEmailHeader'];
-            $this->settings->generalEmailFooter =$data['generalEmailFooter'];
-
             $this->sendMail->sendSettingsChangedMail();
         }
 
