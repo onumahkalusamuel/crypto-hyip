@@ -29,19 +29,19 @@ class CryptoHelper
         }
         return $btc;
     }
-    
-    public function usdToCrypto($amount, $cryptoCurrency) {
-        
+
+    public function usdToCrypto($amount, $cryptoCurrency)
+    {
+
         $coin = strtolower($cryptoCurrency);
-        
-        if(in_array($coin, ['btc','eth','doge','ltc'])) {
+
+        if (in_array($coin, ['btc', 'eth', 'doge', 'ltc', 'trx', 'bnb', 'bch'])) {
             $fetch = json_decode(file_get_contents(sprintf($this->convertEndpoint, $coin)), true);
-            
+
             $amount = $fetch[strtoupper($coin)] * $amount;
         }
-        
-        return $amount;
 
+        return $amount;
     }
 
     public function btcPaymentQrCode($amount, $address)

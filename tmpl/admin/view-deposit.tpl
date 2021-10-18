@@ -7,14 +7,17 @@
 
 {if "btc" === $check}
     {assign var=protocol value="bitcoin"}
+    {assign var=depositAddress value=$sysSettings.btcDepositAddress}
 {elseif "eth" === $check}
-    {assign var=protocol value="etherium"}
+    {assign var=protocol value="ethereum"}
+{elseif "bch" === $check}
+    {assign var=protocol value="bitcoincash"}
 {elseif "ltc" === $check}
     {assign var=protocol value="litecoin"}
 {elseif "doge" === $check}
     {assign var=protocol value="dogecoin"}
 {else}
-    {assign var=protocol value="bitcoin"}
+    {assign var=protocol value="none"}
 {/if}
 
 {assign var=paymentLink value="https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount={$deposit->cryptoAmount}&address={$deposit->depositAddress}"}
@@ -39,8 +42,13 @@
                                         {if $deposit->cryptoCurrency === "pm"}
                                             Make a payment of <strong>{$deposit->cryptoAmount} USD</strong> to
                                             <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                        {elseif $deposit->cryptoCurrency === "trx"}
+                                            Make a payment of <strong>{$deposit->cryptoAmount} TRX</strong> to
+                                            <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                        {elseif $deposit->cryptoCurrency === "bnb"}
+                                            Make a payment of <strong>{$deposit->cryptoAmount} BNB</strong> to
+                                            <strong>{$deposit->depositAddress}</strong> to complete your deposit.
                                         {else}
-
                                             <strong>Click on Address</strong>
                                             OR
                                             <strong>Scan QR-Code</strong>
@@ -108,7 +116,8 @@
 
                         <tr>
                             <th>Payment Method:</th>
-                            <td>{$deposit->cryptoCurrency|upper} &nbsp; <img src="currencies/{$deposit->cryptoCurrency}.gif"></td>
+                            <td>{$deposit->cryptoCurrency|upper} &nbsp; <img
+                                    src="currencies/{$deposit->cryptoCurrency}.gif"></td>
                         </tr>
 
                         <tr>
