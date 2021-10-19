@@ -4,10 +4,10 @@
 {assign var=transactions value=$data.trailLog}
 
 {assign var=check value=$deposit->cryptoCurrency}
+{assign var=depositAddress value=$depositAddresses[$check]}
 
 {if "btc" === $check}
     {assign var=protocol value="bitcoin"}
-    {assign var=depositAddress value=$sysSettings.btcDepositAddress}
 {elseif "eth" === $check}
     {assign var=protocol value="ethereum"}
 {elseif "bch" === $check}
@@ -20,7 +20,7 @@
     {assign var=protocol value="none"}
 {/if}
 
-{assign var=paymentLink value="https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount={$deposit->cryptoAmount}&address={$deposit->depositAddress}"}
+{assign var=paymentLink value="https://www.bitcoinqrcodemaker.com/api/?style={$protocol}&amount={$deposit->cryptoAmount}&address={$depositAddress}"}
 
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>
@@ -41,13 +41,13 @@
                                     {if $deposit->depositStatus === "pending"}
                                         {if $deposit->cryptoCurrency === "pm"}
                                             Make a payment of <strong>{$deposit->cryptoAmount} USD</strong> to
-                                            <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                            <strong>{$depositAddress}</strong> to complete your deposit.
                                         {elseif $deposit->cryptoCurrency === "trx"}
                                             Make a payment of <strong>{$deposit->cryptoAmount} TRX</strong> to
-                                            <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                            <strong>{$depositAddress}</strong> to complete your deposit.
                                         {elseif $deposit->cryptoCurrency === "bnb"}
                                             Make a payment of <strong>{$deposit->cryptoAmount} BNB</strong> to
-                                            <strong>{$deposit->depositAddress}</strong> to complete your deposit.
+                                            <strong>{$depositAddress}</strong> to complete your deposit.
                                         {else}
                                             <strong>Click on Address</strong>
                                             OR
@@ -59,7 +59,7 @@
                                             <strong>{$deposit->cryptoAmount}</strong>
                                             {$deposit->cryptoCurrency|upper} to
                                             <a class="heading-line-bottom font-14"
-                                                href="{$protocol}:{$deposit->depositAddress}?amount={$deposit->cryptoAmount}&message={$deposit->transactionID}"><strong>{$deposit->depositAddress}</strong></a>
+                                                href="{$protocol}:{$depositAddress}?amount={$deposit->cryptoAmount}&message={$deposit->transactionID}"><strong>{$depositAddress}</strong></a>
                                         {/if}
                                     {else}
                                         <p class="desc mb-20">Payment received and processed.</p>

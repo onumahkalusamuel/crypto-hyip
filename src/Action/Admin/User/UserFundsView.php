@@ -21,7 +21,6 @@ final class UserFundsView
     private $trailLog;
     private $settings;
     protected $view;
-    public $activeCurrencies;
 
     public function __construct(
         User $user,
@@ -38,7 +37,6 @@ final class UserFundsView
         $this->withdrawals = $withdrawals;
         $this->trailLog = $trailLog;
         $this->settings = $settings;
-        $this->activeCurrencies = explode(',', $this->settings->activeCurrencies);
         $this->view = $view;
     }
 
@@ -54,7 +52,6 @@ final class UserFundsView
 
         if ($ID === 'new') $data['user']['ID'] = "new";
 
-        $data['activeCurrencies'] = $this->activeCurrencies;
         $data['total_balance'] = 0;
         $data['total_deposit'] = 0;
         $data['active_deposit'] = 0;
@@ -133,7 +130,7 @@ final class UserFundsView
             $data['user']['email'] = $user->email;
 
             // fetch the wallet addresses
-            foreach ($this->activeCurrencies as $c) {
+            foreach ($GLOBALS['activeCurrencies'] as $c) {
                 $data['user'][$c . 'Address'] = $user->{$c . 'Address'};
                 $data['user'][$c . 'Balance'] = $user->{$c . 'Balance'};
                 $data['total_balance'] += $user->{$c . 'Balance'};
@@ -144,7 +141,7 @@ final class UserFundsView
                 'params' => ['referredUserID' => $ID],
                 'select' => ['referralUserID as ID', 'referralUserName as userName']
             ]);
-            
+
             if (!empty($ref->ID)) {
                 $data['user']['upline_id'] = $ref->ID;
                 $data['user']['upline_username'] = $ref->userName;

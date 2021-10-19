@@ -36,7 +36,6 @@ final class SingleView
             $user = new \stdClass;
             $user->ID = "new";
             $data['user'] = $user;
-            $data['activeCurrencies'] = [];
         } else {
 
             // find the user
@@ -45,8 +44,6 @@ final class SingleView
 
             //set the user to output
             $data['user'] = $user;
-
-            $data['activeCurrencies'] = explode(',', $this->settings->activeCurrencies);
         }
 
         $this->view->assign('data', $data);

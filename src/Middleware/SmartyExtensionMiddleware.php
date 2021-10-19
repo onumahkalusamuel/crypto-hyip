@@ -50,9 +50,31 @@ final class SmartyExtensionMiddleware implements MiddlewareInterface
         $this->smarty->assign('route', $this->app->getRouteCollector()->getRouteParser());
         $this->smarty->assign('flashBag', $this->session->getFlashBag());
         $this->smarty->assign('session', $this->session);
-        $this->smarty->assign('allCurrencies', ['btc', 'bch', 'bnb', 'doge', 'eth', 'ltc', 'pm', 'trx']);
-        $this->smarty->assign('activeCurrencies', explode(",", $this->settings->activeCurrencies));
+
+        $allCurrencies = $activeCurrencies = $depositAddresses = [];
+
+        foreach ($_ENV as $key => $value) {
+            if (preg_match("/_ADDRESS/", $key)) {
+                $exp = strtolower(explode('_ADDRESS', $key)[0]);
+                $allCurrencies[] = $exp;
+                if (!empty($value)) {
+                    $activeCurrencies[] = $exp;
+                    $depositAddresses[$exp] = $value;
+                }
+            }
+        }
+
+        $this->smarty->assign('allCurrencies', $allCurrencies);
+        $GLOBALS['allCurrencies'] = $allCurrencies;
+
+        $this->smarty->assign('activeCurrencies', $activeCurrencies);
+        $GLOBALS['activeCurrencies'] = $activeCurrencies;
+
+        $this->smarty->assign('depositAddresses', $depositAddresses);
+        $GLOBALS['depositAddresses'] = $depositAddresses;
+
         $this->smarty->assign('sysSettings', $this->settings->settings);
+
         $this->smarty->registerPlugin('function', 'paginationLinks', [$this, 'paginationLinks']);
         $this->smarty->registerPlugin('function', 'getNews', [$this, 'getNews']);
         $this->smarty->registerPlugin('function', 'getInvestmentPlans', [$this, 'getInvestmentPlans']);

@@ -1,7 +1,6 @@
 {include file='admin/header.tpl' pageTitle='Settings'}
 
 {assign var=settings value=$data.settings}
-{assign var=activeCurrencies value=","|explode:$settings.activeCurrencies}
 
 <script type="text/javascript" src="assets/nicEdit.js"></script>
 <script type="text/javascript">

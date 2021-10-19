@@ -6,7 +6,6 @@ use App\Domain\User\Service\User;
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\Referrals\Service\Referrals;
-use App\Domain\Settings\Service\Settings;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,7 +21,6 @@ final class UserDashboardAction
     protected $referrals;
     protected $trailLog;
     protected $view;
-    protected $activeCurrencies;
 
     public function __construct(
         Session $session,
@@ -31,7 +29,6 @@ final class UserDashboardAction
         Withdrawals $withdrawals,
         Referrals $referrals,
         TrailLog $trailLog,
-        Settings $settings,
         View $view
     ) {
         $this->user = $user;
@@ -41,7 +38,6 @@ final class UserDashboardAction
         $this->referrals = $referrals;
         $this->trailLog = $trailLog;
         $this->view = $view;
-        $this->activeCurrencies = explode(',', $settings->activeCurrencies);
     }
 
     public function __invoke(
@@ -55,7 +51,7 @@ final class UserDashboardAction
         $data['full_name'] = "";
         $data['registration_date'] = "";
         $data['account_balance'] = [];
-        $data['activeCurrencies'] = $this->activeCurrencies;
+        $data['activeCurrencies'] = $GLOBALS['activeCurrencies'];
         $data['total_balance'] = 0;
         $data['total_deposit'] = 0;
         $data['active_deposit'] = 0;
@@ -131,7 +127,7 @@ final class UserDashboardAction
         $data['registration_date'] = $user->createdAt;
 
         // fetch the wallet balances
-        foreach ($this->activeCurrencies as $c) {
+        foreach ($GLOBALS['activeCurrencies'] as $c) {
             $data['account_balance'][$c] = $user->{$c . 'Balance'};
             $data['total_balance'] += $user->{$c . 'Balance'};
         }

@@ -62,18 +62,15 @@ final class AddBonusAction
         ResponseInterface $response,
         $args
     ): ResponseInterface {
-    	$ID = $args['user_id'];
-    	$user = $this->user->readSingle(['ID' => $ID]);
-    	$plans = $this->plans->readAll([]);
-    	$currencies = explode(',', $this->settings->activeCurrencies);
+        $ID = $args['user_id'];
+        $user = $this->user->readSingle(['ID' => $ID]);
+        $plans = $this->plans->readAll([]);
 
-	$this->view->assign('user', $user);
-	$this->view->assign('plans', $plans);
-	$this->view->assign('currencies',$currencies);
-	$this->view->display('admin/add-bonus.tpl');
+        $this->view->assign('user', $user);
+        $this->view->assign('plans', $plans);
+        $this->view->display('admin/add-bonus.tpl');
 
-    	return $response;
-
+        return $response;
     }
 
     public function initTransaction(
@@ -81,20 +78,20 @@ final class AddBonusAction
         ResponseInterface $response
     ): ResponseInterface {
 
-    	$flash = $this->session->getFlashBag();
+        $flash = $this->session->getFlashBag();
         $flash->clear();
 
         // Get RouteParser from request to generate the urls
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-    	$data = (array) $request->getParsedBody();
-    	$message = "";
+        $data = (array) $request->getParsedBody();
+        $message = "";
 
         if (empty($data['ID']) || empty($data['fullName']) || empty($data['userName']) || empty($data['amount'])) {
             $message = "Please provide all required data.";
         }
 
-        if(empty($message)) {
+        if (empty($message)) {
 
             $token = substr(strtoupper(sha1(uniqid())), 5, 10);
 
@@ -104,7 +101,7 @@ final class AddBonusAction
 
             $sendMail = $this->mail->sendBonusConfirmToken($bonusUrl, $data['fullName'], $data['userName'], $data['amount'], $data['cryptoCurrency']);
 
-            if(empty($sendMail)) {
+            if (empty($sendMail)) {
                 $message = "An error occured. Please try again later.";
             }
         }
@@ -120,7 +117,6 @@ final class AddBonusAction
         }
 
         return $response->withStatus(302)->withHeader('Location', $url);
-
     }
 
     public function confirmTransaction(
@@ -129,7 +125,7 @@ final class AddBonusAction
         $args
     ): ResponseInterface {
 
-    	$token = $args['confirmation_code'];
+        $token = $args['confirmation_code'];
 
         $file = "$this->location/$token.json";
 
@@ -137,7 +133,7 @@ final class AddBonusAction
             $response->getBody()->write("Invalid link clicked. Generate a fresh one.");
             return $response;
         }
-        
+
         if (time() > filemtime($file) + 36000) {
             unlink($file);
             $response->getBody()->write("Token expired.");
@@ -150,20 +146,19 @@ final class AddBonusAction
         unlink($file);
 
         // fetch user
-        $user = (object) $this->user->readSingle(['ID'=>$d->ID]);
-        
+        $user = (object) $this->user->readSingle(['ID' => $d->ID]);
+
         // get plan
-        if(!empty($d->planID)) $plan = $this->plans->readSingle(['ID' => $d->planID]);
+        if (!empty($d->planID)) $plan = $this->plans->readSingle(['ID' => $d->planID]);
 
         // check if bonus is to go as deposit
         if ($d->bonusUsage == "toDeposit") {
             if (!empty($d->planID)) {
-                
-                $addr = $d->cryptoCurrency . "DepositAddress";
-                $depositAddress = $this->settings->$addr;
-                
+
+                $depositAddress = $GLOBALS['depositAddresses'][$d->cryptoCurrency];
+
                 if ($plan->ID && !empty($depositAddress)) {
-                    $cd = $this->deposits->create(['data'=> [
+                    $cd = $this->deposits->create(['data' => [
                         'userID' => $d->ID,
                         'userName' => $d->userName,
                         'planID' => $plan->ID,
@@ -187,7 +182,7 @@ final class AddBonusAction
         } else {
             // add to balance
             $wallet = $d->cryptoCurrency . "Balance";
-            $cd = $this->user->update(['ID'=>$d->ID, 'data'=> [
+            $cd = $this->user->update(['ID' => $d->ID, 'data' => [
                 $wallet => $user->$wallet + $d->amount,
             ]]);
         }
@@ -197,16 +192,18 @@ final class AddBonusAction
         }
 
         // traillog it
-        $this->traillog->create(['data' =>
+        $this->traillog->create(
             [
-                'userID' => $d->ID,
-                'userName' => $d->userName,
-                'logType' => 'bonus',
-                'transactionDetails' => "Bonus of $ $d->amount ({$d->cryptoCurrency}) added to {$d->userName} - {$d->bonusUsage}",
-                'transactionID' => $d->ID,
-                'amount' => $d->amount,
-                'cryptoCurrency' => $d->cryptoCurrency
-            ]
+                'data' =>
+                [
+                    'userID' => $d->ID,
+                    'userName' => $d->userName,
+                    'logType' => 'bonus',
+                    'transactionDetails' => "Bonus of $ $d->amount ({$d->cryptoCurrency}) added to {$d->userName} - {$d->bonusUsage}",
+                    'transactionID' => $d->ID,
+                    'amount' => $d->amount,
+                    'cryptoCurrency' => $d->cryptoCurrency
+                ]
             ]
         );
 
@@ -245,7 +242,7 @@ final class AddBonusAction
                     $referralBonus = round($referralPercentage / 100 * $d->amount, 2);
 
                     // update referral table
-                    $rr = $this->referrals->update(['ID'=> $ref->ID, 'data' => [
+                    $rr = $this->referrals->update(['ID' => $ref->ID, 'data' => [
                         'referralPaid' => 1,
                         'referralBonus' => $ref->referralBonus + $referralBonus
                     ]]);
@@ -266,7 +263,7 @@ final class AddBonusAction
 
                         // add to interest wallet balance
                         $wallet = $d->cryptoCurrency . "Balance";
-                        $this->user->update(['ID'=>$referrer->ID, 'data' => [
+                        $this->user->update(['ID' => $referrer->ID, 'data' => [
                             $wallet => $referrer->$wallet + $referralBonus,
                         ]]);
 
@@ -281,7 +278,7 @@ final class AddBonusAction
                             'cryptoCurrency' => $d->cryptoCurrency
                         ];
 
-                        $this->traillog->create(['data'=>$logData]);
+                        $this->traillog->create(['data' => $logData]);
                     }
                 }
             }
@@ -289,6 +286,5 @@ final class AddBonusAction
 
         $response->getBody()->write("Bonus processed successfully.");
         return $response;
-
     }
 }

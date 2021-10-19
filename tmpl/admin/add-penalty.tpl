@@ -42,7 +42,7 @@
                                 <th>Crypto Currency:</th>
                                 <td>
                                     <select name="cryptoCurrency" class="inpts">
-                                        {foreach $currencies as $currency}
+                                        {foreach $activeCurrencies as $currency}
                                             <option value="{$currency}">{$currency|upper}</option>
                                         {/foreach}
                                     </select>

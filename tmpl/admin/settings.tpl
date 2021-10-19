@@ -1,7 +1,6 @@
 {include file='admin/header.tpl' pageTitle='Settings'}
 
 {assign var=settings value=$data.settings}
-{assign var=activeCurrencies value=","|explode:$settings.activeCurrencies}
 
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>
@@ -57,22 +56,21 @@
                             <tr>
                                 <th>Active Currencies:</th>
                                 <td>
-                                    {foreach $allCurrencies as $currency}
+                                    {foreach $activeCurrencies as $currency}
                                         <label>
-                                            <input value="{$currency}" type="checkbox" name="activeCurrencies[{$currency}]"
-                                                {if $currency|@in_array:$activeCurrencies} checked {/if} />
+                                            <input value="{$currency}" disabled type="checkbox" checked />
                                             {$currency|upper}
                                         </label>
                                     {/foreach}
                                 </td>
                             </tr>
-                            {foreach $allCurrencies as $currency}
+                            {foreach $activeCurrencies as $currency}
                                 <tr>
                                     <th>{$currency|upper} Deposit Address:</th>
                                     <td>
-                                        {assign var=wallet value=$currency|cat:'DepositAddress'}
+                                        {assign var=wallet value=$currency}
                                         <input readonly disabled type="text" style="background-color:#0004"
-                                            value="{$settings[$wallet]}" class="inpts">
+                                            value="{$depositAddresses[$currency]}" class="inpts">
                                     </td>
                                 </tr>
                             {/foreach}
@@ -108,8 +106,6 @@
                                     <textarea rows=5 name="footerCode" class="inpts">{$settings.footerCode}</textarea>
                                 </td>
                             </tr>
-
-
                             <tr>
                                 <th>Enter Password:</th>
                                 <td><input type="password" name="confirmPassword" class="inpts"></td>
@@ -117,14 +113,14 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="alert alert-warning">
-                                        <strong>Active Currencies:</strong> The currencies selected here
+                                        <strong>Active Currencies:</strong> The active currencies
                                         will be seen by the users when they want to make payment. Please make sure you
-                                        fill in their respective deposit addresses.<br />
+                                        fill the address of currencies you want to be active.<br />
                                         <strong>Google Track ID:</strong> ID for google analytics.<br />
-                                        <strong>Header Code:</strong> Enter chat app codes that need to be in the head section of the
-                                        page.<br />
-                                        <strong>Footer Code:</strong> Enter chat app codes or any other code that needs to be before the
-                                        closing html tag.
+                                        <strong>Header Code:</strong> Enter chat app codes that need to be in the head
+                                        section of the page.<br />
+                                        <strong>Footer Code:</strong> Enter chat app codes or any other code that needs
+                                        to be before the closing html tag.
                                     </div>
                                 </td>
                             </tr>

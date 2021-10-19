@@ -92,10 +92,7 @@ final class DepositsAction
             $data['planTitle'] = $plan->title;
             $data['percentage'] = $plan->percentage;
             $data['profitFrequency'] = $plan->profitFrequency;
-
-            $depositAddress = $data['cryptoCurrency'] . "DepositAddress";
-
-            $data['depositAddress'] = $this->settings->$depositAddress;
+            $data['depositAddress'] = $_ENV[strtoupper($data['cryptoCurrency']) . "_ADDRESS"];
 
             if (empty($data['depositAddress'])) $message = "Unable to create payment link. Please try another payment method.";
 

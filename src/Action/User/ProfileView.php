@@ -37,11 +37,11 @@ final class ProfileView
         // users
         $user = $this->user->readSingle([
             'ID' => $ID,
-            'select' => ['ID', 'fullName', 'userName', 'email', 'btcAddress', 'ethAddress', 'dogeAddress', 'ltcAddress','pmAddress']
+            'select' => ['ID', 'fullName', 'userName', 'email', 'btcAddress', 'ethAddress', 'dogeAddress', 'ltcAddress', 'pmAddress']
         ]);
 
         $data['profile'] = $user;
-        $data['activeCurrencies'] = explode(',', $this->settings->activeCurrencies);
+        $data['activeCurrencies'] = $GLOBALS['activeCurrencies'];
 
         $this->view->assign('data', $data);
         $this->view->display('theme/user/profile.tpl');

@@ -70,7 +70,7 @@ final class DepositsView
         $data = [
             'deposits' => $deposits,
             'plans' => $plans,
-            'activeCurrencies' => explode(',', $this->settings->activeCurrencies)
+            'activeCurrencies' => $GLOBALS['activeCurrencies']
         ];
 
         $this->view->assign('data', $data);

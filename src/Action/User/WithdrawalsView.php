@@ -87,9 +87,8 @@ final class WithdrawalsView
     {
 
         $wallets = [];
-        $activeCurrencies = explode(',', $this->settings->activeCurrencies);
         $user = $this->user->readSingle(['ID' => $ID]);
-        foreach ($activeCurrencies as $currency)
+        foreach ($GLOBALS['activeCurrencies'] as $currency)
             $wallets[] = $this->genWallet($currency, $user->{$currency . 'Balance'}, (bool) $user->{$currency . 'Address'});
 
         return $wallets;

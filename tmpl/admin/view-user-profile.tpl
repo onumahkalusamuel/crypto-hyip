@@ -1,9 +1,6 @@
 {include file='admin/header.tpl' pageTitle='User'}
 
 {assign var=user value=$data.user}
-{assign var=activeCurrencies value=$data.activeCurrencies}
-
-
 
 <table class="forTexts" width="100%" height="100%" cellspacing="0" cellpadding="10" border="0">
     <tbody>

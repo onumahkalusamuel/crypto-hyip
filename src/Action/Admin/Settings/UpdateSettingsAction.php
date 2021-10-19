@@ -56,80 +56,12 @@ final class UpdateSettingsAction
             $message = "Invalid password provided.";
         }
 
-        // check for wallet addresses and vailidate
-        //BTC
-        if (empty($message) && !empty($data['btcDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('btc', $data['btcDepositAddress'])) {
-                $message = "Invalid BTC Address entered.";
-            } else {
-                $this->settings->btcDepositAddress = $data['btcDepositAddress'];
-            }
-        }
-        //bch
-        if (empty($message) && !empty($data['bchDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('bch', $data['bchDepositAddress'])) {
-                $message = "Invalid BCH Address entered.";
-            } else {
-                $this->settings->bchDepositAddress = $data['bchDepositAddress'];
-            }
-        }
-        //bnb
-        if (empty($message) && !empty($data['bnbDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('bnb', $data['bnbDepositAddress'])) {
-                $message = "Invalid BNB Address entered.";
-            } else {
-                $this->settings->bnbDepositAddress = $data['bnbDepositAddress'];
-            }
-        }
-        //ETH
-        if (empty($message) && !empty($data['ethDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('eth', $data['ethDepositAddress'])) {
-                $message = "Invalid ETH Address entered.";
-            } else {
-                $this->settings->ethDepositAddress = $data['ethDepositAddress'];
-            }
-        }
-        // DOGE
-        if (empty($message) && !empty($data['dogeDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('doge', $data['dogeDepositAddress'])) {
-                $message = "Invalid DOGE Address entered.";
-            } else {
-                $this->settings->dogeDepositAddress = $data['dogeDepositAddress'];
-            }
-        }
-        // LTC
-        if (empty($message) && !empty($data['ltcDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('ltc', $data['ltcDepositAddress'])) {
-                $message = "Invalid LTC Address entered.";
-            } else {
-                $this->settings->ltcDepositAddress = $data['ltcDepositAddress'];
-            }
-        }
-        //trx
-        if (empty($message) && !empty($data['trxDepositAddress'])) {
-            if (!$this->cryptoHelper->validate('trx', $data['trxDepositAddress'])) {
-                $message = "Invalid TRX Address entered.";
-            } else {
-                $this->settings->trxDepositAddress = $data['trxDepositAddress'];
-            }
-        }
-    
-        // PM
-        if (empty($message) && !empty($data['pmDepositAddress'])) {
-            if (substr(strtoupper($data['pmDepositAddress']), 0, 1) !== "U") {
-                $message = "Invalid PM Address entered.";
-            } else {
-                $this->settings->pmDepositAddress = $data['pmDepositAddress'];
-            }
-        }
-
         if (empty($message)) {
             $this->settings->minWithdrawal = $data['minWithdrawal'];
             $this->settings->payReferral = $data['payReferral'];
             $this->settings->googleTrackId = trim($data['googleTrackId']);
             $this->settings->headerCode = trim($data['headerCode']);
             $this->settings->footerCode = trim($data['footerCode']);
-            $this->settings->activeCurrencies = implode(",", $data['activeCurrencies']);
             $this->sendMail->sendSettingsChangedMail();
         }
 
