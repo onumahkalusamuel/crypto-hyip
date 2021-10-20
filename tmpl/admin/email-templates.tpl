@@ -1,4 +1,4 @@
-{include file='admin/header.tpl' pageTitle='Settings'}
+{include file='admin/header.tpl' pageTitle='Email Templates'}
 
 {assign var=settings value=$data.settings}
 
