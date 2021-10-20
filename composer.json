@@ -3,8 +3,6 @@
         "slim/slim": "4.*",
         "slim/psr7": "^1.2",
         "illuminate/database": "^7.29",
-        "tuupola/slim-jwt-auth": "^3.5",
-        "firebase/php-jwt": "^5.2",
         "merkeleon/php-cryptocurrency-address-validation": "^1.2",
         "selective/basepath": "^2.0",
         "guzzlehttp/guzzle": "^7.3",
