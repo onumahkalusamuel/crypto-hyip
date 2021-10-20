@@ -1,7 +1,7 @@
 {include file='admin/header.tpl' pageTitle='User'}
 {assign var=user value=$data.user}
 
-<script type="text/javascript" src="assets/nicEdit.js"></script>
+<script type="text/javascript" src="nicEdit.js"></script>
 <script type="text/javascript">
     bkLib.onDomLoaded(function() { nicEditors.allTextAreas({ fullPanel: true }) });
 </script>
