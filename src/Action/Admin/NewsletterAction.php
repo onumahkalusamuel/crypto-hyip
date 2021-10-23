@@ -100,22 +100,7 @@ final class NewsletterAction
 
         // send to single user
         if (empty($message) && !empty($singleRecipient)) {
-
-            $data['message'];
-
-            $mailMessage = str_replace(
-                ['#name#', '#username#', '#email#', '#date_register#'],
-                [$user->fullName, $user->userName, $user->email, $user->createdAt],
-                $data['message']
-            );
-
-            $send = $this->mail->send([
-                'email' => $user->email,
-                'name' => $user->fullName,
-                'subject' => $data['subject'],
-                'message' => $mailMessage,
-            ]);
-
+            $send = $this->mail->sendNewsletter($user, $data);
             if (empty($send['success'])) {
                 $message = $send['message'];
             }
@@ -184,6 +169,8 @@ final class NewsletterAction
                         'data' => json_encode([
                             'message' => $data['message'],
                             'subject' => $data['subject'],
+                            'useGeneralHeader' => $data['useGeneralHeader'],
+                            'useGeneralFooter' => $data['useGeneralFooter'],
                             'to' => implode(",", $userIds),
                             'send_list' => implode(",", $userIds)
                         ])

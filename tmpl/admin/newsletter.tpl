@@ -43,7 +43,7 @@
                             </tr>
                             <tr id="userNameRow">
                                 <th>Username:</th>
-                                <td><input type="text" name="userName" value="" class="inpts" size="30">
+                                <td><input type="text" name="userName" value="" class="inpts" size="30" />
                                 </td>
                             </tr>
                             <tr>
@@ -52,7 +52,25 @@
                             </tr>
                             <tr>
                                 <th>Message:<br></th>
-                                <td><textarea name="message" class="inpts" rows="10" required></textarea> </td>
+                                <td><textarea name="message" class="inpts" rows="10"></textarea> </td>
+                            </tr>
+                            <tr>
+                                <th>Use General Header?</th>
+                                <td>
+                                    <select name="useGeneralHeader" class="inpts">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Use General Footer?</th>
+                                <td>
+                                    <select name="useGeneralFooter" class="inpts">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <th></th>

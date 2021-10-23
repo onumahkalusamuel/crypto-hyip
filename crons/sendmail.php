@@ -9,11 +9,19 @@ $connection = $container->get(Connection::class);
 use App\Domain\QueuedJobs\Repository\QueuedJobsRepository;
 use App\Domain\User\Repository\UserRepository;
 use App\Helpers\SendMail;
+use App\Domain\EmailTemplates\Service\EmailTemplates;
+use App\Domain\EmailTemplates\Repository\EmailTemplatesRepository;
+use App\Domain\Settings\Repository\SettingsRepository;
+use App\Domain\Settings\Service\Settings;
 
 // construct the needed classes
 $queuedJobsRepository = new QueuedJobsRepository($connection);
 $userRepository = new UserRepository($connection);
-$sendMail = new SendMail($container);
+$emailTemplatesRepository = new EmailTemplatesRepository($connection);
+$emailTemplates = new EmailTemplates($emailTemplatesRepository);
+$settingsRepository = new SettingsRepository($connection);
+$settings = new Settings($settingsRepository);
+$sendMail = new SendMail($container, $emailTemplates, $settings);
 
 // fetch all pending mail jobs
 $jobs = $queuedJobsRepository->readAll([
@@ -41,22 +49,13 @@ foreach ($jobs as $job) {
     $userIds = explode(",", $data['to']);
 
     while (!empty($userIds) && $totalSent < 200) {
+
         $currentUserId = array_shift($userIds);
+        
         $user = $userRepository->readSingle(['ID' => $currentUserId]);
         if (empty($user->ID)) continue;
 
-        $mailMessage = str_replace(
-            ['#name#', '#username#', '#email#', '#date_register#'],
-            [$user->fullName, $user->userName, $user->email, $user->createdAt],
-            $data['message']
-        );
-
-        $send = $sendMail->send([
-            'email' => $user->email,
-            'name' => $user->fullName,
-            'subject' => $data['subject'],
-            'message' => $mailMessage,
-        ]);
+        $send = $sendMail->sendNewsletter($user, $data);
 
         if (empty($send['success'])) {
             $userIds[] = $currentUserId;

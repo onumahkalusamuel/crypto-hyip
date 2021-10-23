@@ -92,6 +92,28 @@ class SendMail
         return $this->send($data);
     }
 
+    public function sendNewsletter($user, $params = array()): array
+    {
+        $data['email'] = $user->email;
+        $data['name'] = $user->fullName;
+
+        $message = "";
+
+        if ($params['useGeneralHeader']) $message .= $this->siteSettings->generalEmailHeader;
+        $message .= $params['message'];
+        if ($params['useGeneralFooter']) $message .= $this->siteSettings->generalEmailFooter;
+
+        $search = ['#name#', '#username#', '#email#', '#date_register#', '#site_url#', '#site_name#', '#site_email#', '#this_year#'];
+        $replace = [$user->fullName, $user->userName, $user->email, $user->createdAt, $this->siteUrl, $this->siteName, $this->contactEmail, date('Y')];
+
+        $message = str_replace($search, $replace, $message);
+
+        $data['subject'] = $params['subject'] . " - " . $this->siteName;
+        $data['message'] = $message;
+
+        return $this->send($data);
+    }
+
     private function sendTemplatedMail($templateId, $email, $name, $replacements = array())
     {
         $template = $this->emailTemplates->readSingle(['ID' => $templateId]);
