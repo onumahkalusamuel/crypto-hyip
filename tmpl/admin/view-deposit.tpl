@@ -33,7 +33,7 @@
                         <tr>
                             <th></th>
                             <td>
-                                {if $deposit->cryptoCurrency ne "pm"}
+                                {if false === $deposit->cryptoCurrency|in_array:["pm","trx","bnb"]}
                                     <img src="{$paymentLink}" alt="QR CODE">
                                 {/if}
                                 <div class="hlp">
