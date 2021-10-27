@@ -36,8 +36,8 @@ final class ProfileView
         $ID = $this->session->get('ID');
         $select = ['ID', 'fullName', 'userName', 'email'];
         foreach ($GLOBALS['activeCurrencies'] as $currency) {
-            $select[] = [$currency . 'Address'];
-            $select[] = [$currency . 'Balance'];
+            $select[] = $currency . 'Address';
+            $select[] = $currency . 'Balance';
         }
         // users
         $user = $this->user->readSingle([
