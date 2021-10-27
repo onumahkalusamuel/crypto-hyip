@@ -32,6 +32,7 @@ class ProfileAction
 
         $data = (array) $request->getParsedBody();
         $ID = $this->session->get('ID');
+        $update = [];
 
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $oldPassword = $data['oldPassword'];
@@ -53,36 +54,55 @@ class ProfileAction
         }
 
         // check for wallet addresses and vailidate
+        //BNB
+        if (empty($message) && !empty($data['bnbAddress'])) {
+            if (!$this->cryptoHelper->validate('bnb', $data['bnbAddress'])) {
+                $message = "Invalid BNB Address entered.";
+            } else $update['bnbAddress'] = $data['bnbAddress'];
+        }
+        //BCH
+        if (empty($message) && !empty($data['bchAddress'])) {
+            if (!$this->cryptoHelper->validate('bch', $data['bchAddress'])) {
+                $message = "Invalid BCH Address entered.";
+            } else $update['bchAddress'] = $data['bchAddress'];
+        }
         //BTC
         if (empty($message) && !empty($data['btcAddress'])) {
             if (!$this->cryptoHelper->validate('btc', $data['btcAddress'])) {
                 $message = "Invalid BTC Address entered.";
-            }
+            } else $update['btcAddress'] = $data['btcAddress'];
         }
         //ETH
         if (empty($message) && !empty($data['ethAddress'])) {
             if (!$this->cryptoHelper->validate('eth', $data['ethAddress'])) {
                 $message = "Invalid ETH Address entered.";
-            }
+            } else $update['ethAddress'] = $data['ethAddress'];
         }
         // DOGE
         if (empty($message) && !empty($data['dogeAddress'])) {
             if (!$this->cryptoHelper->validate('doge', $data['dogeAddress'])) {
                 $message = "Invalid DOGE Address entered.";
-            }
+            } else $update['dogeAddress'] = $data['dogeAddress'];
         }
         // LTC
         if (empty($message) && !empty($data['ltcAddress'])) {
             if (!$this->cryptoHelper->validate('ltc', $data['ltcAddress'])) {
                 $message = "Invalid LTC Address entered.";
-            }
+            } else $update['ltcAddress'] = $data['ltcAddress'];
+        }
+
+        // TRX
+        if (empty($message) && !empty($data['trxAddress'])) {
+            if (!$this->cryptoHelper->validate('trx', $data['trxAddress'])) {
+                $message = "Invalid TRX Address entered.";
+            } else $update['trxAddress'] = $data['trxAddress'];
         }
 
         // PM
         if (empty($message) && !empty($data['pmAddress'])) {
             if (substr(strtoupper($data['pmAddress']), 0, 1) !== "U") {
                 $message = "Invalid PM Address entered.";
-            }
+            } else $update['pmAddress'] = $data['pmAddress'];
         }
 
         if (empty($message) && !empty($data['password']) && $data['password'] !== $data['confirmPassword']) {
@@ -90,25 +110,15 @@ class ProfileAction
         }
 
         if (empty($message) && !empty($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+            $update['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
+        // email and name
+        $update['email'] = $data['email'];
+        $update['fullName'] = $data['fullName'];
+
         if (empty($message)) {
-            $updateData = [
-                'fullName' => $data['fullName'],
-                'email' => $data['email'],
-                'btcAddress' => $data['btcAddress'],
-                'ethAddress' => $data['ethAddress'],
-                'dogeAddress' => $data['dogeAddress'],
-                'ltcAddress' => $data['ltcAddress'],
-                'pmAddress' => $data['pmAddress']
-            ];
-
-            if (!empty($data['password'])) {
-                $updateData['password'] = $data['password'];
-            }
-
-            $update = $this->user->update(['ID' => $ID, 'data' => $updateData]);
+            $up = $this->user->update(['ID' => $ID, 'data' => $update]);
         }
 
         // Clear all flash messages
@@ -119,7 +129,7 @@ class ProfileAction
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
         $url = $routeParser->urlFor("user-profile");
 
-        if (empty($message) && !empty($update)) {
+        if (empty($message) && !empty($up)) {
             $flash->set('success', 'Profile updated successfully!');
         } else {
             $flash->set('error', !empty($message) ? $message : 'Unable to update details at the moment!');

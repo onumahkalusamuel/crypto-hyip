@@ -39,6 +39,23 @@ final class UpdateAction
         }
 
         // validate addresses
+        // bch
+        if (empty($message) && !empty($data['bchAddress'])) {
+            if (!$this->cryptoHelper->validate('bch', $data['bchAddress'])) {
+                $message = "Invalid BCH Address entered.";
+            } else {
+                $newData['bchAddress'] = $data['bchAddress'];
+            }
+        }
+
+        // bnb
+        if (empty($message) && !empty($data['bnbAddress'])) {
+            if (!$this->cryptoHelper->validate('bnb', $data['bnbAddress'])) {
+                $message = "Invalid BNB Address entered.";
+            } else {
+                $newData['bnbAddress'] = $data['bnbAddress'];
+            }
+        }
         // BTC
         if (empty($message) && !empty($data['btcAddress'])) {
             if (!$this->cryptoHelper->validate('btc', $data['btcAddress'])) {
@@ -69,6 +86,14 @@ final class UpdateAction
                 $message = "Invalid LTC Address entered.";
             } else {
                 $newData['ltcAddress'] = $data['ltcAddress'];
+            }
+        }
+        // trx
+        if (empty($message) && !empty($data['trxAddress'])) {
+            if (!$this->cryptoHelper->validate('trx', $data['trxAddress'])) {
+                $message = "Invalid TRX Address entered.";
+            } else {
+                $newData['trxAddress'] = $data['trxAddress'];
             }
         }
 

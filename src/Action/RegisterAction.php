@@ -49,9 +49,12 @@ final class RegisterAction
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $password = trim($data['password']);
         $userName = trim($data['userName']);
+        $bchAddress = trim($data['bchAddress']);
+        $bnbAddress = trim($data['bnbAddress']);
         $btcAddress = trim($data['btcAddress']);
         $ethAddress = trim($data['ethAddress']);
         $ltcAddress = trim($data['ltcAddress']);
+        $trxAddress = trim($data['trxAddress']);
         $dogeAddress = trim($data['dogeAddress']);
         $pmAddress = trim($data['pmAddress']);
         $secretQuestion = trim($data['secretQuestion']);
@@ -124,9 +127,12 @@ final class RegisterAction
                 'userName' => $userName,
                 'userType' => 'user',
                 'password' => password_hash($password, PASSWORD_BCRYPT),
+                'bnbAddress' => $bnbAddress,
+                'bchAddress' => $bchAddress,
                 'btcAddress' => $btcAddress,
                 'ethAddress' => $ethAddress,
                 'ltcAddress' => $ltcAddress,
+                'trxAddress' => $trxAddress,
                 'dogeAddress' => $dogeAddress,
                 'pmAddress' => $pmAddress,
                 'secretQuestion' => $secretQuestion,
