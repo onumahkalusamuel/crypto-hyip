@@ -42,12 +42,12 @@ class LoginAction
         $loginUser = $this->user->find(['params' => ['userName' => $email]]);
 
         // then by email
-        if(empty($loginUser->ID)) {
+        if (empty($loginUser->ID)) {
             $loginUser = $this->user->find(['params' => ['email' => $email]]);
         }
 
         if (password_verify($password, $loginUser->password)) {
-            if ($loginUser->isActive === 0) {
+            if (empty($loginUser->isActive)) {
                 $message = "Sorry, it looks like your account is not active. Please chat with support for assistance.";
             } else {
                 $loggedIn = true;

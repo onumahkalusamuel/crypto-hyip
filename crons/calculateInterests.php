@@ -43,6 +43,12 @@ foreach ($deposits as $deposit) {
         continue;
     }
 
+    if (empty($user->isActive)) {
+        // user inactive
+        logMessage("info", "User {$deposit->userName} inactive!");
+        continue;
+    }
+
     // set a reference date for calculations
     // use the deposit approval date if the last interest date is still null.
     $referenceDate = !empty($deposit->lastInterestDate) ? $deposit->lastInterestDate : $deposit->depositApprovalDate;
@@ -139,7 +145,7 @@ foreach ($deposits as $deposit) {
         // log the error
         $depositRepository->rollback();
         logMessage('error', "{$e->getMessage()}, in file: {$e->getFile()}, line {$e->getLine()}");
-	continue;
+        continue;
     }
 
     // then check up on releases
@@ -185,7 +191,6 @@ foreach ($deposits as $deposit) {
         }
         continue;
     }
-
 }
 
 //exit application

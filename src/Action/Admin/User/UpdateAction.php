@@ -38,6 +38,8 @@ final class UpdateAction
             $newData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
+        $newData['isActive'] = $data['isActive'];
+
         // validate addresses
         foreach ($GLOBALS['activeCurrencies'] as $currency) {
             if (empty($message)) {

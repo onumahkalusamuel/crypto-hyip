@@ -24,7 +24,7 @@
                                 <th>Status:</th>
                                 <td><select name="isActive" class="inpts">
                                         <option {if $user->isActive==1}selected{/if} value="1">Active </option>
-                                        <option {if $user->isActive==0}selected{/if} value="0">Disabled </option>
+                                        <option {if $user->isActive==0}selected{/if} value="0">Disable </option>
                                     </select> </td>
                             </tr>
                             <tr>
