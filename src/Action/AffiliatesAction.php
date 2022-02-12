@@ -4,7 +4,6 @@ namespace App\Action;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 final class AffiliatesAction
@@ -21,20 +20,11 @@ final class AffiliatesAction
         ResponseInterface $response,
         $args
     ): ResponseInterface {
-
         // used to track progress
         $referralUserName = $args['referralUserName'] ?? '';
-
         // keep it in the session
         $this->session->set('referralUserName', $referralUserName);
-
-        // Get RouteParser from request to generate the urls
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-        // $url = $routeParser->urlFor("page", ['page' => "register"]);
-
-        $url = $routeParser->urlFor("home");
-
-        return $response->withStatus(302)->withHeader('Location', $url);
+        $response->getBody()->write(json_encode(array('success' => true)));
+        return $response;
     }
 }

@@ -83,6 +83,6 @@ final class ResetPasswordAction
             'message' => $message
         ]));
 
-        return $response->withStatus(400);
+        return $response;
     }
 }

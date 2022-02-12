@@ -9,35 +9,27 @@ use App\Domain\Referrals\Service\Referrals;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Smarty as View;
 
 final class UserDashboardAction
 {
     protected $user;
-    protected $session;
     protected $deposits;
     protected $withdrawals;
     protected $referrals;
     protected $trailLog;
-    protected $view;
 
     public function __construct(
-        Session $session,
         User $user,
         Deposits $deposits,
         Withdrawals $withdrawals,
         Referrals $referrals,
-        TrailLog $trailLog,
-        View $view
+        TrailLog $trailLog
     ) {
         $this->user = $user;
-        $this->session = $session;
         $this->deposits = $deposits;
         $this->withdrawals = $withdrawals;
         $this->referrals = $referrals;
         $this->trailLog = $trailLog;
-        $this->view = $view;
     }
 
     public function __invoke(
@@ -45,7 +37,7 @@ final class UserDashboardAction
         ResponseInterface $response
     ): ResponseInterface {
 
-        $ID = $this->session->get('ID');
+        $ID = $request->getAttribute('token')['data']->ID;
 
         $data['user_name'] = "";
         $data['full_name'] = "";
@@ -132,10 +124,10 @@ final class UserDashboardAction
             $data['total_balance'] += $user->{$c . 'Balance'};
         }
 
-        // earned_total
-
-        $this->view->assign('data', $data);
-        $this->view->display('theme/user/dashboard.tpl');
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $data
+        ]));
 
         return $response;
     }

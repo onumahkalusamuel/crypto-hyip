@@ -35,7 +35,7 @@ class SendMail
         $this->contactName = $smtp['name'];
         $this->contactEmail = $smtp['email'];
         $this->siteName = $display['name'];
-        $this->siteUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        $this->siteUrl = $_ENV['FRONTEND_URL'];
 
         $mail = new PHPMailer(true);
 

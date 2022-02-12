@@ -3,33 +3,17 @@
 namespace App\Action\User;
 
 use App\Domain\Deposits\Service\Deposits;
-use App\Domain\Plans\Service\Plans;
-use App\Domain\Settings\Service\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Smarty as View;
 
 final class DepositsView
 {
-    protected $session;
     protected $deposits;
-    protected $plans;
-    protected $view;
-    private $settings;
 
     public function __construct(
-        Session $session,
-        Deposits $deposits,
-        Plans $plans,
-        Settings $settings,
-        View $view
+        Deposits $deposits
     ) {
-        $this->session = $session;
         $this->deposits = $deposits;
-        $this->plans = $plans;
-        $this->view = $view;
-        $this->settings = $settings;
     }
 
     public function __invoke(
@@ -37,7 +21,7 @@ final class DepositsView
         ResponseInterface $response
     ): ResponseInterface {
 
-        $ID = $this->session->get('ID');
+        $ID = $request->getAttribute('token')['data']->ID;
 
         $filters = $params = [];
 
@@ -60,21 +44,10 @@ final class DepositsView
             'filters' => $filters
         ]);
 
-        // plans
-        $plans = $this->plans->readAll([
-            'params' => ['isActive' => 1],
-            'select' => ['ID', 'title', 'minimum', 'maximum', 'percentage', 'durationType', 'profitFrequency', 'duration']
-        ]);
-
-        // prepare the return data
-        $data = [
-            'deposits' => $deposits,
-            'plans' => $plans,
-            'activeCurrencies' => $GLOBALS['activeCurrencies']
-        ];
-
-        $this->view->assign('data', $data);
-        $this->view->display('theme/user/deposits.tpl');
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $deposits
+        ]));
 
         return $response;
     }

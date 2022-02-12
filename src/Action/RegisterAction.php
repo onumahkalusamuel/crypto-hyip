@@ -8,27 +8,22 @@ use App\Helpers\SendMail;
 use App\Helpers\CryptoHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 final class RegisterAction
 {
     private $referrals;
     private $user;
-    private $session;
     private $mail;
     private $cryptoHelper;
 
     public function __construct(
         Referrals $referrals,
         User $user,
-        Session $session,
         SendMail $sendMail,
         CryptoHelper $cryptoHelper
     ) {
         $this->referrals = $referrals;
         $this->user = $user;
-        $this->session = $session;
         $this->mail = $sendMail;
         $this->cryptoHelper = $cryptoHelper;
     }
@@ -44,7 +39,7 @@ final class RegisterAction
         // Collect input from the HTTP request
         $data = (array) $request->getParsedBody();
 
-        $referralUserName = $this->session->get('referralUserName') ?? '';
+        $referralUserName = trim($data['referralUserName']) ?? '';
         $fullName = trim($data['fullName']);
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $password = trim($data['password']);
@@ -175,19 +170,10 @@ final class RegisterAction
                     }
                 }
             }
-            // Clear all flash messages
-            $flash = $this->session->getFlashBag();
-            $flash->clear();
-
-            // Get RouteParser from request to generate the urls
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-            $url = $routeParser->urlFor("login");
 
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'message' => "Account Registered Successfully",
-                'redirect' => $url
             ]));
 
             // Redirect to protected page
@@ -201,7 +187,7 @@ final class RegisterAction
             'message' => $message
         ]));
 
-        return $response->withStatus(400);
+        return $response;
     }
 
     public function emailInUse($email): bool

@@ -4,35 +4,26 @@ namespace App\Action\User;
 
 use App\Domain\Deposits\Service\Deposits;
 use App\Domain\Plans\Service\Plans;
-use App\Domain\Settings\Service\Settings;
 use App\Helpers\CryptoHelper;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 final class DepositsAction
 {
     private $deposits;
     private $cryptoHelper;
-    private $settings;
-    private $session;
     private $plans;
     private $sendMail;
 
     public function __construct(
         Deposits $deposits,
-        Settings $settings,
         CryptoHelper $cryptoHelper,
-        Session $session,
         Plans $plans,
         SendMail $sendMail
     ) {
         $this->deposits = $deposits;
-        $this->settings = $settings;
         $this->cryptoHelper = $cryptoHelper;
-        $this->session = $session;
         $this->plans = $plans;
         $this->sendMail = $sendMail;
     }
@@ -48,8 +39,8 @@ final class DepositsAction
         // Collect input from the HTTP request
         $data = (array) $request->getParsedBody();
 
-        $data['userID'] = $this->session->get('ID');
-        $data['userName'] = $this->session->get('userName');
+        $data['userID'] = $request->getAttribute('token')['data']->ID;
+        $data['userName'] = $request->getAttribute('token')['data']->userName;
         $data['transactionID'] = strtoupper(uniqid());
         $data['amount'] = (float) $data['amount'];
 
@@ -102,26 +93,15 @@ final class DepositsAction
 
         // responses
         if (empty($message) && !empty($depositId)) {
-            // Clear all flash messages
-            $flash = $this->session->getFlashBag();
-            $flash->clear();
-
-            $flash->set('success', "The deposit has been saved. It will become active when the administrator checks statistics");
-            // Get RouteParser from request to generate the urls
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-            $url = $routeParser->urlFor("user-view-deposit", ['id' => $depositId]);
-
             $response->getBody()->write(json_encode([
                 'success' => true,
-                'message' => "Successful",
-                'redirect' => $url
+                'message' => "The deposit has been saved. It will become active when the administrator checks statistics",
+                'id' => $depositId
             ]));
 
             // notify admin
             $this->sendMail->sendPendingDepositMailToAdmin($data['userName'], $data['amount']);
 
-            // Redirect to protected page
             return $response;
         }
 
@@ -132,6 +112,6 @@ final class DepositsAction
             'message' => $message
         ]));
 
-        return $response->withStatus(400);
+        return $response;
     }
 }

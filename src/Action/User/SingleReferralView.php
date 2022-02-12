@@ -6,26 +6,18 @@ use App\Domain\Referrals\Service\Referrals;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Smarty as View;
 
 final class SingleReferralView
 {
-    protected $session;
     protected $referrals;
     protected $trailLog;
-    protected $view;
 
     public function __construct(
-        Session $session,
         Referrals $referrals,
-        TrailLog $trailLog,
-        View $view
+        TrailLog $trailLog
     ) {
-        $this->session = $session;
         $this->referrals = $referrals;
         $this->trailLog = $trailLog;
-        $this->view = $view;
     }
 
     public function __invoke(
@@ -34,7 +26,7 @@ final class SingleReferralView
         $args
     ): ResponseInterface {
 
-        $userID = $this->session->get('ID');
+        $userID = $request->getAttribute('token')['data']->ID;
         $ID = $args['id'];
         $params = [];
 
@@ -62,8 +54,10 @@ final class SingleReferralView
             'trailLog' => $trailLog
         ];
 
-        $this->view->assign('data', $data);
-        $this->view->display('theme/user/view-referral.tpl');
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $data
+        ]));
 
         return $response;
     }

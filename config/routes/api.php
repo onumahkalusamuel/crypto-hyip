@@ -21,7 +21,10 @@ return function (App $app) {
             return $response->withStatus(404);
         });
 
-        $group->get('/last-transactions[/{type}[/]]', \App\Action\Api\LastTransactionsAction::class)->setName('api-last-transactions');
+        // get public
+        (require __DIR__ . '/public.php')($group);
+        // get user
+        (require __DIR__ . '/user.php')($group);
 
         // catch-all
         $group->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '{routes:.+}', function ($request, $response) {

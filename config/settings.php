@@ -77,6 +77,9 @@ $settings['session'] = [
     'cache_expire' => 0,
 ];
 
+// jwt settings
+$settings['jwt_key'] = $_ENV['JWT_KEY'];
+
 // fetch the definitions from the public file
 $settings['display_settings'] = function () {
     return require dirname(__DIR__) . "/settings.php";

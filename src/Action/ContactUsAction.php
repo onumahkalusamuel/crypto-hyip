@@ -23,11 +23,11 @@ final class ContactUsAction
         // send a copy to admin
         try {
             $send = $this->sendMail->sendContactMail($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $send['message'] = "Unable to send mail at the moment";
         }
 
-        if($send['success']) $send['message'] = "Message sent successfully.";
+        if ($send['success']) $send['message'] = "Message sent successfully.";
         else $send['message'] = "Unable to send message at the moment. Please try again later.";
 
         $response->getBody()->write(json_encode($send));

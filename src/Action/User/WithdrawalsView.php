@@ -5,35 +5,23 @@ namespace App\Action\User;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use App\Domain\User\Service\User;
 use App\Domain\Settings\Service\Settings;
-use App\Domain\Plans\Service\Plans;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Smarty as View;
 
 final class WithdrawalsView
 {
-    protected $session;
     protected $withdrawals;
     protected $user;
-    protected $plans;
     protected $settings;
-    protected $view;
 
     public function __construct(
-        Session $session,
         Withdrawals $withdrawals,
         User $user,
-        Plans $plans,
-        Settings $settings,
-        View $view
+        Settings $settings
     ) {
-        $this->session = $session;
         $this->withdrawals = $withdrawals;
         $this->user = $user;
-        $this->plans = $plans;
         $this->settings = $settings;
-        $this->view = $view;
     }
 
     public function __invoke(
@@ -41,7 +29,7 @@ final class WithdrawalsView
         ResponseInterface $response
     ): ResponseInterface {
 
-        $ID = $this->session->get('ID');
+        $ID = $request->getAttribute('token')['data']->ID;
 
         $filters = $params = [];
 
@@ -77,8 +65,10 @@ final class WithdrawalsView
             'min_withdrawal' => $minWithdrawal
         ];
 
-        $this->view->assign('data', $data);
-        $this->view->display('theme/user/withdrawals.tpl');
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $data
+        ]));
 
         return $response;
     }

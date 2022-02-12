@@ -8,28 +8,23 @@ use App\Domain\Settings\Service\Settings;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 final class WithdrawalsAction
 {
     private $withdrawals;
     private $user;
     private $settings;
-    private $session;
     private $sendMail;
 
     public function __construct(
         Withdrawals $withdrawals,
         User $user,
         Settings $settings,
-        Session $session,
         SendMail $sendMail
     ) {
         $this->withdrawals = $withdrawals;
         $this->user = $user;
         $this->settings = $settings;
-        $this->session = $session;
         $this->sendMail = $sendMail;
     }
 
@@ -44,9 +39,9 @@ final class WithdrawalsAction
         // Collect input from the HTTP request
         $data = (array) $request->getParsedBody();
 
-        $ID = $this->session->get('ID');
+        $ID = $request->getAttribute('token')['data']->ID;
         $data['userID'] = $ID;
-        $data['userName'] = $this->session->get('userName');
+        $data['userName'] = $request->getAttribute('token')['data']->userName;
         $data['transactionID'] = strtoupper(uniqid());
         $data['amount'] = (float) $data['amount'];
 
@@ -56,7 +51,7 @@ final class WithdrawalsAction
 
         // check if amount is lower than minimum
         if (empty($message) && $data['amount'] < $this->settings->minWithdrawal) {
-            $message = "Withdrawal amount of $".$data['amount']." is lower than minimum deposit of $" . $this->settings->minWithdrawal;
+            $message = "Withdrawal amount of $" . $data['amount'] . " is lower than minimum deposit of $" . $this->settings->minWithdrawal;
         }
 
         // fetch user
@@ -88,21 +83,10 @@ final class WithdrawalsAction
             // send mail
             $this->sendMail->sendWithdrawalRequestEmail($user->email, $data['cryptoCurrency'], $data['amount'], $user->fullName, $user->userName);
 
-            // Clear all flash messages
-            $flash = $this->session->getFlashBag();
-            $flash->clear();
-
-            $flash->set('success', "The withdrawal has been saved. It will become approved when the administrator checks statistics");
-
-            // Get RouteParser from request to generate the urls
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-            $url = $routeParser->urlFor("user-view-withdrawal", ['id' => $withdrawalId]);
-
             $response->getBody()->write(json_encode([
                 'success' => true,
-                'message' => "Successful",
-                'redirect' => $url
+                'message' => "The withdrawal has been saved. It will become approved when the administrator checks statistics",
+                'id' => $withdrawalId
             ]));
 
             // Redirect to protected page

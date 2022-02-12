@@ -6,8 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Psr7\Response as Psr7Response;
-use Slim\Routing\RouteContext;
+use Slim\Psr7\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -29,18 +28,21 @@ final class UserAuthMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        if ($this->session->get('userType') === "user") {
-            // User is logged in
+
+
+
+        //check if there is a school id in header
+        $usertype = $request->getAttribute('token')['data']->userType;
+
+        if ($usertype  === 'user') {
             return $handler->handle($request);
         }
 
-        // User is not logged in. Redirect to login page.
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $return['success'] = false;
+        $return['message'] = 'Unauthorized Access';
+        $response = new Response;
+        $response->getBody()->write(json_encode($return, JSON_PRETTY_PRINT));
 
-        $url = $routeParser->urlFor('login');
-
-        $response = new Psr7Response();
-
-        return $response->withStatus(302)->withHeader('Location', $url);
+        return $response;
     }
 }

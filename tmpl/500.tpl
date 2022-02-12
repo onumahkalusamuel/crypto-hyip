@@ -72,13 +72,13 @@
         <h1 class="">5.oh.oh</h1>
         <h2 class="">Oops! An Error Occured.</h2>
         <p>Unable to process your request at the moment.</p>
-        <a class="button" href="{$route->urlFor('home')}">Return Home</a>
+        {* <a class="button" href="{$route->urlFor('')}">Return Home</a> *}
         <a class="button-alt"
             href="mailto:admin@{$smarty.server.HTTP_HOST}?{'subject=An Error Occured. Page -> '|escape}{$smarty.server.HTTP_HOST|escape}{$smarty.server.REQUEST_URI}">Contact
             Support</a>
         {if $message ne ''}
             <div style="max-width:500px; padding:10px; margin:auto">
-            {$message}
+                {$message}
             </div>
         {/if}
     </div>

@@ -6,23 +6,19 @@ use App\Domain\Deposits\Service\Deposits;
 use App\Domain\TrailLog\Service\TrailLog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Smarty as View;
 
 final class SingleDepositView
 {
-    protected $session;
     protected $deposits;
     protected $trailLog;
     protected $view;
 
     public function __construct(
-        Session $session,
         Deposits $deposits,
         TrailLog $trailLog,
         View $view
     ) {
-        $this->session = $session;
         $this->deposits = $deposits;
         $this->trailLog = $trailLog;
         $this->view = $view;
@@ -34,7 +30,7 @@ final class SingleDepositView
         $args
     ): ResponseInterface {
 
-        $userID = $this->session->get('ID');
+        $userID = $request->getAttribute('token')['data']->ID;
         $ID = $args['id'];
         $params = [];
 
@@ -62,8 +58,10 @@ final class SingleDepositView
             'trailLog' => $trailLog
         ];
 
-        $this->view->assign('data', $data);
-        $this->view->display('theme/user/view-deposit.tpl');
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $data
+        ]));
 
         return $response;
     }

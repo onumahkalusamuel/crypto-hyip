@@ -5,7 +5,6 @@ namespace App\Action;
 use App\Domain\User\Service\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Smarty as View;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class ResetUpdateAction
@@ -17,12 +16,10 @@ class ResetUpdateAction
 
     public function __construct(
         User $user,
-        View $view,
         Session $session
     ) {
 
         $this->user = $user;
-        $this->view = $view;
         $this->session = $session;
     }
 
@@ -37,7 +34,7 @@ class ResetUpdateAction
         $data = (array) $request->getParsedBody();
 
         $newPassword = $data['newPassword'];
-        
+
         $token = $_GET['token'];
         $email = $_GET['email'];
 
@@ -76,8 +73,11 @@ class ResetUpdateAction
         }
 
         // return 
-        $this->view->assign('data', $return);
-        $this->view->display("theme/public/auth/reset-update.tpl");
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $return
+        ]));
+
         return $response;
     }
 }

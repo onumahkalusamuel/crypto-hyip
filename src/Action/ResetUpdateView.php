@@ -66,8 +66,11 @@ class ResetUpdateView
         }
 
         // return 
-        $this->view->assign('data', $data);
-        $this->view->display("theme/public/auth/reset-update.tpl");
+        $response->getBody()->write(json_encode([
+            'success' => true,
+            'data' => $data
+        ]));
+
         return $response;
     }
 }

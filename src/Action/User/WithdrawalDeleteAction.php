@@ -5,19 +5,15 @@ namespace App\Action\User;
 use App\Domain\Withdrawals\Service\Withdrawals;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 final class WithdrawalDeleteAction
 {
 
     private $withdrawals;
-    private $session;
 
-    public function __construct(Withdrawals $withdrawals, Session $session)
+    public function __construct(Withdrawals $withdrawals)
     {
         $this->withdrawals = $withdrawals;
-        $this->session = $session;
     }
 
     public function __invoke(
@@ -27,30 +23,22 @@ final class WithdrawalDeleteAction
     ): ResponseInterface {
 
         $ID = $args['id'];
-        $userID = $this->session->get('ID');
+        $userID = $request->getAttribute('token')['data']->ID;
 
-        $withdrawal = $this->withdrawals->readSingle(['ID'=>$ID]);
+        $withdrawal = $this->withdrawals->readSingle(['ID' => $ID]);
 
-        if($withdrawal->withdrawalStatus === "pending" && $withdrawal->userID == $userID) {
-            $delete = $this->withdrawals->delete(['ID'=>$ID]);
+        if ($withdrawal->withdrawalStatus === "pending" && $withdrawal->userID == $userID) {
+            $delete = $this->withdrawals->delete(['ID' => $ID]);
         }
-
-        // Clear all flash messages
-        $flash = $this->session->getFlashBag();
-        $flash->clear();
-
-        // Get RouteParser from request to generate the urls
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-        $url = $routeParser->urlFor('user-withdrawals');
-
 
         if (!empty($delete)) {
-            $flash->set('success', "Withdrawal deleted successfully");
+            $message = "Withdrawal deleted successfully";
+            $success = true;
         } else {
-            $flash->set('error', "Unable to delete record at the moment. Please try again later.");
+            $message = "Unable to delete record at the moment. Please try again later.";
+            $success = false;
         }
-
-        return $response->withStatus(302)->withHeader('Location', $url);
+        $response->getBody()->write(json_encode(compact('success', 'message')));
+        return $response;
     }
 }

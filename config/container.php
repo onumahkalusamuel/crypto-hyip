@@ -1,5 +1,6 @@
 <?php
 
+use App\Middleware\AppAuthMiddleware;
 use Illuminate\Container\Container as IlluminateContainer;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Tuupola\Middleware\JwtAuthentication;
 
 return [
     'settings' => function () {
@@ -39,6 +41,24 @@ return [
             (bool)$settings['log_errors'],
             (bool)$settings['log_error_details']
         );
+    },
+
+    // AppAuth
+    AppAuthMiddleware::class => function (ContainerInterface $container) {
+        $auth = new JwtAuthentication([
+            "secret" => $container->get('settings')['jwt_key'],
+            "secure" => false,
+            "path" => "/api/user",
+            "error" => function ($response, $arguments) {
+                http_response_code(401);
+                $data["success"] = false;
+                $data["message"] = $arguments["message"];
+                return $response
+                    ->getBody()->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            }
+        ]);
+
+        return $auth;
     },
 
     // Database connection

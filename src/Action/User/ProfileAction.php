@@ -5,21 +5,17 @@ namespace App\Action\User;
 use App\Domain\User\Service\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 use App\Helpers\CryptoHelper;
 
 class ProfileAction
 {
 
     protected $user;
-    protected $session;
     protected $cryptoHelper;
 
-    public function __construct(Session $session, User $user, CryptoHelper $cryptoHelper)
+    public function __construct(User $user, CryptoHelper $cryptoHelper)
     {
         $this->user = $user;
-        $this->session = $session;
         $this->cryptoHelper = $cryptoHelper;
     }
 
@@ -29,9 +25,10 @@ class ProfileAction
     ): ResponseInterface {
 
         $message = false;
+        $success = false;
 
         $data = (array) $request->getParsedBody();
-        $ID = $this->session->get('ID');
+        $ID = $request->getAttribute('token')['data']->ID;
         $update = [];
 
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
@@ -89,20 +86,16 @@ class ProfileAction
             $up = $this->user->update(['ID' => $ID, 'data' => $update]);
         }
 
-        // Clear all flash messages
-        $flash = $this->session->getFlashBag();
-        $flash->clear();
-
-        // Get RouteParser from request to generate the urls
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $url = $routeParser->urlFor("user-profile");
-
         if (empty($message) && !empty($up)) {
-            $flash->set('success', 'Profile updated successfully!');
+            $success = true;
+            $message = 'Profile updated successfully!';
         } else {
-            $flash->set('error', !empty($message) ? $message : 'Unable to update details at the moment!');
+            $success = false;
+            $message = !empty($message) ? $message : 'Unable to update details at the moment!';
         }
 
-        return $response->withStatus(302)->withHeader('Location', $url);
+        $response->getBody()->write(json_encode(compact('success', 'message')));
+
+        return $response;
     }
 }
