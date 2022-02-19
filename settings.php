@@ -8,16 +8,16 @@
 $settings = [];
 
 // The name of the website
-$settings['name'] = 'Investorm';
+$settings['name'] = 'Crypto HYIP';
 
 // contact email
-$settings['email'] = 'admin@investorm.ltd';
+$settings['email'] = 'admin@site.com';
 
 // the address of company
-$settings['address'] = '130 Old Street, London England, EC1V 9BD.';
+$settings['address'] = '1 Wall Street, New York, NY 10005, USA';
 
 // short description of site. Will show at the footer area
-$settings['description'] = $settings['name'] . ' stands firmly in support of financial freedom and the liberty that Bitcoin provides globally for anyone to voluntarily participate in a permissionless and decentralized network.';
+$settings['description'] = $settings['name'] . ' is the best crypto investment script ever created. We would love you to use our site and give us feedback to make it better for you.';
 
 // Keywords for seo purposes
 $settings['keywords'] = 'crypto, investment, money, income, long-term, bitcoin, registered trader';
