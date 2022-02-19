@@ -13,7 +13,7 @@ return function (App $app) {
     $app->post('/admin-login', \App\Action\Admin\LoginAction::class)->setName('login-action');
 
     $app->get('/login[/]', function ($request, $response) {
-        $this->get(Smarty::class)->display('theme/public/auth/login.tpl');
+        $this->get(Smarty::class)->display('admin/login.tpl');
         return $response;
     })->setName('login');
 

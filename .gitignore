@@ -21,6 +21,7 @@ public/assets/*
 !public/assets/css/
 public/assets/css/*
 !public/assets/css/index.php
+!public/assets/css/bootstrap.min.css
 
 !public/assets/js/
 public/assets/js/*
