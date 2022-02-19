@@ -10,7 +10,12 @@ return function (App $app) {
     (require __DIR__ . '/api.php')($app);
 
     // login mainly admin login
-    $app->get('/admin-login', \App\Action\Admin\LoginAction::class)->setName('login');
+    $app->post('/admin-login', \App\Action\Admin\LoginAction::class)->setName('login-action');
+
+    $app->get('/login[/]', function ($request, $response) {
+        $this->get(Smarty::class)->display('theme/public/auth/login.tpl');
+        return $response;
+    })->setName('login');
 
 
     // catchall - for 404 - Not Found

@@ -12,7 +12,7 @@ return function (RouteCollectorProxy $app) {
         $group->post('reset-password', \App\Action\ResetPasswordAction::class);
         $group->post('reset[/]', \App\Action\ResetUpdateAction::class);
         $group->post('login', \App\Action\LoginAction::class);
-        $group->get('logout', \App\Action\LogoutAction::class);
+        $group->get('logout', \App\Action\LogoutAction::class)->setName('logout');
 
         //ref
         $group->get('ref/{referralUserName}', \App\Action\AffiliatesAction::class)->setName('ref');

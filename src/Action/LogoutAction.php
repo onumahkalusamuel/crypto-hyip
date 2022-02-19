@@ -4,6 +4,7 @@ namespace App\Action;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /** Logout a user */
@@ -25,7 +26,11 @@ final class LogoutAction
     ): ResponseInterface {
         // Logout user
         $this->session->invalidate();
-        $response->getBody()->write(json_encode(array('success' => true)));
-        return $response;
+
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $url = $routeParser->urlFor('admin-dashboard');
+
+        return $response->withStatus(302)->withHeader('Location', $url);
     }
 }

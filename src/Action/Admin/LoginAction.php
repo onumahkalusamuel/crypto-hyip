@@ -6,6 +6,7 @@ use App\Domain\User\Service\User;
 use App\Helpers\SendMail;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginAction
@@ -62,6 +63,10 @@ class LoginAction
             $this->session->set('userName', $loginUser->userName);
             $this->session->set('email', $loginUser->email);
             $message = "Login successful.";
+
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+            $url = $routeParser->urlFor('admin-dashboard');
         }
 
         if (empty($message)) {
@@ -71,7 +76,8 @@ class LoginAction
         $response->getBody()->write(json_encode([
             'success' => true,
             'message' => $message,
-            'userType' => $userType
+            'userType' => $userType,
+            'redirect' => $url
         ]));
 
         return $response;
